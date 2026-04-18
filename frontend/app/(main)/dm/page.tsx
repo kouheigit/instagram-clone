@@ -227,14 +227,16 @@ export default function DmPage() {
               {/* 自分のノート */}
               {me && (
                 <div className="px-4 py-4 border-b border-[#dbdbdb]">
-                  <div className="relative inline-flex flex-col items-center">
-                    <div className="absolute -top-1 -left-2 bg-white border border-[#dbdbdb] rounded-2xl px-3 py-1.5 text-[11px] text-[#262626] max-w-[120px] shadow-sm leading-snug z-10">
+                  <div className="inline-flex flex-col items-start">
+                    <div className="ml-6 mb-1 bg-white border border-[#dbdbdb] rounded-2xl px-3 py-1.5 text-[11px] text-[#262626] max-w-[120px] shadow-sm leading-snug">
                       新しいノートを<br />シェアしよう...
                     </div>
-                    <div className="mt-8 w-16 h-16 rounded-full overflow-hidden ring-2 ring-[#dbdbdb]">
-                      <Avatar src={me.profile_img} username={me.username} size={64} />
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-[#dbdbdb]">
+                        <Avatar src={me.profile_img} username={me.username} size={64} />
+                      </div>
+                      <span className="text-xs text-[#262626] mt-1.5">自分のノート</span>
                     </div>
-                    <span className="text-xs text-[#262626] mt-1.5">自分のノート</span>
                   </div>
                 </div>
               )}
