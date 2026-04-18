@@ -270,7 +270,6 @@ export function Sidebar({ onCreatePost }: Props) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
-  const [expanded, setExpanded] = useState(true);
   const [moreOpen, setMoreOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -291,12 +290,9 @@ export function Sidebar({ onCreatePost }: Props) {
     setMoreOpen(false);
   };
 
-  /* 検索パネル開放中はサイドバーを細いまま固定 */
-  const isExpanded = expanded && !searchOpen;
-
-  const lc = `whitespace-nowrap overflow-hidden transition-all duration-200 text-[16px] leading-none ${
-    isExpanded ? "opacity-100 max-w-[180px]" : "opacity-0 max-w-0"
-  }`;
+  const lc = searchOpen
+    ? "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-0 max-w-0"
+    : "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-100 max-w-[180px] group-hover:opacity-0 group-hover:max-w-0 transition-all duration-200";
 
   const itemClass = (active: boolean) =>
     `flex h-14 items-center gap-4 px-3 rounded-xl text-[16px] hover:bg-[#f3f3f3] transition-colors ${
@@ -306,10 +302,9 @@ export function Sidebar({ onCreatePost }: Props) {
   return (
     <>
       <nav
-        onMouseEnter={() => { setExpanded(false); }}
-        onMouseLeave={() => { if (!searchOpen) setExpanded(true); setMoreOpen(false); }}
-        className={`fixed top-0 left-0 h-full border-r border-[#dbdbdb] bg-white px-3 py-4 flex flex-col z-[60] transition-[width] duration-200 overflow-hidden ${
-          isExpanded ? "w-[244px]" : "w-[72px]"
+        onMouseLeave={() => setMoreOpen(false)}
+        className={`group fixed top-0 left-0 h-full border-r border-[#dbdbdb] bg-white px-3 py-4 flex flex-col z-[60] transition-[width] duration-200 overflow-hidden ${
+          searchOpen ? "w-[72px]" : "w-[244px] hover:w-[72px]"
         }`}
       >
         {/* ロゴ */}
