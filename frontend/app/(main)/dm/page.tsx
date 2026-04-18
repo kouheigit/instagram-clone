@@ -60,6 +60,24 @@ export default function DmPage() {
     load();
   }, [me]);
 
+  // フォロー中ユーザーを取得してcontactUsersにセット
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const seen = new Set<string>();
+      const result: User[] = [];
+      if (me?.username) {
+        try {
+          const r = await usersApi.following(me.username);
+          const list: User[] = r.data.results ?? r.data ?? [];
+          for (const u of list) {
+            if (!seen.has(u.user_id)) { seen.add(u.user_id); result.push(u); }
+          }
+        } catch { /* ignore */ }
+      }
+      setContactUsers(result);
+    };
+    fetchContacts();
+  }, [me]);
 
   const handleSidebarSearch = (q: string) => {
     setSidebarQuery(q);
