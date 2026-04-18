@@ -17,6 +17,8 @@ export default function DmPage() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // フォロワー一覧（メッセージ下に表示）
+  const [contactUsers, setContactUsers] = useState<User[]>([]);
 
   // サイドバー内検索
   const [sidebarQuery, setSidebarQuery] = useState("");
