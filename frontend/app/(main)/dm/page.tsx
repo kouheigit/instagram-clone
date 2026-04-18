@@ -17,8 +17,8 @@ export default function DmPage() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // フォロー中ユーザー（検索欄下のアバター用）
-  const [followingUsers, setFollowingUsers] = useState<User[]>([]);
+  // アバター行用ユーザー（suggestions + following）
+  const [contactUsers, setContactUsers] = useState<User[]>([]);
 
   // サイドバー内検索
   const [sidebarQuery, setSidebarQuery] = useState("");
@@ -33,6 +33,7 @@ export default function DmPage() {
   const [searching, setSearching] = useState(false);
   const [startingDm, setStartingDm] = useState(false);
 
+  // 会話一覧とパートナー情報を取得
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -41,7 +42,6 @@ export default function DmPage() {
         const convs: Conversation[] = res.data.results ?? res.data ?? [];
         setConversations(convs);
 
-        // パートナーのユーザー情報を取得
         const partnerIds = convs
           .flatMap((c) => c.members)
           .map((m) => m.user_id)
@@ -60,24 +60,45 @@ export default function DmPage() {
     load();
   }, [me]);
 
-  // フォロー中ユーザーを取得（なければ提案ユーザーで補完）
+  // アバター行：suggestions（ユーザー名不要）+ following でポピュレート
   useEffect(() => {
-    if (!me?.username) return;
-    usersApi.following(me.username).then((res) => {
-      const list: User[] = res.data.results ?? res.data ?? [];
-      if (list.length > 0) {
-        setFollowingUsers(list);
-      } else {
-        usersApi.suggestions().then((r) => {
-          setFollowingUsers(r.data ?? []);
-        }).catch(() => {});
+    const fetchContacts = async () => {
+      const seen = new Set<string>();
+      const result: User[] = [];
+
+      // 1. suggestions（ユーザー名不要、即時取得可能）
+      try {
+        const r = await usersApi.suggestions();
+        for (const u of (r.data ?? []) as User[]) {
+          if (!seen.has(u.user_id)) { seen.add(u.user_id); result.push(u); }
+        }
+      } catch { /* ignore */ }
+
+      // 2. following（me.username が必要）
+      if (me?.username) {
+        try {
+          const r = await usersApi.following(me.username);
+          const list: User[] = r.data.results ?? r.data ?? [];
+          for (const u of list) {
+            if (!seen.has(u.user_id)) { seen.add(u.user_id); result.push(u); }
+          }
+        } catch { /* ignore */ }
       }
-    }).catch(() => {
-      usersApi.suggestions().then((r) => {
-        setFollowingUsers(r.data ?? []);
-      }).catch(() => {});
-    });
+
+      setContactUsers(result);
+    };
+    fetchContacts();
   }, [me]);
+
+  // パートナーが揃ったらアバター行に追加
+  useEffect(() => {
+    if (Object.keys(partners).length === 0) return;
+    setContactUsers((prev) => {
+      const seen = new Set(prev.map((u) => u.user_id));
+      const extra: User[] = Object.values(partners).filter((u) => !seen.has(u.user_id));
+      return extra.length > 0 ? [...extra, ...prev] : prev;
+    });
+  }, [partners]);
 
   const handleSidebarSearch = (q: string) => {
     setSidebarQuery(q);
@@ -103,7 +124,7 @@ export default function DmPage() {
     } catch { /* ignore */ }
   };
 
-  // 5秒ポーリングで新着メッセージを取得
+  // 5秒ポーリング
   useEffect(() => {
     if (!selected) return;
     const interval = setInterval(async () => {
@@ -150,7 +171,8 @@ export default function DmPage() {
       setShowNewDm(false);
       setSearchQuery("");
       setSearchResults([]);
-      // 会話リストを再取得して選択
+      setSidebarQuery("");
+      setSidebarResults([]);
       const convsRes = await dmApi.conversations();
       const convs: Conversation[] = convsRes.data.results ?? convsRes.data ?? [];
       setConversations(convs);
@@ -162,7 +184,6 @@ export default function DmPage() {
         for (const u of uRes.data as User[]) map[u.user_id] = u;
         setPartners(map);
       }
-      // 作成/取得した会話を選択
       const found = convs.find((c) => c.conversation_id === newConv.conversation_id) ?? newConv;
       openConversation(found);
     } catch { /* ignore */ } finally {
@@ -180,8 +201,11 @@ export default function DmPage() {
 
   return (
     <div className="flex h-[calc(100vh-48px)] lg:h-screen max-w-[935px] mx-auto">
-      {/* 会話リスト */}
+
+      {/* 左カラム：会話リスト */}
       <div className={`w-full lg:w-[350px] border-r border-[#dbdbdb] flex flex-col ${selected ? "hidden lg:flex" : "flex"}`}>
+
+        {/* ヘッダー */}
         <div className="px-4 py-4 border-b border-[#dbdbdb] flex items-center justify-between">
           <h1 className="font-semibold text-base">{me?.username}</h1>
           <button
@@ -194,7 +218,7 @@ export default function DmPage() {
         </div>
 
         {/* 検索バー */}
-        <div className="px-4 py-3 border-b border-[#dbdbdb]">
+        <div className="px-4 py-3">
           <div className="flex items-center gap-2 bg-[#efefef] rounded-lg px-3 py-2">
             <Search size={14} className="text-[#8e8e8e] shrink-0" />
             <input
@@ -214,7 +238,7 @@ export default function DmPage() {
 
         <div className="flex-1 overflow-y-auto">
           {sidebarQuery ? (
-            /* 検索結果 */
+            /* 検索結果インライン表示 */
             <>
               {sidebarSearching ? (
                 <div className="flex justify-center py-6">
@@ -241,34 +265,43 @@ export default function DmPage() {
             </>
           ) : (
             <>
-              {/* フォロー中ユーザーのアバター横スクロール */}
-              {followingUsers.length > 0 && (
-                <div className="border-b border-[#dbdbdb] py-4">
-                  <div className="flex gap-4 px-4 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-                    {followingUsers.map((u) => (
+              {/* フォロー中／提案ユーザーのアバター横スクロール */}
+              {contactUsers.length > 0 && (
+                <div className="py-4 border-b border-[#dbdbdb]">
+                  <div
+                    className="flex gap-4 px-4 overflow-x-auto"
+                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  >
+                    {contactUsers.map((u) => (
                       <button
                         key={u.user_id}
                         onClick={() => handleStartDm(u.user_id)}
                         disabled={startingDm}
                         className="flex flex-col items-center gap-1.5 shrink-0"
                       >
-                        <Avatar src={u.profile_img} username={u.username} size={56} />
-                        <span className="text-xs text-[#262626] max-w-[56px] truncate">{u.username}</span>
+                        <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#dbdbdb]">
+                          <Avatar src={u.profile_img} username={u.username} size={56} />
+                        </div>
+                        <span className="text-xs text-[#262626] w-14 truncate text-center">{u.username}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* メッセージ一覧 */}
+              {/* 会話リスト */}
               {conversations.length > 0 && (
-                <p className="px-4 pt-3 pb-1 text-sm font-semibold text-[#262626]">メッセージ</p>
+                <div className="flex items-center justify-between px-4 pt-4 pb-1">
+                  <p className="text-sm font-semibold text-[#262626]">メッセージ</p>
+                  <button className="text-xs font-semibold text-[#0095f6]">リクエスト</button>
+                </div>
               )}
               {conversations.length === 0 ? (
                 <p className="text-center text-[#8e8e8e] text-sm mt-8">メッセージがありません</p>
               ) : (
                 conversations.map((conv) => {
                   const partner = getPartner(conv);
+                  const lastMsg = conv.last_message;
                   return (
                     <button
                       key={conv.conversation_id}
@@ -278,9 +311,14 @@ export default function DmPage() {
                       }`}
                     >
                       <Avatar src={partner?.profile_img} username={partner?.username ?? "?"} size={56} />
-                      <div className="text-left">
-                        <p className="font-semibold text-sm">{partner?.username ?? "不明なユーザー"}</p>
-                        <p className="text-[#8e8e8e] text-xs">メッセージを表示</p>
+                      <div className="text-left min-w-0 flex-1">
+                        <p className="font-semibold text-sm truncate">{partner?.username ?? "不明なユーザー"}</p>
+                        {lastMsg && (
+                          <p className="text-[#8e8e8e] text-xs truncate max-w-[200px]">
+                            {lastMsg.sender_id === me?.user_id ? "あなた: " : ""}
+                            {lastMsg.is_deleted ? "このメッセージは削除されました" : lastMsg.content}
+                          </p>
+                        )}
                       </div>
                     </button>
                   );
@@ -291,7 +329,7 @@ export default function DmPage() {
         </div>
       </div>
 
-      {/* メッセージ画面 */}
+      {/* 右カラム：メッセージ画面 or 空ステート */}
       {selected ? (
         <div className="flex-1 flex flex-col">
           {/* ヘッダー */}
@@ -353,9 +391,10 @@ export default function DmPage() {
           </form>
         </div>
       ) : (
+        /* 空ステート（会話未選択） */
         <div className="hidden lg:flex flex-1 items-center justify-center flex-col gap-4 text-[#8e8e8e]">
           <div className="w-20 h-20 rounded-full border-2 border-[#262626] flex items-center justify-center">
-            <Image src="/plane_icon.png" alt="送信" width={28} height={28} />
+            <Image src="/plane_icon.png" alt="メッセージ" width={28} height={28} />
           </div>
           <p className="font-semibold text-xl text-[#262626]">メッセージ</p>
           <p className="text-sm text-center px-8">友達やグループに非公開で写真やメッセージを送信できます</p>
@@ -417,7 +456,7 @@ export default function DmPage() {
               {!searching && searchQuery && searchResults.length === 0 && (
                 <p className="text-center text-[#8e8e8e] text-sm py-6">ユーザーが見つかりません</p>
               )}
-              {!searchQuery && (
+              {!searching && !searchQuery && (
                 <p className="text-center text-[#8e8e8e] text-sm py-6">ユーザー名を検索してください</p>
               )}
             </div>
