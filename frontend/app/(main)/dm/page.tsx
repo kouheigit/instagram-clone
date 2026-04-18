@@ -258,7 +258,7 @@ export default function DmPage() {
               {me && (
                 <div className="px-4 py-4 border-b border-[#dbdbdb]">
                   <div className="inline-flex flex-col items-start">
-                    <div className="ml-6 mb-1 bg-white border border-[#dbdbdb] rounded-2xl px-3 py-1.5 text-[11px] text-[#262626] max-w-[120px] shadow-sm leading-snug">
+                    <div className="ml-6 mb-1 bg-white border border-[#dbdbdb] rounded-2xl px-3 py-2 text-[12px] text-[#262626] max-w-[140px] shadow-sm leading-snug">
                       新しい日に、新しいノートを...
                     </div>
                     <div className="flex flex-col items-center">
