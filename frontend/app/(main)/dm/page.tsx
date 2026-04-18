@@ -316,7 +316,7 @@ export default function DmPage() {
                     <Avatar src={u.profile_img} username={u.username} size={56} />
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-sm truncate">{u.username}</p>
-                      <p className="text-[#8e8e8e] text-xs">メッセージを送信</p>
+                      {u.display_name && <p className="text-[#8e8e8e] text-xs truncate">{u.display_name}</p>}
                     </div>
                   </button>
                 ));
