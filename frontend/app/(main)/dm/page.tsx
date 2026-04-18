@@ -79,6 +79,16 @@ export default function DmPage() {
     fetchContacts();
   }, [me]);
 
+  // 会話パートナーもcontactUsersに追加
+  useEffect(() => {
+    if (Object.keys(partners).length === 0) return;
+    setContactUsers((prev) => {
+      const seen = new Set(prev.map((u) => u.user_id));
+      const extra = Object.values(partners).filter((u) => !seen.has(u.user_id));
+      return extra.length > 0 ? [...extra, ...prev] : prev;
+    });
+  }, [partners]);
+
   const handleSidebarSearch = (q: string) => {
     setSidebarQuery(q);
     if (searchTimer.current) clearTimeout(searchTimer.current);
