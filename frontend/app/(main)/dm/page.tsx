@@ -276,34 +276,51 @@ export default function DmPage() {
                 <p className="text-sm font-semibold text-[#262626]">メッセージ</p>
                 <button className="text-xs font-semibold text-[#0095f6]">リクエスト</button>
               </div>
-              {conversations.length === 0 ? (
-                <p className="text-center text-[#8e8e8e] text-sm mt-8">メッセージがありません</p>
-              ) : (
-                conversations.map((conv) => {
-                  const partner = getPartner(conv);
-                  const lastMsg = conv.last_message;
-                  return (
-                    <button
-                      key={conv.conversation_id}
-                      onClick={() => openConversation(conv)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors ${
-                        selected?.conversation_id === conv.conversation_id ? "bg-[#fafafa]" : ""
-                      }`}
-                    >
-                      <Avatar src={partner?.profile_img} username={partner?.username ?? "?"} size={56} />
-                      <div className="text-left min-w-0 flex-1">
-                        <p className="font-semibold text-sm truncate">{partner?.username ?? "不明なユーザー"}</p>
-                        {lastMsg && (
-                          <p className="text-[#8e8e8e] text-xs truncate max-w-[200px]">
-                            {lastMsg.sender_id === me?.user_id ? "あなた: " : ""}
-                            {lastMsg.is_deleted ? "このメッセージは削除されました" : lastMsg.content}
-                          </p>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })
-              )}
+              {conversations.map((conv) => {
+                const partner = getPartner(conv);
+                const lastMsg = conv.last_message;
+                return (
+                  <button
+                    key={conv.conversation_id}
+                    onClick={() => openConversation(conv)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors ${
+                      selected?.conversation_id === conv.conversation_id ? "bg-[#fafafa]" : ""
+                    }`}
+                  >
+                    <Avatar src={partner?.profile_img} username={partner?.username ?? "?"} size={56} />
+                    <div className="text-left min-w-0 flex-1">
+                      <p className="font-semibold text-sm truncate">{partner?.username ?? "不明なユーザー"}</p>
+                      {lastMsg && (
+                        <p className="text-[#8e8e8e] text-xs truncate max-w-[200px]">
+                          {lastMsg.sender_id === me?.user_id ? "あなた: " : ""}
+                          {lastMsg.is_deleted ? "このメッセージは削除されました" : lastMsg.content}
+                        </p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+              {/* 会話のないフォロー中ユーザーを縦一覧表示 */}
+              {(() => {
+                const conversationPartnerIds = new Set(
+                  conversations.flatMap((c) => c.members.map((m) => m.user_id))
+                );
+                const extras = contactUsers.filter((u) => !conversationPartnerIds.has(u.user_id) && u.user_id !== me?.user_id);
+                return extras.map((u) => (
+                  <button
+                    key={u.user_id}
+                    onClick={() => handleStartDm(u.user_id)}
+                    disabled={startingDm}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors text-left"
+                  >
+                    <Avatar src={u.profile_img} username={u.username} size={56} />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-sm truncate">{u.username}</p>
+                      <p className="text-[#8e8e8e] text-xs">メッセージを送信</p>
+                    </div>
+                  </button>
+                ));
+              })()}
             </>
           )}
         </div>
