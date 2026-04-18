@@ -1,0 +1,425 @@
+version: "3.9"
+
+networks:
+  instagram_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  kafka_data:
+  zookeeper_data:
+  media_data:
+
+services:
+  # ===========================
+  # Infrastructure
+  # ===========================
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: instagram_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-instagram}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-instagram_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-instagram_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - instagram_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-instagram}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: instagram_redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_pass} --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6380:6379"
+    networks:
+      - instagram_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:-redis_pass}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: instagram_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - instagram_net
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: instagram_kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_LOG_RETENTION_HOURS: 168
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    ports:
+      - "29092:29092"
+    networks:
+      - instagram_net
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  kafka-init:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: instagram_kafka_init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      "
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.created --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.liked --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.commented --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic story.created --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.followed --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.activity --partitions 3 --replication-factor 1
+      echo 'Kafka topics created.'
+      "
+
+  # ===========================
+  # API Gateway (Nginx)
+  # ===========================
+
+  nginx:
+    build:
+      context: ./infra/docker/nginx
+      dockerfile: Dockerfile
+    container_name: instagram_nginx
+    depends_on:
+      - user-service
+      - post-service
+      - feed-service
+      - story-service
+      - notification-service
+      - dm-service
+      - search-service
+      - media-service
+    volumes:
+      - ./infra/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - media_data:/var/media:ro
+    ports:
+      - "8888:80"
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  # ===========================
+  # Application Services
+  # ===========================
+
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: instagram_user_service
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - ./services/user-service:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/0
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  post-service:
+    build:
+      context: ./services/post-service
+      dockerfile: Dockerfile
+    container_name: instagram_post_service
+    command: python manage.py runserver 0.0.0.0:8002
+    volumes:
+      - ./services/post-service:/app
+      - media_data:/var/media
+    ports:
+      - "8002:8002"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/1
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - USER_SERVICE_URL=http://user-service:8001
+      - FEED_SERVICE_URL=http://feed-service:8003
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  feed-service:
+    build:
+      context: ./services/feed-service
+      dockerfile: Dockerfile
+    container_name: instagram_feed_service
+    command: python manage.py runserver 0.0.0.0:8003
+    volumes:
+      - ./services/feed-service:/app
+    ports:
+      - "8003:8003"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/2
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - POST_SERVICE_URL=http://post-service:8002
+      - USER_SERVICE_URL=http://user-service:8001
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  story-service:
+    build:
+      context: ./services/story-service
+      dockerfile: Dockerfile
+    container_name: instagram_story_service
+    command: python manage.py runserver 0.0.0.0:8005
+    volumes:
+      - ./services/story-service:/app
+      - media_data:/var/media
+    ports:
+      - "8005:8005"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/3
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: instagram_notification_service
+    command: python manage.py runserver 0.0.0.0:8008
+    volumes:
+      - ./services/notification-service:/app
+    ports:
+      - "8008:8008"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/6
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  media-service:
+    build:
+      context: ./services/media-service
+      dockerfile: Dockerfile
+    container_name: instagram_media_service
+    command: python manage.py runserver 0.0.0.0:8004
+    volumes:
+      - ./services/media-service:/app
+      - media_data:/var/media
+    ports:
+      - "8004:8004"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/7
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - MEDIA_BASE_URL=http://localhost:8080
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  search-service:
+    build:
+      context: ./services/search-service
+      dockerfile: Dockerfile
+    container_name: instagram_search_service
+    command: python manage.py runserver 0.0.0.0:8006
+    volumes:
+      - ./services/search-service:/app
+    ports:
+      - "8006:8006"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/5
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  dm-service:
+    build:
+      context: ./services/dm-service
+      dockerfile: Dockerfile
+    container_name: instagram_dm_service
+    command: python manage.py runserver 0.0.0.0:8007
+    volumes:
+      - ./services/dm-service:/app
+    ports:
+      - "8007:8007"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/4
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - DEBUG=True
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  # ===========================
+  # Celery Worker
+  # ===========================
+
+  celery-worker:
+    build:
+      context: ./services/post-service
+      dockerfile: Dockerfile
+    container_name: instagram_celery_worker
+    command: celery -A config worker --loglevel=info --concurrency=2
+    volumes:
+      - ./services/post-service:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/1
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - USER_SERVICE_URL=http://user-service:8001
+      - FEED_SERVICE_URL=http://feed-service:8003
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  # ===========================
+  # Monitoring
+  # ===========================
+
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    container_name: instagram_prometheus
+    volumes:
+      - ./infra/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: instagram_grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin_pass}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - instagram_net
+    restart: unless-stopped
