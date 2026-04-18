@@ -272,12 +272,10 @@ export default function DmPage() {
               )}
 
               {/* 会話リスト */}
-              {conversations.length > 0 && (
-                <div className="flex items-center justify-between px-4 pt-4 pb-1">
-                  <p className="text-sm font-semibold text-[#262626]">メッセージ</p>
-                  <button className="text-xs font-semibold text-[#0095f6]">リクエスト</button>
-                </div>
-              )}
+              <div className="flex items-center justify-between px-4 pt-4 pb-1">
+                <p className="text-sm font-semibold text-[#262626]">メッセージ</p>
+                <button className="text-xs font-semibold text-[#0095f6]">リクエスト</button>
+              </div>
               {conversations.length === 0 ? (
                 <p className="text-center text-[#8e8e8e] text-sm mt-8">メッセージがありません</p>
               ) : (
