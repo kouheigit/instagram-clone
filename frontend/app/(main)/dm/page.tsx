@@ -200,7 +200,7 @@ export default function DmPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-48px)] lg:h-screen max-w-[935px] mx-auto">
+    <div className="flex h-[calc(100vh-48px)] lg:h-screen">
 
       {/* 左カラム：会話リスト */}
       <div className={`w-full lg:w-[350px] border-r border-[#dbdbdb] flex flex-col ${selected ? "hidden lg:flex" : "flex"}`}>
