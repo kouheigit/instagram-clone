@@ -270,7 +270,7 @@ export function Sidebar({ onCreatePost }: Props) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [moreOpen, setMoreOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -306,8 +306,8 @@ export function Sidebar({ onCreatePost }: Props) {
   return (
     <>
       <nav
-        onMouseEnter={() => { if (!searchOpen) setExpanded(true); }}
-        onMouseLeave={() => { setExpanded(false); setMoreOpen(false); }}
+        onMouseEnter={() => { setExpanded(false); }}
+        onMouseLeave={() => { if (!searchOpen) setExpanded(true); setMoreOpen(false); }}
         className={`fixed top-0 left-0 h-full border-r border-[#dbdbdb] bg-white px-3 py-4 flex flex-col z-[60] transition-[width] duration-200 overflow-hidden ${
           isExpanded ? "w-[244px]" : "w-[72px]"
         }`}
