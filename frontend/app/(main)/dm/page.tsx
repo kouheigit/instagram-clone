@@ -17,8 +17,6 @@ export default function DmPage() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // アバター行用ユーザー（suggestions + following）
-  const [contactUsers, setContactUsers] = useState<User[]>([]);
 
   // サイドバー内検索
   const [sidebarQuery, setSidebarQuery] = useState("");
@@ -60,45 +58,6 @@ export default function DmPage() {
     load();
   }, [me]);
 
-  // アバター行：suggestions（ユーザー名不要）+ following でポピュレート
-  useEffect(() => {
-    const fetchContacts = async () => {
-      const seen = new Set<string>();
-      const result: User[] = [];
-
-      // 1. suggestions（ユーザー名不要、即時取得可能）
-      try {
-        const r = await usersApi.suggestions();
-        for (const u of (r.data ?? []) as User[]) {
-          if (!seen.has(u.user_id)) { seen.add(u.user_id); result.push(u); }
-        }
-      } catch { /* ignore */ }
-
-      // 2. following（me.username が必要）
-      if (me?.username) {
-        try {
-          const r = await usersApi.following(me.username);
-          const list: User[] = r.data.results ?? r.data ?? [];
-          for (const u of list) {
-            if (!seen.has(u.user_id)) { seen.add(u.user_id); result.push(u); }
-          }
-        } catch { /* ignore */ }
-      }
-
-      setContactUsers(result);
-    };
-    fetchContacts();
-  }, [me]);
-
-  // パートナーが揃ったらアバター行に追加
-  useEffect(() => {
-    if (Object.keys(partners).length === 0) return;
-    setContactUsers((prev) => {
-      const seen = new Set(prev.map((u) => u.user_id));
-      const extra: User[] = Object.values(partners).filter((u) => !seen.has(u.user_id));
-      return extra.length > 0 ? [...extra, ...prev] : prev;
-    });
-  }, [partners]);
 
   const handleSidebarSearch = (q: string) => {
     setSidebarQuery(q);
@@ -265,26 +224,17 @@ export default function DmPage() {
             </>
           ) : (
             <>
-              {/* フォロー中／提案ユーザーのアバター横スクロール */}
-              {contactUsers.length > 0 && (
-                <div className="py-4 border-b border-[#dbdbdb]">
-                  <div
-                    className="flex gap-4 px-4 overflow-x-auto"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                  >
-                    {contactUsers.map((u) => (
-                      <button
-                        key={u.user_id}
-                        onClick={() => handleStartDm(u.user_id)}
-                        disabled={startingDm}
-                        className="flex flex-col items-center gap-1.5 shrink-0"
-                      >
-                        <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#dbdbdb]">
-                          <Avatar src={u.profile_img} username={u.username} size={56} />
-                        </div>
-                        <span className="text-xs text-[#262626] w-14 truncate text-center">{u.username}</span>
-                      </button>
-                    ))}
+              {/* 自分のノート */}
+              {me && (
+                <div className="px-4 py-4 border-b border-[#dbdbdb]">
+                  <div className="relative inline-flex flex-col items-center">
+                    <div className="absolute -top-1 -left-2 bg-white border border-[#dbdbdb] rounded-2xl px-3 py-1.5 text-[11px] text-[#262626] max-w-[120px] shadow-sm leading-snug z-10">
+                      新しいノートを<br />シェアしよう...
+                    </div>
+                    <div className="mt-8 w-16 h-16 rounded-full overflow-hidden ring-2 ring-[#dbdbdb]">
+                      <Avatar src={me.profile_img} username={me.username} size={64} />
+                    </div>
+                    <span className="text-xs text-[#262626] mt-1.5">自分のノート</span>
                   </div>
                 </div>
               )}
