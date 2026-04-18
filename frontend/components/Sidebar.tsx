@@ -290,9 +290,7 @@ export function Sidebar({ onCreatePost }: Props) {
     setMoreOpen(false);
   };
 
-  const lc = searchOpen
-    ? "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-0 max-w-0"
-    : "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-100 max-w-[180px] group-hover:opacity-0 group-hover:max-w-0 transition-all duration-200";
+  const lc = "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-0 max-w-0 group-hover:opacity-100 group-hover:max-w-[180px] transition-all duration-200";
 
   const itemClass = (active: boolean) =>
     `flex h-14 items-center gap-4 px-3 rounded-xl text-[16px] hover:bg-[#f3f3f3] transition-colors ${
@@ -304,7 +302,7 @@ export function Sidebar({ onCreatePost }: Props) {
       <nav
         onMouseLeave={() => setMoreOpen(false)}
         className={`group fixed top-0 left-0 h-full border-r border-[#dbdbdb] bg-white px-3 py-4 flex flex-col z-[60] transition-[width] duration-200 overflow-hidden ${
-          searchOpen ? "w-[72px]" : "w-[244px] hover:w-[72px]"
+          searchOpen ? "w-[72px]" : "w-[72px] hover:w-[244px]"
         }`}
       >
         {/* ロゴ */}

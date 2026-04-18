@@ -34,7 +34,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* メインコンテンツ */}
-      <main className="flex-1 lg:ml-[244px] pb-12 lg:pb-0" key={feedKey}>
+      <main className="flex-1 lg:ml-[72px] pb-12 lg:pb-0" key={feedKey}>
         {children}
       </main>
 
