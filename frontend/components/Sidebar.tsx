@@ -214,10 +214,35 @@ function NavBtn({
 
 /* ─── ホバーフライアウトラベル ─── */
 function NavFlyout({ label, children }: { label: string; children: React.ReactNode }) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <div className="relative group/flyout">
+    <div
+      className="relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {children}
-      <div className="absolute left-[calc(100%+8px)] top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-[#efefef] text-sm font-semibold text-[#262626] whitespace-nowrap pointer-events-none z-[100] opacity-0 -translate-x-1 group-hover/flyout:opacity-100 group-hover/flyout:translate-x-0 transition-all duration-150 ease-out">
+      <div
+        style={{
+          position: "absolute",
+          left: "calc(100% + 8px)",
+          top: "50%",
+          transform: hovered ? "translateY(-50%) translateX(0)" : "translateY(-50%) translateX(-6px)",
+          opacity: hovered ? 1 : 0,
+          pointerEvents: "none",
+          zIndex: 200,
+          transition: "opacity 150ms ease-out, transform 150ms ease-out",
+          background: "#fff",
+          border: "1px solid #efefef",
+          borderRadius: "12px",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+          padding: "6px 12px",
+          fontSize: "14px",
+          fontWeight: 600,
+          color: "#262626",
+          whiteSpace: "nowrap",
+        }}
+      >
         {label}
       </div>
     </div>
