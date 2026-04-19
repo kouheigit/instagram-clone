@@ -321,40 +321,48 @@ export function Sidebar({ onCreatePost }: Props) {
           </NavFlyout>
 
           {/* リール */}
-          <Link href="/reels">
-            <NavIcon>
-              <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
-            </NavIcon>
-          </Link>
+          <NavFlyout label="リール">
+            <Link href="/reels">
+              <NavIcon>
+                <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
 
           {/* メッセージ（飛行機アイコン・ノータッチ） */}
-          <Link href="/dm">
-            <NavIcon>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/plane_icon.png"
-                alt="メッセージ"
-                style={{ width: "24px", height: "24px", objectFit: "contain" }}
-              />
-            </NavIcon>
-          </Link>
+          <NavFlyout label="メッセージ">
+            <Link href="/dm">
+              <NavIcon>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/plane_icon.png"
+                  alt="メッセージ"
+                  style={{ width: "24px", height: "24px", objectFit: "contain" }}
+                />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
 
           {/* ハート（お知らせ） */}
-          <Link href="/notifications">
-            <NavIcon className="relative">
-              <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none pointer-events-none">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
-            </NavIcon>
-          </Link>
+          <NavFlyout label="お知らせ">
+            <Link href="/notifications">
+              <NavIcon className="relative">
+                <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none pointer-events-none">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </NavIcon>
+            </Link>
+          </NavFlyout>
 
           {/* 投稿作成 */}
-          <NavBtn onClick={onCreatePost}>
-            <Plus size={24} strokeWidth={1.75} />
-          </NavBtn>
+          <NavFlyout label="作成">
+            <NavBtn onClick={onCreatePost}>
+              <Plus size={24} strokeWidth={1.75} />
+            </NavBtn>
+          </NavFlyout>
         </div>
 
         {/* 下部固定エリア */}
