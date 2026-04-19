@@ -326,7 +326,7 @@ export function Sidebar({ onCreatePost }: Props) {
             <NavIcon className="relative">
               <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                <span className="absolute -top-0.5 -right-0.5 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none pointer-events-none">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
