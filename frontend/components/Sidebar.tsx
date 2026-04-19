@@ -329,7 +329,7 @@ export function Sidebar({ onCreatePost }: Props) {
           <Link
             href="/"
             style={{ marginTop: "20px", marginBottom: "28px" }}
-            className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-black/5 transition-colors"
+            className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-[#f2f2f2] transition-colors"
           >
             <InstagramLogo />
           </Link>
@@ -406,7 +406,7 @@ export function Sidebar({ onCreatePost }: Props) {
             <NavFlyout label={user.username}>
               <Link
                 href={`/profile/${user.username}`}
-                className="ig-sidebar-profile block rounded-xl hover:bg-black/5 transition-colors"
+                className="ig-sidebar-profile block rounded-xl hover:bg-[#f2f2f2] transition-colors"
               >
                 <div className="flex items-center gap-4">
                   <div
