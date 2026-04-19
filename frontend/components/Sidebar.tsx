@@ -389,7 +389,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* ハート（お知らせ） */}
           <NavFlyout label="お知らせ">
             <Link href="/notifications">
-              <NavIcon label="お知らせ" className="relative">
+              <NavIcon label="お知らせ" active={pathname === "/notifications" && !searchOpen} className="relative">
                 <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none pointer-events-none">
