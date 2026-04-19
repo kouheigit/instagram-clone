@@ -380,7 +380,11 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* プロフィールアバター */}
           {user && (
-            <Link href={`/profile/${user.username}`} style={{ marginBottom: "20px" }}>
+            <Link
+              href={`/profile/${user.username}`}
+              style={{ marginBottom: "20px" }}
+              className="block rounded-full hover:opacity-80 transition-opacity"
+            >
               <div
                 style={{
                   width: "24px",
