@@ -192,6 +192,9 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+const NAV_ICON_BASE =
+  "w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-black/5 transition-colors text-[#262626]";
+
 /* ─── アイコンボタン共通ラッパー（button用） ─── */
 function NavBtn({
   children,
@@ -203,10 +206,7 @@ function NavBtn({
   className?: string;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-black/5 transition-colors text-[#262626] mb-1 ${className}`}
-    >
+    <button onClick={onClick} className={`${NAV_ICON_BASE} ${className}`}>
       {children}
     </button>
   );
@@ -221,9 +221,7 @@ function NavIcon({
   className?: string;
 }) {
   return (
-    <div
-      className={`w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-black/5 transition-colors text-[#262626] ${className}`}
-    >
+    <div className={`${NAV_ICON_BASE} ${className}`}>
       {children}
     </div>
   );
@@ -282,60 +280,63 @@ export function Sidebar({ onCreatePost }: Props) {
           <InstagramLogo />
         </Link>
 
-        {/* ホーム */}
-        <Link href="/" className="mb-1">
-          <NavIcon>
-            <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
-          </NavIcon>
-        </Link>
+        {/* メインナビ（gap-1 = 4px） */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          {/* ホーム */}
+          <Link href="/">
+            <NavIcon>
+              <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
+            </NavIcon>
+          </Link>
 
-        {/* 検索 */}
-        <NavBtn onClick={handleSearchToggle}>
-          <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
-        </NavBtn>
+          {/* 検索 */}
+          <NavBtn onClick={handleSearchToggle}>
+            <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
+          </NavBtn>
 
-        {/* 発見 */}
-        <Link href="/explore" className="mb-1">
-          <NavIcon>
-            <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
-          </NavIcon>
-        </Link>
+          {/* 発見 */}
+          <Link href="/explore">
+            <NavIcon>
+              <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
+            </NavIcon>
+          </Link>
 
-        {/* リール */}
-        <Link href="/reels" className="mb-1">
-          <NavIcon>
-            <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
-          </NavIcon>
-        </Link>
+          {/* リール */}
+          <Link href="/reels">
+            <NavIcon>
+              <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
+            </NavIcon>
+          </Link>
 
-        {/* メッセージ（飛行機アイコン・ノータッチ） */}
-        <Link href="/dm" className="mb-1">
-          <NavIcon>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/plane_icon.png"
-              alt="メッセージ"
-              style={{ width: "24px", height: "24px", objectFit: "contain" }}
-            />
-          </NavIcon>
-        </Link>
+          {/* メッセージ（飛行機アイコン・ノータッチ） */}
+          <Link href="/dm">
+            <NavIcon>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/plane_icon.png"
+                alt="メッセージ"
+                style={{ width: "24px", height: "24px", objectFit: "contain" }}
+              />
+            </NavIcon>
+          </Link>
 
-        {/* ハート（お知らせ） */}
-        <Link href="/notifications" className="mb-1">
-          <NavIcon className="relative">
-            <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
-            {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
-          </NavIcon>
-        </Link>
+          {/* ハート（お知らせ） */}
+          <Link href="/notifications">
+            <NavIcon className="relative">
+              <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </NavIcon>
+          </Link>
 
-        {/* 投稿作成 */}
-        <NavBtn onClick={onCreatePost}>
-          <Plus size={24} strokeWidth={1.75} />
-        </NavBtn>
+          {/* 投稿作成 */}
+          <NavBtn onClick={onCreatePost}>
+            <Plus size={24} strokeWidth={1.75} />
+          </NavBtn>
+        </div>
 
         {/* 下部固定エリア */}
         <div
@@ -347,18 +348,20 @@ export function Sidebar({ onCreatePost }: Props) {
           }}
         >
           {/* その他のMeta製アプリ（グリッドアイコン・ノータッチ） */}
-          <NavBtn className="mb-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/meta_apps_icon.png"
-              alt="その他のMeta製アプリ"
-              style={{ width: "24px", height: "24px", objectFit: "contain" }}
-            />
-          </NavBtn>
+          <div style={{ marginBottom: "16px" }}>
+            <NavBtn>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/meta_apps_icon.png"
+                alt="その他のMeta製アプリ"
+                style={{ width: "24px", height: "24px", objectFit: "contain" }}
+              />
+            </NavBtn>
+          </div>
 
           {/* ハンバーガーメニュー */}
           <div className="relative" style={{ marginBottom: "16px" }}>
-            <NavBtn onClick={() => setMoreOpen((v) => !v)} className="mb-0">
+            <NavBtn onClick={() => setMoreOpen((v) => !v)}>
               <Menu size={24} strokeWidth={1.75} />
             </NavBtn>
             {moreOpen && (
@@ -376,10 +379,7 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* プロフィールアバター */}
           {user && (
-            <Link
-              href={`/profile/${user.username}`}
-              style={{ marginBottom: "20px" }}
-            >
+            <Link href={`/profile/${user.username}`} style={{ marginBottom: "20px" }}>
               <div
                 style={{
                   width: "24px",
