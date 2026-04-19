@@ -375,12 +375,7 @@ export function Sidebar({ onCreatePost }: Props) {
           <NavFlyout label="メッセージ">
             <Link href="/dm">
               <NavIcon label="メッセージ">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/plane_icon.png"
-                  alt="メッセージ"
-                  style={{ width: "24px", height: "24px", objectFit: "contain" }}
-                />
+                <PaperPlaneIcon active={isDm} />
               </NavIcon>
             </Link>
           </NavFlyout>
