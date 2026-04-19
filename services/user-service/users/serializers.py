@@ -3,10 +3,15 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from .models import User, Follow
+from .tokens import UserRefreshToken
 
 
 class EmailOrUsernameTokenSerializer(TokenObtainPairSerializer):
     """ユーザー名またはメールアドレスでログインできるカスタムシリアライザー"""
+
+    @classmethod
+    def get_token(cls, user):
+        return UserRefreshToken.for_user(user)
 
     def validate(self, attrs):
         username_or_email = attrs.get(self.username_field, "")
