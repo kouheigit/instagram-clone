@@ -206,7 +206,7 @@ function NavBtn({
   className?: string;
 }) {
   return (
-    <button onClick={onClick} className={`${NAV_ICON_BASE} ${className}`}>
+    <button type="button" onClick={onClick} className={`${NAV_ICON_BASE} ${className}`}>
       {children}
     </button>
   );
