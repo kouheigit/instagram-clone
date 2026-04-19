@@ -24,6 +24,38 @@ function InstagramLogo() {
 }
 
 
+/* ─── 飛行機アイコン ─── */
+function PaperPlaneIcon({ active = false }: { active?: boolean }) {
+  if (active) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/plane_icon.png"
+        alt=""
+        width={24}
+        height={24}
+        style={{ objectFit: "contain" }}
+      />
+    );
+  }
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  );
+}
+
 const RECENT_KEY = "ig_recent_searches";
 
 interface RecentItem {
