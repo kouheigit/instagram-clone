@@ -296,23 +296,29 @@ export function Sidebar({ onCreatePost }: Props) {
         {/* メインナビ（gap-1 = 4px） */}
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           {/* ホーム */}
-          <Link href="/">
-            <NavIcon>
-              <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
-            </NavIcon>
-          </Link>
+          <NavFlyout label="ホーム">
+            <Link href="/">
+              <NavIcon>
+                <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
 
           {/* 検索 */}
-          <NavBtn onClick={handleSearchToggle}>
-            <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
-          </NavBtn>
+          <NavFlyout label="検索">
+            <NavBtn onClick={handleSearchToggle}>
+              <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
+            </NavBtn>
+          </NavFlyout>
 
           {/* 発見 */}
-          <Link href="/explore">
-            <NavIcon>
-              <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
-            </NavIcon>
-          </Link>
+          <NavFlyout label="発見">
+            <Link href="/explore">
+              <NavIcon>
+                <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
 
           {/* リール */}
           <Link href="/reels">
