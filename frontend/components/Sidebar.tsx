@@ -413,7 +413,7 @@ export function Sidebar({ onCreatePost }: Props) {
             <NavFlyout label={user.username}>
               <Link
                 href={`/profile/${user.username}`}
-                className="ig-sidebar-profile block rounded-xl hover:bg-[#f2f2f2] transition-colors"
+                className="ig-sidebar-profile block rounded-xl hover:bg-[#f2f2f2] transition-colors duration-150"
               >
                 <div className="flex items-center gap-4">
                   <div
