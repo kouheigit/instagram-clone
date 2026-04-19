@@ -212,6 +212,18 @@ function NavBtn({
   );
 }
 
+/* ─── ホバーフライアウトラベル ─── */
+function NavFlyout({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="relative group/flyout">
+      {children}
+      <div className="absolute left-[calc(100%+8px)] top-1/2 -translate-y-1/2 px-3 py-1.5 bg-white rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-[#efefef] text-sm font-semibold text-[#262626] whitespace-nowrap pointer-events-none z-[100] opacity-0 -translate-x-1 group-hover/flyout:opacity-100 group-hover/flyout:translate-x-0 transition-all duration-150 ease-out">
+        {label}
+      </div>
+    </div>
+  );
+}
+
 /* ─── アイコンラッパー（Link内用・div） ─── */
 function NavIcon({
   children,
