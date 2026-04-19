@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { notificationsApi, searchApi } from "@/lib/api";
 import { Avatar } from "./Avatar";
-import { LogOut, X } from "lucide-react";
+import { Home, Search, Compass, Play, Heart, Plus, Menu, LogOut, X } from "lucide-react";
 
 interface Props {
   onCreatePost: () => void;
@@ -15,7 +15,7 @@ interface Props {
 /* ─── Instagram カメラロゴ ─── */
 function InstagramLogo() {
   return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2.25" y="2.25" width="19.5" height="19.5" rx="5.25" ry="5.25" />
       <circle cx="12" cy="12" r="4.5" />
       <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none" />
@@ -23,79 +23,6 @@ function InstagramLogo() {
   );
 }
 
-function IconHome({ active }: { active: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9.005 16.545a2.997 2.997 0 015.99 0V22h6V11.543L12 2 3 11.543V22h6.005z" />
-    </svg>
-  );
-}
-
-function IconReels({ active }: { active: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" />
-      <polygon points="9,7.5 9,16.5 17.5,12" />
-    </svg>
-  );
-}
-
-function IconMessages({ active }: { active: boolean }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src="/plane_icon.png" alt="メッセージ" width={24} height={24} style={{ opacity: active ? 1 : 0.85 }} />
-  );
-}
-
-function IconSearch({ active }: { active: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" />
-      <path d="M21 21l-4.35-4.35" />
-    </svg>
-  );
-}
-
-function IconExplore({ active }: { active: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88" />
-    </svg>
-  );
-}
-
-function IconHeart({ active }: { active: boolean }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-    </svg>
-  );
-}
-
-function IconCreate() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
-      <line x1="12" y1="3" x2="12" y2="21" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-    </svg>
-  );
-}
-
-function IconMore() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 6h18M3 12h18M3 18h18" />
-    </svg>
-  );
-}
-
-function IconMetaApps() {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src="/meta_apps_icon.png" alt="その他のMeta製アプリ" width={24} height={24} />
-  );
-}
 
 const RECENT_KEY = "ig_recent_searches";
 
@@ -171,7 +98,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   const showRecent = !query.trim();
 
   return (
-    <div className="fixed top-0 left-[72px] h-full w-[397px] bg-white border-r border-[#dbdbdb] z-[58] flex flex-col">
+    <div className="fixed top-0 left-[73px] h-full w-[397px] bg-white border-r border-[#dbdbdb] z-[58] flex flex-col">
       {/* ヘッダー */}
       <div className="px-6 pt-8 pb-4 flex items-center justify-between">
         <span className="text-[24px] font-bold text-[#262626]">検索</span>
@@ -265,6 +192,43 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+/* ─── アイコンボタン共通ラッパー（button用） ─── */
+function NavBtn({
+  children,
+  onClick,
+  className = "",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-black/5 transition-colors text-[#262626] mb-1 ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ─── アイコンラッパー（Link内用・div） ─── */
+function NavIcon({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-black/5 transition-colors text-[#262626] ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 /* ─── Sidebar 本体 ─── */
 export function Sidebar({ onCreatePost }: Props) {
   const { user, logout } = useAuth();
@@ -290,124 +254,113 @@ export function Sidebar({ onCreatePost }: Props) {
     setMoreOpen(false);
   };
 
-  const lc = "whitespace-nowrap overflow-hidden text-[16px] leading-none opacity-0 max-w-0 group-hover:opacity-100 group-hover:max-w-[180px] transition-all duration-200";
-
-  const itemClass = (active: boolean) =>
-    `flex h-14 items-center gap-4 px-3 rounded-xl text-[16px] hover:bg-[#f3f3f3] transition-colors ${
-      active ? "font-bold" : "font-normal"
-    }`;
-
   return (
     <>
       <nav
-        onMouseLeave={() => setMoreOpen(false)}
-        className={`group fixed top-0 left-0 h-full border-r border-[#dbdbdb] bg-white px-3 py-4 flex flex-col z-[60] transition-[width] duration-200 overflow-hidden ${
-          searchOpen ? "w-[72px]" : "w-[72px] hover:w-[244px]"
-        }`}
+        style={{
+          width: "73px",
+          background: "#FFFFFF",
+          borderRight: "1px solid #DBDBDB",
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "8px",
+          paddingBottom: "20px",
+          boxSizing: "border-box",
+          zIndex: 60,
+        }}
       >
         {/* ロゴ */}
-        <Link href="/" className="px-3 py-3 mb-[88px] flex items-center gap-4">
-          <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-[#262626]">
-            <InstagramLogo />
-          </div>
+        <Link
+          href="/"
+          style={{ marginTop: "16px", marginBottom: "19px", color: "#262626" }}
+        >
+          <InstagramLogo />
         </Link>
 
-        {/* メインナビ */}
-        <div className="flex-1 flex flex-col gap-1">
+        {/* ホーム */}
+        <Link href="/" className="mb-1">
+          <NavIcon>
+            <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
+          </NavIcon>
+        </Link>
 
-          {/* ホーム */}
-          <Link href="/" className={itemClass(pathname === "/" && !searchOpen)}>
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconHome active={pathname === "/" && !searchOpen} />
-            </div>
-            <span className={lc}>ホーム</span>
-          </Link>
+        {/* 検索 */}
+        <NavBtn onClick={handleSearchToggle}>
+          <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
+        </NavBtn>
 
-          {/* リール動画 */}
-          <Link href="/reels" className={itemClass(pathname === "/reels" && !searchOpen)}>
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconReels active={pathname === "/reels" && !searchOpen} />
-            </div>
-            <span className={lc}>リール動画</span>
-          </Link>
+        {/* 発見 */}
+        <Link href="/explore" className="mb-1">
+          <NavIcon>
+            <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
+          </NavIcon>
+        </Link>
 
-          {/* メッセージ */}
-          <Link href="/dm" className={itemClass(pathname === "/dm" && !searchOpen)}>
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconMessages active={pathname === "/dm" && !searchOpen} />
-            </div>
-            <span className={lc}>メッセージ</span>
-          </Link>
+        {/* リール */}
+        <Link href="/reels" className="mb-1">
+          <NavIcon>
+            <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
+          </NavIcon>
+        </Link>
 
-          {/* 検索 */}
-          <button
-            onClick={handleSearchToggle}
-            className={itemClass(searchOpen) + " w-full text-left"}
-          >
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconSearch active={searchOpen} />
-            </div>
-            <span className={lc}>検索</span>
-          </button>
+        {/* メッセージ（飛行機アイコン・ノータッチ） */}
+        <Link href="/dm" className="mb-1">
+          <NavIcon>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/plane_icon.png"
+              alt="メッセージ"
+              style={{ width: "24px", height: "24px", objectFit: "contain" }}
+            />
+          </NavIcon>
+        </Link>
 
-          {/* 発見 */}
-          <Link href="/explore" className={itemClass(pathname === "/explore" && !searchOpen)}>
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconExplore active={pathname === "/explore" && !searchOpen} />
-            </div>
-            <span className={lc}>発見</span>
-          </Link>
+        {/* ハート（お知らせ） */}
+        <Link href="/notifications" className="mb-1">
+          <NavIcon className="relative">
+            <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </NavIcon>
+        </Link>
 
-          {/* お知らせ */}
-          <Link href="/notifications" className={itemClass(pathname === "/notifications" && !searchOpen)}>
-            <div className="relative flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconHeart active={pathname === "/notifications" && !searchOpen} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
-            </div>
-            <span className={lc}>お知らせ</span>
-          </Link>
+        {/* 投稿作成 */}
+        <NavBtn onClick={onCreatePost}>
+          <Plus size={24} strokeWidth={1.75} />
+        </NavBtn>
 
-          {/* 作成 */}
-          <button onClick={onCreatePost} className={itemClass(false) + " w-full text-left"}>
-            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconCreate />
-            </div>
-            <span className={lc}>作成</span>
-          </button>
+        {/* 下部固定エリア */}
+        <div
+          style={{
+            marginTop: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {/* その他のMeta製アプリ（グリッドアイコン・ノータッチ） */}
+          <NavBtn className="mb-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/meta_apps_icon.png"
+              alt="その他のMeta製アプリ"
+              style={{ width: "24px", height: "24px", objectFit: "contain" }}
+            />
+          </NavBtn>
 
-          {/* プロフィール */}
-          {user && (
-            <Link
-              href={`/profile/${user.username}`}
-              className={itemClass(pathname === `/profile/${user.username}` && !searchOpen)}
-            >
-              <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center">
-                <Avatar src={user.profile_img} username={user.username} size={24} />
-              </div>
-              <span className={lc}>プロフィール</span>
-            </Link>
-          )}
-        </div>
-
-        {/* ボトムセクション */}
-        <div className="flex flex-col gap-1 mt-2">
-
-          {/* その他 */}
-          <div className="relative">
-            <button
-              onClick={() => setMoreOpen((v) => !v)}
-              className={itemClass(false) + " w-full text-left"}
-            >
-              <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center">
-                <IconMore />
-              </div>
-              <span className={lc}>その他</span>
-            </button>
-
+          {/* ハンバーガーメニュー */}
+          <div className="relative" style={{ marginBottom: "16px" }}>
+            <NavBtn onClick={() => setMoreOpen((v) => !v)} className="mb-0">
+              <Menu size={24} strokeWidth={1.75} />
+            </NavBtn>
             {moreOpen && (
               <div className="absolute bottom-full left-0 mb-1 w-[220px] bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-[#dbdbdb] overflow-hidden z-50">
                 <button
@@ -421,24 +374,33 @@ export function Sidebar({ onCreatePost }: Props) {
             )}
           </div>
 
-          {/* その他のMeta製アプリ */}
-          <button className={itemClass(false) + " w-full text-left"}>
-            <div className="flex-shrink-0 w-7 h-7 flex items-center justify-center">
-              <IconMetaApps />
-            </div>
-            <span className={`${lc} text-[15px]`}>その他のMeta製ア...</span>
-          </button>
+          {/* プロフィールアバター */}
+          {user && (
+            <Link
+              href={`/profile/${user.username}`}
+              style={{ marginBottom: "20px" }}
+            >
+              <div
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                }}
+              >
+                <Avatar src={user.profile_img} username={user.username} size={24} />
+              </div>
+            </Link>
+          )}
         </div>
       </nav>
 
       {/* 検索パネル */}
       {searchOpen && <SearchPanel onClose={() => setSearchOpen(false)} />}
-
-      {/* 検索パネル外クリックで閉じる */}
       {searchOpen && (
         <div className="fixed inset-0 z-[57]" onClick={() => setSearchOpen(false)} />
       )}
-
       {moreOpen && (
         <div className="fixed inset-0 z-[59]" onClick={() => setMoreOpen(false)} />
       )}
