@@ -264,16 +264,22 @@ function NavFlyout({ children }: { label: string; children: React.ReactNode; dis
 function NavIcon({
   children,
   label,
+  active = false,
   className = "",
 }: {
   children: React.ReactNode;
   label?: string;
+  active?: boolean;
   className?: string;
 }) {
   return (
     <div className={`${NAV_ICON_BASE} ig-sidebar-row ${className}`}>
       {children}
-      {label && <span className="ig-sidebar-label text-[16px]">{label}</span>}
+      {label && (
+        <span className={`ig-sidebar-label text-[16px]${active ? " font-semibold" : ""}`}>
+          {label}
+        </span>
+      )}
     </div>
   );
 }
