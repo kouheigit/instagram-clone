@@ -336,7 +336,7 @@ export function Sidebar({ onCreatePost }: Props) {
           <Link
             href="/"
             style={{ marginTop: "20px", marginBottom: "28px" }}
-            className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-[#f2f2f2] transition-colors"
+            className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-[#f2f2f2] transition-colors duration-150"
           >
             <InstagramLogo />
           </Link>
