@@ -23,17 +23,27 @@ class EmailOrUsernameTokenSerializer(TokenObtainPairSerializer):
         if "@" in username_or_email:
             try:
                 user_obj = User.objects.get(email__iexact=username_or_email)
-                attrs[self.username_field] = user_obj.username
             except User.DoesNotExist:
                 raise AuthenticationFailed("No active account found with the given credentials")
         else:
             try:
                 user_obj = User.objects.get(username__iexact=username_or_email)
-                attrs[self.username_field] = user_obj.username
             except User.DoesNotExist:
                 raise AuthenticationFailed("No active account found with the given credentials")
 
-        return super().validate(attrs)
+        user = authenticate(
+            request=self.context.get("request"),
+            username=user_obj.username,
+            password=password,
+        )
+        if user is None:
+            raise AuthenticationFailed("No active account found with the given credentials")
+
+        refresh = self.get_token(user)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
