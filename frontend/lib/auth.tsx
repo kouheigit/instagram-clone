@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       router.push("/");
       return;
     }
-    const res = await authApi.login(username, password);
+    const res = await authApi.login(username.trim(), password);
     localStorage.setItem("access_token", res.data.access);
     localStorage.setItem("refresh_token", res.data.refresh);
     await fetchMe();
