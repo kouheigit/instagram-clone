@@ -409,7 +409,7 @@ export function Sidebar({ onCreatePost }: Props) {
           }}
         >
           {/* ハンバーガーメニュー */}
-          <div className="relative" style={{ marginBottom: "4px", width: "100%" }}>
+          <div className="relative" style={{ marginBottom: "4px" }}>
             <NavFlyout label="その他">
               <NavBtn onClick={() => setMoreOpen((v) => !v)} label="その他">
                 <Menu size={24} strokeWidth={1.75} />
