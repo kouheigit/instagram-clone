@@ -37,7 +37,7 @@ export function BottomNav({ onCreatePost }: Props) {
       <Link href="/explore">
         <Search size={24} strokeWidth={pathname === "/explore" ? 2.5 : 1.5} />
       </Link>
-      <button onClick={onCreatePost}>
+      <button type="button" onClick={onCreatePost}>
         <PlusSquare size={24} strokeWidth={1.5} />
       </button>
       <Link href="/notifications" className="relative">
