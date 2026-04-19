@@ -62,7 +62,6 @@ body {
   align-items: center;
   padding-left: 0;
   padding-right: 0;
-  border-right: 1px solid #DBDBDB;
   transition: width 180ms ease, padding 180ms ease;
 }
 
@@ -133,4 +132,5 @@ body {
   text-overflow: ellipsis;
   min-width: 0;
   flex: 1;
+  text-align: left;
 }
