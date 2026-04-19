@@ -40,6 +40,7 @@ export default function LoginPage() {
               placeholder="ユーザー名またはメールアドレス"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              autoCapitalize="none"
               required
               className="w-full bg-[#fafafa] border border-[#dbdbdb] rounded px-2 py-2 text-sm focus:outline-none focus:border-[#a8a8a8]"
             />
