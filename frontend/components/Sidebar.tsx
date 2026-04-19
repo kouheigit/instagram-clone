@@ -368,8 +368,9 @@ export function Sidebar({ onCreatePost }: Props) {
             {moreOpen && (
               <div className="absolute bottom-full left-0 mb-1 w-[220px] bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-[#dbdbdb] overflow-hidden z-50">
                 <button
+                  type="button"
                   onClick={logout}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-[#f5f5f5] transition-colors text-left"
+                  className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-[#f5f5f5] transition-colors text-left text-[#262626]"
                 >
                   <LogOut size={18} strokeWidth={1.5} />
                   <span>ログアウト</span>
