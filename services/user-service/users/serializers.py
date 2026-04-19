@@ -14,7 +14,11 @@ class EmailOrUsernameTokenSerializer(TokenObtainPairSerializer):
         return UserRefreshToken.for_user(user)
 
     def validate(self, attrs):
-        username_or_email = attrs.get(self.username_field, "")
+        username_or_email = (attrs.get(self.username_field) or "").strip()
+        password = attrs.get("password") or ""
+
+        if not username_or_email or not password:
+            raise AuthenticationFailed("No active account found with the given credentials")
 
         # メールアドレスで入力された場合はユーザー名に変換
         if "@" in username_or_email:
