@@ -362,7 +362,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* 発見 */}
           <NavFlyout label="発見">
             <Link href="/explore">
-              <NavIcon label="発見">
+              <NavIcon label="発見" active={pathname === "/explore" && !searchOpen}>
                 <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
@@ -371,7 +371,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* リール */}
           <NavFlyout label="リール">
             <Link href="/reels">
-              <NavIcon label="リール">
+              <NavIcon label="リール" active={pathname === "/reels" && !searchOpen}>
                 <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
