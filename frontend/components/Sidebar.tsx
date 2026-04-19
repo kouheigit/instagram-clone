@@ -376,21 +376,25 @@ export function Sidebar({ onCreatePost }: Props) {
         >
           {/* その他のMeta製アプリ（グリッドアイコン・ノータッチ） */}
           <div style={{ marginBottom: "16px" }}>
-            <NavBtn>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/meta_apps_icon.png"
-                alt="その他のMeta製アプリ"
-                style={{ width: "24px", height: "24px", objectFit: "contain" }}
-              />
-            </NavBtn>
+            <NavFlyout label="その他のMeta製アプリ">
+              <NavBtn>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/meta_apps_icon.png"
+                  alt="その他のMeta製アプリ"
+                  style={{ width: "24px", height: "24px", objectFit: "contain" }}
+                />
+              </NavBtn>
+            </NavFlyout>
           </div>
 
           {/* ハンバーガーメニュー */}
           <div className="relative" style={{ marginBottom: "16px" }}>
-            <NavBtn onClick={() => setMoreOpen((v) => !v)}>
-              <Menu size={24} strokeWidth={1.75} />
-            </NavBtn>
+            <NavFlyout label="その他">
+              <NavBtn onClick={() => setMoreOpen((v) => !v)}>
+                <Menu size={24} strokeWidth={1.75} />
+              </NavBtn>
+            </NavFlyout>
             {moreOpen && (
               <div className="absolute bottom-full left-0 mb-1 w-[220px] bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-[#dbdbdb] overflow-hidden z-50">
                 <button
@@ -407,23 +411,25 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* プロフィールアバター */}
           {user && (
-            <Link
-              href={`/profile/${user.username}`}
-              style={{ marginBottom: "20px" }}
-              className="block rounded-full hover:opacity-80 transition-opacity"
-            >
-              <div
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                }}
+            <NavFlyout label={user.username}>
+              <Link
+                href={`/profile/${user.username}`}
+                style={{ marginBottom: "20px" }}
+                className="block rounded-full hover:opacity-80 transition-opacity"
               >
-                <Avatar src={user.profile_img} username={user.username} size={24} />
-              </div>
-            </Link>
+                <div
+                  style={{
+                    width: "24px",
+                    height: "24px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Avatar src={user.profile_img} username={user.username} size={24} />
+                </div>
+              </Link>
+            </NavFlyout>
           )}
         </div>
       </nav>
