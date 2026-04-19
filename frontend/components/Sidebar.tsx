@@ -285,13 +285,15 @@ export function Sidebar({ onCreatePost }: Props) {
         }}
       >
         {/* ロゴ */}
-        <Link
-          href="/"
-          style={{ marginTop: "16px", marginBottom: "19px" }}
-          className="text-[#262626] flex items-center justify-center w-12 h-12 rounded-xl hover:bg-black/5 transition-colors"
-        >
-          <InstagramLogo />
-        </Link>
+        <NavFlyout label="Instagram">
+          <Link
+            href="/"
+            style={{ marginTop: "16px", marginBottom: "19px" }}
+            className="text-[#262626] flex items-center justify-center w-12 h-12 rounded-xl hover:bg-black/5 transition-colors"
+          >
+            <InstagramLogo />
+          </Link>
+        </NavFlyout>
 
         {/* メインナビ（gap-1 = 4px） */}
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -411,10 +413,10 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* プロフィールアバター */}
           {user && (
+            <div style={{ marginBottom: "20px" }}>
             <NavFlyout label={user.username}>
               <Link
                 href={`/profile/${user.username}`}
-                style={{ marginBottom: "20px" }}
                 className="block rounded-full hover:opacity-80 transition-opacity"
               >
                 <div
@@ -430,6 +432,7 @@ export function Sidebar({ onCreatePost }: Props) {
                 </div>
               </Link>
             </NavFlyout>
+            </div>
           )}
         </div>
       </nav>
