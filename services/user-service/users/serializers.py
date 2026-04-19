@@ -20,10 +20,15 @@ class EmailOrUsernameTokenSerializer(TokenObtainPairSerializer):
         if not username_or_email or not password:
             raise AuthenticationFailed("No active account found with the given credentials")
 
-        # メールアドレスで入力された場合はユーザー名に変換
         if "@" in username_or_email:
             try:
                 user_obj = User.objects.get(email__iexact=username_or_email)
+                attrs[self.username_field] = user_obj.username
+            except User.DoesNotExist:
+                raise AuthenticationFailed("No active account found with the given credentials")
+        else:
+            try:
+                user_obj = User.objects.get(username__iexact=username_or_email)
                 attrs[self.username_field] = user_obj.username
             except User.DoesNotExist:
                 raise AuthenticationFailed("No active account found with the given credentials")
