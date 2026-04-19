@@ -346,7 +346,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* ホーム */}
           <NavFlyout label="ホーム">
             <Link href="/">
-              <NavIcon label="ホーム">
+              <NavIcon label="ホーム" active={pathname === "/" && !searchOpen}>
                 <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
