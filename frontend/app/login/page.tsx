@@ -41,6 +41,8 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               required
               className="w-full bg-[#fafafa] border border-[#dbdbdb] rounded px-2 py-2 text-sm focus:outline-none focus:border-[#a8a8a8]"
             />
