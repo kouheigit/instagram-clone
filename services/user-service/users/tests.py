@@ -63,3 +63,13 @@ class AuthLoginTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
+
+    def test_login_with_mixed_case_email_returns_tokens(self):
+        response = self.client.post(
+            "/api/v1/auth/login/",
+            {"username": "ALICE@EXAMPLE.COM", "password": self.password},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
