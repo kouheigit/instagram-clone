@@ -378,7 +378,7 @@ export function Sidebar({ onCreatePost }: Props) {
             </Link>
           </NavFlyout>
 
-          {/* メッセージ（飛行機アイコン・ノータッチ） */}
+          {/* メッセージ（飛行機アイコン：非アクティブ=SVGアウトライン、アクティブ=plane_icon.png） */}
           <NavFlyout label="メッセージ">
             <Link href="/dm">
               <NavIcon label="メッセージ" active={isDm}>
