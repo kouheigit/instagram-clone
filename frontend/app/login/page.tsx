@@ -17,8 +17,9 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(username, password);
-    } catch {
-      setError("ユーザー名またはパスワードが正しくありません");
+    } catch (err: unknown) {
+      const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      setError(detail || "ユーザー名またはパスワードが正しくありません");
     } finally {
       setLoading(false);
     }
