@@ -25,7 +25,7 @@ function InstagramLogo() {
 
 
 /* ─── 飛行機アイコン ─── */
-function PaperPlaneIcon() {
+function PaperPlaneIcon({ active = false }: { active?: boolean }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -33,7 +33,11 @@ function PaperPlaneIcon() {
       alt=""
       width={24}
       height={24}
-      style={{ objectFit: "contain", display: "block" }}
+      style={{
+        objectFit: "contain",
+        display: "block",
+        ...(active ? { mixBlendMode: "multiply" as const } : {}),
+      }}
     />
   );
 }
@@ -363,7 +367,7 @@ export function Sidebar({ onCreatePost }: Props) {
           <NavFlyout label="メッセージ">
             <Link href="/dm">
               <NavIcon label="メッセージ" active={isDm}>
-                <PaperPlaneIcon />
+                <PaperPlaneIcon active={isDm} />
               </NavIcon>
             </Link>
           </NavFlyout>
