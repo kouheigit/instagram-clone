@@ -298,6 +298,8 @@ export function Sidebar({ onCreatePost }: Props) {
     return () => clearInterval(interval);
   }, []);
 
+  const isDm = pathname === "/dm" && !searchOpen;
+
   const handleSearchToggle = () => {
     setSearchOpen((v) => !v);
     setMoreOpen(false);
