@@ -26,24 +26,10 @@ function InstagramLogo() {
 
 /* ─── 飛行機アイコン ─── */
 function PaperPlaneIcon({ active = false }: { active?: boolean }) {
-  if (active) {
-    return (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        style={{ display: "block" }}
-      >
-        <polygon points="22,2 15,22 11,13 2,9" fill="#000000" />
-        <line x1="11" y1="13" x2="22" y2="2" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    );
-  }
+  // eslint-disable-next-line @next/next/no-img-element
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/plane_icon.png"
+      src={active ? "/plane_icon_active.png" : "/plane_icon.png"}
       alt=""
       width={24}
       height={24}
