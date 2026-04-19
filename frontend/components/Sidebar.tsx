@@ -34,7 +34,7 @@ function PaperPlaneIcon({ active = false }: { active?: boolean }) {
         alt=""
         width={24}
         height={24}
-        style={{ objectFit: "contain" }}
+        style={{ objectFit: "contain", display: "block" }}
       />
     );
   }
