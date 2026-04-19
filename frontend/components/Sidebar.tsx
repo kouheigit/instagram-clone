@@ -130,7 +130,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
   const showRecent = !query.trim();
 
   return (
-    <div className="fixed top-0 left-[73px] h-full w-[397px] bg-white border-r border-[#dbdbdb] z-[58] flex flex-col">
+    <div className="fixed top-0 left-[73px] h-full w-[397px] bg-white z-[58] flex flex-col" style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}>
       {/* ヘッダー */}
       <div className="px-6 pt-8 pb-4 flex items-center justify-between">
         <span className="text-[24px] font-bold text-[#262626]">検索</span>
