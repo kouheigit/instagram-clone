@@ -63,6 +63,8 @@ body {
   padding-left: 0;
   padding-right: 0;
   transition: width 180ms ease, padding 180ms ease;
+  border: none;
+  outline: none;
 }
 
 .ig-sidebar:not(.ig-sidebar-compact):hover {
