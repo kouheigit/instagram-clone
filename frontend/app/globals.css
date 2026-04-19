@@ -89,6 +89,7 @@ body {
 
 .ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-nav > div {
   width: 100%;
+  border-radius: 0.75rem;
 }
 
 .ig-sidebar-row {
