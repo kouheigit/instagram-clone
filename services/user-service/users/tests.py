@@ -53,3 +53,13 @@ class AuthLoginTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_login_with_mixed_case_username_returns_tokens(self):
+        response = self.client.post(
+            "/api/v1/auth/login/",
+            {"username": "Alice_Photo", "password": self.password},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
