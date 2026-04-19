@@ -44,3 +44,12 @@ class AuthLoginTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
+
+    def test_login_with_wrong_password_is_rejected(self):
+        response = self.client.post(
+            "/api/v1/auth/login/",
+            {"username": self.user.username, "password": "wrong-pass"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
