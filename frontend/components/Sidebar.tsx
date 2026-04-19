@@ -225,7 +225,7 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
 }
 
 const NAV_ICON_BASE =
-  "w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-[#f2f2f2] transition-colors text-[#262626]";
+  "w-12 h-12 p-3 rounded-xl flex items-center justify-center cursor-pointer hover:bg-[#f2f2f2] transition-colors duration-150 text-[#262626]";
 
 /* ─── アイコンボタン共通ラッパー（button用） ─── */
 function NavBtn({
