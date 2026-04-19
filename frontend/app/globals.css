@@ -82,6 +82,10 @@ body {
   align-items: stretch;
 }
 
+.ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-nav > div {
+  width: 100%;
+}
+
 .ig-sidebar-row {
   width: 48px;
   flex-shrink: 0;
@@ -104,6 +108,7 @@ body {
   gap: 16px;
   padding-left: 12px;
   padding-right: 12px;
+  overflow: hidden;
 }
 
 .ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-logo {
@@ -123,4 +128,9 @@ body {
 .ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-logo-label,
 .ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-label {
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
