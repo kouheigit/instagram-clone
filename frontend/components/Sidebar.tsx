@@ -199,52 +199,31 @@ const NAV_ICON_BASE =
 function NavBtn({
   children,
   onClick,
+  label,
   className = "",
 }: {
   children: React.ReactNode;
   onClick?: () => void;
+  label?: string;
   className?: string;
 }) {
   return (
-    <button type="button" onClick={onClick} className={`${NAV_ICON_BASE} ${className}`}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${NAV_ICON_BASE} ig-sidebar-row ${className}`}
+    >
       {children}
+      {label && <span className="ig-sidebar-label text-[16px]">{label}</span>}
     </button>
   );
 }
 
 /* ─── ホバーフライアウトラベル ─── */
-function NavFlyout({ label, children }: { label: string; children: React.ReactNode }) {
-  const [hovered, setHovered] = useState(false);
+function NavFlyout({ children }: { label: string; children: React.ReactNode; disabled?: boolean }) {
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div>
       {children}
-      <div
-        style={{
-          position: "absolute",
-          left: "calc(100% + 8px)",
-          top: "50%",
-          transform: hovered ? "translateY(-50%) translateX(0)" : "translateY(-50%) translateX(-6px)",
-          opacity: hovered ? 1 : 0,
-          pointerEvents: "none",
-          zIndex: 200,
-          transition: "opacity 150ms ease-out, transform 150ms ease-out",
-          background: "#fff",
-          border: "1px solid #efefef",
-          borderRadius: "12px",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-          padding: "6px 12px",
-          fontSize: "14px",
-          fontWeight: 600,
-          color: "#262626",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {label}
-      </div>
     </div>
   );
 }
@@ -252,14 +231,17 @@ function NavFlyout({ label, children }: { label: string; children: React.ReactNo
 /* ─── アイコンラッパー（Link内用・div） ─── */
 function NavIcon({
   children,
+  label,
   className = "",
 }: {
   children: React.ReactNode;
+  label?: string;
   className?: string;
 }) {
   return (
-    <div className={`${NAV_ICON_BASE} ${className}`}>
+    <div className={`${NAV_ICON_BASE} ig-sidebar-row ${className}`}>
       {children}
+      {label && <span className="ig-sidebar-label text-[16px]">{label}</span>}
     </div>
   );
 }
@@ -292,40 +274,39 @@ export function Sidebar({ onCreatePost }: Props) {
   return (
     <>
       <nav
+        className={searchOpen ? "ig-sidebar ig-sidebar-compact" : "ig-sidebar"}
         style={{
-          width: "73px",
           background: "#FFFFFF",
-          borderRight: "1px solid #DBDBDB",
           height: "100vh",
           position: "fixed",
           left: 0,
           top: 0,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
           paddingTop: "8px",
           paddingBottom: "20px",
           boxSizing: "border-box",
           zIndex: 60,
+          overflow: "hidden",
         }}
       >
         {/* ロゴ */}
         <NavFlyout label="Instagram">
           <Link
             href="/"
-            style={{ marginTop: "16px", marginBottom: "19px" }}
-            className="text-[#262626] flex items-center justify-center w-12 h-12 rounded-xl hover:bg-black/5 transition-colors"
+            style={{ marginTop: "20px", marginBottom: "28px" }}
+            className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-black/5 transition-colors"
           >
             <InstagramLogo />
           </Link>
         </NavFlyout>
 
         {/* メインナビ（gap-1 = 4px） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div className="ig-sidebar-nav" style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
           {/* ホーム */}
           <NavFlyout label="ホーム">
             <Link href="/">
-              <NavIcon>
+              <NavIcon label="ホーム">
                 <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
@@ -333,7 +314,7 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* 検索 */}
           <NavFlyout label="検索">
-            <NavBtn onClick={handleSearchToggle}>
+            <NavBtn onClick={handleSearchToggle} label="検索">
               <Search size={24} strokeWidth={searchOpen ? 2.5 : 1.75} />
             </NavBtn>
           </NavFlyout>
@@ -341,7 +322,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* 発見 */}
           <NavFlyout label="発見">
             <Link href="/explore">
-              <NavIcon>
+              <NavIcon label="発見">
                 <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
@@ -350,7 +331,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* リール */}
           <NavFlyout label="リール">
             <Link href="/reels">
-              <NavIcon>
+              <NavIcon label="リール">
                 <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
@@ -359,7 +340,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* メッセージ（飛行機アイコン・ノータッチ） */}
           <NavFlyout label="メッセージ">
             <Link href="/dm">
-              <NavIcon>
+              <NavIcon label="メッセージ">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/plane_icon.png"
@@ -373,7 +354,7 @@ export function Sidebar({ onCreatePost }: Props) {
           {/* ハート（お知らせ） */}
           <NavFlyout label="お知らせ">
             <Link href="/notifications">
-              <NavIcon className="relative">
+              <NavIcon label="お知らせ" className="relative">
                 <Heart size={24} strokeWidth={pathname === "/notifications" && !searchOpen ? 2.5 : 1.75} />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-[#ed4956] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none pointer-events-none">
@@ -386,39 +367,51 @@ export function Sidebar({ onCreatePost }: Props) {
 
           {/* 投稿作成 */}
           <NavFlyout label="作成">
-            <NavBtn onClick={onCreatePost}>
+            <NavBtn onClick={onCreatePost} label="作成">
               <Plus size={24} strokeWidth={1.75} />
             </NavBtn>
           </NavFlyout>
+
+          {/* プロフィールアバター */}
+          {user && (
+            <NavFlyout label={user.username}>
+              <Link
+                href={`/profile/${user.username}`}
+                className="ig-sidebar-profile block rounded-xl hover:bg-black/5 transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Avatar src={user.profile_img} username={user.username} size={24} />
+                  </div>
+                  <span className="ig-sidebar-label text-[16px] text-[#262626]">{user.username}</span>
+                </div>
+              </Link>
+            </NavFlyout>
+          )}
         </div>
 
         {/* 下部固定エリア */}
         <div
+          className="ig-sidebar-nav"
           style={{
             marginTop: "auto",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            width: "100%",
           }}
         >
-          {/* その他のMeta製アプリ（グリッドアイコン・ノータッチ） */}
-          <div style={{ marginBottom: "16px" }}>
-            <NavFlyout label="その他のMeta製アプリ">
-              <NavBtn>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/meta_apps_icon.png"
-                  alt="その他のMeta製アプリ"
-                  style={{ width: "24px", height: "24px", objectFit: "contain" }}
-                />
-              </NavBtn>
-            </NavFlyout>
-          </div>
-
           {/* ハンバーガーメニュー */}
-          <div className="relative" style={{ marginBottom: "16px" }}>
+          <div className="relative" style={{ marginBottom: "4px", width: "100%" }}>
             <NavFlyout label="その他">
-              <NavBtn onClick={() => setMoreOpen((v) => !v)}>
+              <NavBtn onClick={() => setMoreOpen((v) => !v)} label="その他">
                 <Menu size={24} strokeWidth={1.75} />
               </NavBtn>
             </NavFlyout>
@@ -436,29 +429,19 @@ export function Sidebar({ onCreatePost }: Props) {
             )}
           </div>
 
-          {/* プロフィールアバター */}
-          {user && (
-            <div style={{ marginBottom: "20px" }}>
-            <NavFlyout label={user.username}>
-              <Link
-                href={`/profile/${user.username}`}
-                className="block rounded-full hover:opacity-80 transition-opacity"
-              >
-                <div
-                  style={{
-                    width: "24px",
-                    height: "24px",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Avatar src={user.profile_img} username={user.username} size={24} />
-                </div>
-              </Link>
+          {/* その他のMeta製アプリ（グリッドアイコン・ノータッチ） */}
+          <div style={{ marginBottom: "20px" }}>
+            <NavFlyout label="その他のMeta製アプリ">
+              <NavBtn label="その他のMeta製アプリ">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/meta_apps_icon.png"
+                  alt="その他のMeta製アプリ"
+                  style={{ width: "24px", height: "24px", objectFit: "contain" }}
+                />
+              </NavBtn>
             </NavFlyout>
-            </div>
-          )}
+          </div>
         </div>
       </nav>
 
