@@ -67,11 +67,16 @@ body {
   outline: none;
 }
 
+.ig-sidebar.ig-sidebar-compact {
+  border: none;
+}
+
 .ig-sidebar:not(.ig-sidebar-compact):hover {
   width: 244px;
   align-items: stretch;
   padding-left: 12px;
   padding-right: 12px;
+  border: none;
 }
 
 .ig-sidebar-nav {
