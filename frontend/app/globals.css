@@ -94,6 +94,7 @@ body {
 .ig-sidebar-row {
   width: 48px;
   flex-shrink: 0;
+  transition: background-color 150ms ease;
 }
 
 .ig-sidebar-logo {
