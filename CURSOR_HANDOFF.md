@@ -43,8 +43,9 @@
 
 ### フロントエンド（実装済みページ）
 ディレクトリ: `/Users/user/Desktop/pgfile/instagram/frontend/`
-起動コマンド: `npm run dev -- --port 3001`
+起動コマンド: `npm run dev`
 アクセス: `http://localhost:3001`
+補足: `localhost:3000` は Grafana が使用
 APIベース: `http://localhost:8888/api/v1`（nginx経由）
 
 | ページ | パス | 状態 |
@@ -108,7 +109,7 @@ docker compose up -d
 
 # フロントエンド
 cd frontend
-npm run dev -- --port 3001
+npm run dev
 ```
 
 - フロントエンド: http://localhost:3001
