@@ -407,6 +407,24 @@ services:
       - instagram_net
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: instagram_frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8888
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana:10.4.2
     container_name: instagram_grafana
