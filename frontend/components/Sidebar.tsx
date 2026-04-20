@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { notificationsApi, searchApi } from "@/lib/api";
 import { Avatar } from "./Avatar";
-import { Home, Search, Compass, Play, Heart, Plus, Menu, LogOut, X } from "lucide-react";
+import { Home, Search, Compass, Heart, Plus, Menu, LogOut, X } from "lucide-react";
 
 interface Props {
   onCreatePost: () => void;
@@ -34,6 +34,19 @@ function PaperPlaneIcon({ active = false }: { active?: boolean }) {
       width={24}
       height={24}
       style={{ objectFit: "contain", display: "block" }}
+    />
+  );
+}
+
+function ReelsIcon({ active = false }: { active?: boolean }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return (
+    <img
+      src={active ? "/reels_icon_active.png" : "/reels_icon.png"}
+      alt=""
+      width={24}
+      height={24}
+      style={{ objectFit: "contain", display: "block", mixBlendMode: active ? "multiply" : "normal" }}
     />
   );
 }
@@ -334,6 +347,15 @@ export function Sidebar({ onCreatePost }: Props) {
             </Link>
           </NavFlyout>
 
+          {/* リール */}
+          <NavFlyout label="リール">
+            <Link href="/reels">
+              <NavIcon label="リール" active={pathname === "/reels" && !searchOpen}>
+                <ReelsIcon active={pathname === "/reels" && !searchOpen} />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
+
           {/* 検索 */}
           <NavFlyout label="検索">
             <NavBtn onClick={handleSearchToggle} label="検索">
@@ -346,15 +368,6 @@ export function Sidebar({ onCreatePost }: Props) {
             <Link href="/explore">
               <NavIcon label="発見" active={pathname === "/explore" && !searchOpen}>
                 <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
-              </NavIcon>
-            </Link>
-          </NavFlyout>
-
-          {/* リール */}
-          <NavFlyout label="リール">
-            <Link href="/reels">
-              <NavIcon label="リール" active={pathname === "/reels" && !searchOpen}>
-                <Play size={24} strokeWidth={pathname === "/reels" && !searchOpen ? 2.5 : 1.75} />
               </NavIcon>
             </Link>
           </NavFlyout>
