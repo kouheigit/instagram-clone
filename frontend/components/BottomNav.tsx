@@ -12,6 +12,19 @@ interface Props {
   onCreatePost: () => void;
 }
 
+function ReelsIcon({ active = false }: { active?: boolean }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return (
+    <img
+      src={active ? "/reels_icon_active.png" : "/reels_icon.png"}
+      alt=""
+      width={24}
+      height={24}
+      style={{ objectFit: "contain", display: "block", mixBlendMode: active ? "multiply" : "normal" }}
+    />
+  );
+}
+
 export function BottomNav({ onCreatePost }: Props) {
   const { user } = useAuth();
   const pathname = usePathname();
@@ -33,6 +46,9 @@ export function BottomNav({ onCreatePost }: Props) {
     <nav className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t border-[#dbdbdb] flex items-center justify-around px-4 z-[60] lg:hidden">
       <Link href="/" className={pathname === "/" ? "text-black" : "text-[#262626]"}>
         <Home size={24} strokeWidth={pathname === "/" ? 2.5 : 1.5} />
+      </Link>
+      <Link href="/reels">
+        <ReelsIcon active={pathname === "/reels"} />
       </Link>
       <Link href="/explore">
         <Search size={24} strokeWidth={pathname === "/explore" ? 2.5 : 1.5} />
