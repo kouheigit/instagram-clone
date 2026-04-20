@@ -1,4 +1,4 @@
-.PHONY: up down build logs migrate shell ps
+.PHONY: up down build logs migrate shell ps frontend-dev
 
 ## Docker起動
 up:
@@ -23,6 +23,10 @@ down-v:
 ## ログ確認
 logs:
 	docker compose logs -f
+
+## フロントエンド起動
+frontend-dev:
+	cd frontend && npm run dev
 
 ## 各サービスのマイグレーション実行
 migrate:
