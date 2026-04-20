@@ -1,0 +1,26 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D6E71"/>
+      <stop offset="0.36" stop-color="#34373D"/>
+      <stop offset="0.64" stop-color="#2B2E34"/>
+      <stop offset="1" stop-color="#6A6B6E"/>
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 31) rotate(90) scale(26 20)">
+      <stop stop-color="#19283A" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#19283A" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="8" y="6" width="48" height="52" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)"/>
+  <path d="M18 0H21V64H18V0ZM23 0H24.5V64H23V0ZM40 0H41.5V64H40V0ZM44 0H47V64H44V0Z" fill="#808185" fill-opacity="0.12"/>
+  <ellipse cx="32" cy="31" rx="18" ry="20" fill="url(#centerGlow)"/>
+  <g filter="url(#blur)">
+    <rect x="17" y="13" width="30" height="38" rx="10" stroke="#0D1320" stroke-width="2.25"/>
+    <path d="M27.5 24.8514C27.5 22.4763 30.0285 20.965 32.0966 22.108L40.8333 26.9356C42.9722 28.1175 42.9722 31.1918 40.8333 32.3737L32.0966 37.2013C30.0285 38.3443 27.5 36.833 27.5 34.4579V24.8514Z" stroke="#0D1320" stroke-width="2.25"/>
+  </g>
+  <rect x="17" y="13" width="30" height="38" rx="10" stroke="#09111C" stroke-width="2.25"/>
+  <path d="M27.5 24.8514C27.5 22.4763 30.0285 20.965 32.0966 22.108L40.8333 26.9356C42.9722 28.1175 42.9722 31.1918 40.8333 32.3737L32.0966 37.2013C30.0285 38.3443 27.5 36.833 27.5 34.4579V24.8514Z" stroke="#09111C" stroke-width="2.25"/>
+</svg>
