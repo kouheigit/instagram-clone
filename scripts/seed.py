@@ -86,9 +86,9 @@ def create_post(token, post_num, author_num):
     img_id = random.randint(1, 500)
     payload = {
         "caption": caption,
-        "media_files": [{"media_url": f"https://picsum.photos/1080/1080?random={img_id}", "media_order": 1}],
+        "media_files": [{"media_url": f"{PICSUM_BASE_URL}/{img_id}/1080/1080", "media_order": 1}],
         "media_type": "photo",
-        "location": random.choice(["Tokyo", "Osaka", "Kyoto", "Fukuoka", ""]),
+        "location": random.choice(LOCATIONS),
     }
     headers = {"Authorization": f"Bearer {token}"}
     try:
