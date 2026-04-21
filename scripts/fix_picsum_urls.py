@@ -13,3 +13,9 @@
   - PostgreSQL が localhost:5432 で起動中であること
   - psycopg2 がインストール済みであること: pip install psycopg2-binary
 """
+import re
+import sys
+
+DB_DSN = "postgresql://instagram:instagram_pass@localhost:5432/instagram_db"
+OLD_PATTERN = re.compile(r"https://picsum\.photos/1080/1080\?random=(\d+)")
+NEW_TPL = "https://picsum.photos/id/{}/1080/1080"
