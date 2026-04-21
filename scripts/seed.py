@@ -13,16 +13,16 @@ PICSUM_BASE_URL = "https://picsum.photos/id"
 LOCATIONS = ["Tokyo", "Osaka", "Kyoto", "Fukuoka", ""]
 
 USERS = [
-    {"username": "alice_photo",   "email": "alice@example.com",   "password": "Pass1234!", "bio": "写真が好き📸"},
-    {"username": "bob_traveler",  "email": "bob@example.com",     "password": "Pass1234!", "bio": "旅好きのフォトグラファー"},
-    {"username": "carol_art",     "email": "carol@example.com",   "password": "Pass1234!", "bio": "アート＆デザイン"},
-    {"username": "dave_street",   "email": "dave@example.com",    "password": "Pass1234!", "bio": "ストリートフォト"},
-    {"username": "eva_nature",    "email": "eva@example.com",     "password": "Pass1234!", "bio": "自然写真家🌿"},
-    {"username": "frank_food",    "email": "frank@example.com",   "password": "Pass1234!", "bio": "料理と旅"},
-    {"username": "grace_fashion", "email": "grace@example.com",   "password": "Pass1234!", "bio": "ファッション&ライフスタイル"},
-    {"username": "hiro_sports",   "email": "hiro@example.com",    "password": "Pass1234!", "bio": "スポーツ写真"},
-    {"username": "iris_pets",     "email": "iris@example.com",    "password": "Pass1234!", "bio": "動物写真🐾"},
-    {"username": "jack_arch",     "email": "jack@example.com",    "password": "Pass1234!", "bio": "建築フォトグラファー"},
+    {"username": "alice_photo",   "email": "alice@example.com",   "password": "Pass1234!", "bio": "写真が好き📸",                "profile_img": f"{PICSUM_BASE_URL}/200/150/150"},
+    {"username": "bob_traveler",  "email": "bob@example.com",     "password": "Pass1234!", "bio": "旅好きのフォトグラファー",     "profile_img": f"{PICSUM_BASE_URL}/201/150/150"},
+    {"username": "carol_art",     "email": "carol@example.com",   "password": "Pass1234!", "bio": "アート＆デザイン",            "profile_img": f"{PICSUM_BASE_URL}/202/150/150"},
+    {"username": "dave_street",   "email": "dave@example.com",    "password": "Pass1234!", "bio": "ストリートフォト",             "profile_img": f"{PICSUM_BASE_URL}/203/150/150"},
+    {"username": "eva_nature",    "email": "eva@example.com",     "password": "Pass1234!", "bio": "自然写真家🌿",                "profile_img": f"{PICSUM_BASE_URL}/204/150/150"},
+    {"username": "frank_food",    "email": "frank@example.com",   "password": "Pass1234!", "bio": "料理と旅",                   "profile_img": f"{PICSUM_BASE_URL}/205/150/150"},
+    {"username": "grace_fashion", "email": "grace@example.com",   "password": "Pass1234!", "bio": "ファッション&ライフスタイル", "profile_img": f"{PICSUM_BASE_URL}/206/150/150"},
+    {"username": "hiro_sports",   "email": "hiro@example.com",    "password": "Pass1234!", "bio": "スポーツ写真",                "profile_img": f"{PICSUM_BASE_URL}/207/150/150"},
+    {"username": "iris_pets",     "email": "iris@example.com",    "password": "Pass1234!", "bio": "動物写真🐾",                 "profile_img": f"{PICSUM_BASE_URL}/208/150/150"},
+    {"username": "jack_arch",     "email": "jack@example.com",    "password": "Pass1234!", "bio": "建築フォトグラファー",         "profile_img": f"{PICSUM_BASE_URL}/209/150/150"},
 ]
 
 CAPTIONS = [
