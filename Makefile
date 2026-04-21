@@ -1,4 +1,4 @@
-.PHONY: up down build logs migrate shell ps frontend-dev
+.PHONY: up down build logs migrate shell ps frontend-dev seed fix-images
 
 ## Docker起動
 up:
