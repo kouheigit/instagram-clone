@@ -314,7 +314,7 @@ export function Sidebar({ onCreatePost }: Props) {
           top: 0,
           display: "flex",
           flexDirection: "column",
-          gap: "16px",
+          gap: "24px",
           paddingTop: "12px",
           paddingBottom: "20px",
           boxSizing: "border-box",
