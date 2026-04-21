@@ -2,7 +2,7 @@
 """
 シードデータ投入スクリプト
 指示書 2.1 に基づく: ユーザー10人・投稿100件・フォロー関係
-画像URL: https://picsum.photos/1080/1080?random={id}
+画像URL: https://picsum.photos/id/{id}/1080/1080 (安定したID形式 - 起動ごとに変化しない)
 """
 import requests
 import random
