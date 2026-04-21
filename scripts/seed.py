@@ -9,6 +9,7 @@ import random
 import json
 
 BASE_URL = "http://localhost:8888/api/v1"
+PICSUM_BASE_URL = "https://picsum.photos/id"
 
 USERS = [
     {"username": "alice_photo",   "email": "alice@example.com",   "password": "Pass1234!", "bio": "写真が好き📸"},
