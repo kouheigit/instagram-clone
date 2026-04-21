@@ -95,6 +95,7 @@ export interface Notification {
 export interface UserIndex {
   user_id: string;
   username: string;
+  name: string;
   bio: string;
   profile_img: string;
   is_verified: boolean;
