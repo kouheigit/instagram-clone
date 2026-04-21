@@ -5,7 +5,8 @@ PostgreSQL pg_trgm による部分一致検索
 """
 import logging
 from django.contrib.postgres.search import TrigramSimilarity
-from django.db.models import Q
+from django.db.models import Case, IntegerField, Q, Value, When
+from django.db.models.functions import Coalesce, Greatest
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -23,6 +24,60 @@ def get_user_id(request):
     if user and hasattr(user, "user_id") and user.user_id:
         return str(user.user_id)
     return ""
+
+
+def build_user_search_queryset(query, limit=20):
+    user_filter = (
+        Q(username__icontains=query) |
+        Q(name__icontains=query) |
+        Q(email__icontains=query)
+    )
+
+    return (
+        UserIndex.objects
+        .annotate(
+            username_similarity=TrigramSimilarity("username", query),
+            name_similarity=TrigramSimilarity("name", query),
+            email_similarity=TrigramSimilarity("email", query),
+        )
+        .annotate(
+            similarity=Greatest(
+                Coalesce("username_similarity", Value(0.0)),
+                Coalesce("name_similarity", Value(0.0)),
+                Coalesce("email_similarity", Value(0.0)),
+            ),
+            exact_match=Case(
+                When(Q(username__iexact=query) | Q(name__iexact=query) | Q(email__iexact=query), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            prefix_match=Case(
+                When(
+                    Q(username__istartswith=query) |
+                    Q(name__istartswith=query) |
+                    Q(email__istartswith=query),
+                    then=Value(1),
+                ),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            contains_match=Case(
+                When(user_filter, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+        )
+        .filter(user_filter | Q(similarity__gte=0.1))
+        .order_by(
+            "-exact_match",
+            "-prefix_match",
+            "-contains_match",
+            "-similarity",
+            "-is_verified",
+            "-follower_count",
+            "username",
+        )[:limit]
+    )
 
 
 @api_view(["GET"])
@@ -51,12 +106,7 @@ def search(request):
     result = {}
 
     if search_type in ("all", "user"):
-        users = (
-            UserIndex.objects
-            .annotate(similarity=TrigramSimilarity("username", query))
-            .filter(Q(username__icontains=query) | Q(similarity__gte=0.1))
-            .order_by("-is_verified", "-follower_count", "-similarity")[:20]
-        )
+        users = build_user_search_queryset(query, limit=20)
         result["users"] = UserIndexSerializer(users, many=True).data
 
     if search_type in ("all", "hashtag"):
@@ -79,12 +129,7 @@ def search_users(request):
     if not query:
         return Response({"detail": "q パラメータは必須です"}, status=status.HTTP_400_BAD_REQUEST)
 
-    users = (
-        UserIndex.objects
-        .annotate(similarity=TrigramSimilarity("username", query))
-        .filter(Q(username__icontains=query) | Q(similarity__gte=0.1))
-        .order_by("-is_verified", "-follower_count", "-similarity")[:30]
-    )
+    users = build_user_search_queryset(query, limit=30)
     return Response(UserIndexSerializer(users, many=True).data)
 
 
@@ -142,6 +187,8 @@ def upsert_user_index(request):
 
     defaults = {
         "username":      request.data.get("username", ""),
+        "name":          request.data.get("name", "") or request.data.get("username", ""),
+        "email":         request.data.get("email", ""),
         "bio":           request.data.get("bio", ""),
         "profile_img":   request.data.get("profile_img", ""),
         "is_private":    request.data.get("is_private", False),

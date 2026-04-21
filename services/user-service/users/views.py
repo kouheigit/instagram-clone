@@ -44,6 +44,8 @@ def _sync_to_search(user):
         payload = {
             "user_id": str(user.user_id),
             "username": user.username,
+            "name": user.username,
+            "email": user.email,
             "bio": user.bio or "",
             "profile_img": user.profile_img or "",
             "is_private": user.is_private,
@@ -92,6 +94,10 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
+    def perform_update(self, serializer):
+        user = serializer.save()
+        _sync_to_search(user)
+
 
 class MeView(generics.RetrieveUpdateAPIView):
     """現在のユーザー情報取得・更新"""
@@ -100,6 +106,10 @@ class MeView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+    def perform_update(self, serializer):
+        user = serializer.save()
+        _sync_to_search(user)
 
 
 @api_view(["POST"])
@@ -123,6 +133,7 @@ def follow_user(request, username):
 
     # 通知送信 (アクティブフォローのみ)
     if follow.status == Follow.STATUS_ACTIVE:
+        _sync_to_search(followee)
         _send_notification({
             "user_id": str(followee.user_id),
             "actor_id": str(follower.user_id),
@@ -148,6 +159,7 @@ def unfollow_user(request, username):
     deleted, _ = Follow.objects.filter(follower=request.user, followee=followee).delete()
     if deleted == 0:
         return Response({"detail": "フォローしていません"}, status=status.HTTP_404_NOT_FOUND)
+    _sync_to_search(followee)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -274,6 +286,7 @@ def approve_follow_request(request, username):
     follow = get_object_or_404(Follow, follower=requester, followee=request.user, status="pending")
     follow.status = Follow.STATUS_ACTIVE
     follow.save(update_fields=["status"])
+    _sync_to_search(request.user)
 
     _send_notification({
         "user_id": str(requester.user_id),
