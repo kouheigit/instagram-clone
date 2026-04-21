@@ -39,15 +39,11 @@ function PaperPlaneIcon({ active = false }: { active?: boolean }) {
 }
 
 function ReelsIcon({ active = false }: { active?: boolean }) {
-  // eslint-disable-next-line @next/next/no-img-element
   return (
-    <img
-      src={active ? "/reels_icon_active.png" : "/reels_icon.png"}
-      alt=""
-      width={24}
-      height={24}
-      style={{ objectFit: "contain", display: "block", mixBlendMode: active ? "multiply" : "normal" }}
-    />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="4" ry="4" />
+      <polygon points="10,8 16,12 10,16" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 2 : 1.75} strokeLinejoin="round" />
+    </svg>
   );
 }
 
