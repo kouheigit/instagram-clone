@@ -71,6 +71,16 @@ def register_user(user_data):
     return None
 
 
+def set_profile_image(token, profile_img):
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        resp = requests.patch(f"{BASE_URL}/users/me/", json={"profile_img": profile_img}, headers=headers, timeout=10)
+        return resp.status_code in (200, 201)
+    except Exception as e:
+        print(f"  ✗ プロフィール画像更新エラー: {e}")
+    return False
+
+
 def create_post(token, post_num, author_num):
     caption = random.choice(CAPTIONS)
     img_id = random.randint(1, 500)
