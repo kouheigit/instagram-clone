@@ -325,7 +325,7 @@ export function Sidebar({ onCreatePost }: Props) {
         <NavFlyout label="Instagram">
           <Link
             href="/"
-            style={{ marginTop: "20px", marginBottom: "28px" }}
+            style={{ marginTop: "20px", marginBottom: "52px" }}
             className="ig-sidebar-logo text-[#262626] flex items-center rounded-xl hover:bg-[#f2f2f2] transition-colors duration-150"
           >
             <InstagramLogo />
