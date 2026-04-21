@@ -83,7 +83,7 @@ def set_profile_image(token, profile_img):
 
 def create_post(token, post_num, author_num):
     caption = random.choice(CAPTIONS)
-    img_id = random.randint(1, 500)
+    img_id = (author_num * 10 + post_num) % 100 + 1
     payload = {
         "caption": caption,
         "media_files": [{"media_url": f"{PICSUM_BASE_URL}/{img_id}/1080/1080", "media_order": 1}],
