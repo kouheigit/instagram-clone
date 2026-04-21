@@ -52,3 +52,18 @@ def fix_urls(dry_run: bool = False):
                     print(f"  → {NEW_TPL.format(m.group(1))}")
             print("\n（--dry-run モード: 変更は適用されません）")
             return
+
+        updated = 0
+        with conn.cursor() as cur:
+            for media_id, url in rows:
+                m = OLD_PATTERN.match(url)
+                if m:
+                    new_url = NEW_TPL.format(m.group(1))
+                    cur.execute(
+                        "UPDATE post_media SET media_url = %s WHERE media_id = %s",
+                        (new_url, media_id),
+                    )
+                    updated += 1
+            conn.commit()
+
+        print(f"更新完了: {updated}件")
