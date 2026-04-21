@@ -1,18 +1,72 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Grid3x3, Bookmark, X, Settings } from "lucide-react";
+import {
+  BadgeCheck,
+  Bookmark,
+  CirclePlus,
+  Clapperboard,
+  Grid3x3,
+  Lock,
+  MoreHorizontal,
+  Settings,
+  Tag,
+  X,
+} from "lucide-react";
 import { usersApi, postsApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/Avatar";
 import { PostDetailModal } from "@/components/PostDetailModal";
 import type { User, Post } from "@/lib/types";
 
-type Tab = "posts" | "saved";
+type Tab = "posts" | "saved" | "tagged";
 type ListModal = "followers" | "following" | null;
 type SelectedPost = string | null;
+
+function formatCount(value: number) {
+  return new Intl.NumberFormat("ja-JP").format(value);
+}
+
+function ProfileAvatar({ user }: { user: User }) {
+  return (
+    <div className="relative flex-shrink-0">
+      <div className="absolute left-[18px] top-[-16px] hidden rounded-[18px] bg-white px-[16px] py-[10px] text-[14px] font-normal leading-none text-[#737373] shadow-[0_6px_18px_rgba(0,0,0,0.14)] md:block">
+        ノート...
+        <div className="absolute bottom-[-5px] left-[26px] h-[10px] w-[10px] rotate-45 rounded-[2px] bg-white" />
+      </div>
+      <div className="h-[77px] w-[77px] rounded-full border border-[#dbdbdb] p-[2px] md:h-[150px] md:w-[150px]">
+        {user.profile_img ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={user.profile_img}
+            alt={user.username}
+            className="h-full w-full rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-[32px] font-semibold text-white md:text-[56px]">
+            {user.username.charAt(0).toUpperCase()}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function EmptyCircleIcon({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mx-auto mb-4 flex h-[62px] w-[62px] items-center justify-center rounded-full border-2 border-[#262626] ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
@@ -111,44 +165,127 @@ export default function ProfilePage() {
   if (!user) return <p className="text-center mt-20">ユーザーが見つかりません</p>;
 
   const isMe = me?.username === user.username;
-  const displayPosts = tab === "posts" ? posts : savedPosts;
+  const displayPosts = tab === "posts" ? posts : tab === "saved" ? savedPosts : [];
+  const showSavedTab = isMe;
+  const showPrivateNotice = user.is_private && !isMe && !following && posts.length === 0;
 
   return (
-    <div className="max-w-[935px] mx-auto px-4 pt-8">
-      {/* プロフィールヘッダー */}
-      <div className="flex gap-8 mb-10">
-        <div className="flex-shrink-0">
-          <div className="w-20 h-20 lg:w-36 lg:h-36 rounded-full p-[3px] bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]">
-            <div className="w-full h-full rounded-full p-[3px] bg-white">
-              {user.profile_img ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.profile_img}
-                  alt={user.username}
-                  className="w-full h-full rounded-full object-cover"
-                />
+    <div className="mx-auto max-w-[975px] px-0 pt-2 md:px-5 md:pt-[30px]">
+      <section className="border-b border-[#dbdbdb] px-4 pb-5 md:border-b-0 md:px-0 md:pb-[44px]">
+        <div className="grid grid-cols-[auto_1fr] gap-x-7 gap-y-4 md:grid-cols-[291px_minmax(0,1fr)] md:gap-x-[30px] md:gap-y-0">
+          <div className="flex justify-center md:justify-start md:pl-[28px] md:pt-[6px]">
+            <ProfileAvatar user={user} />
+          </div>
+
+          <div className="min-w-0 md:pt-0">
+            <div className="hidden items-center gap-5 md:flex">
+              <div className="flex items-center gap-3">
+                <h1 className="text-[20px] font-normal leading-[24px] text-[#262626]">
+                  {user.username}
+                </h1>
+                {user.is_verified && (
+                  <BadgeCheck size={17} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
+                )}
+                {user.is_private && (
+                  <Lock size={15} className="text-[#8e8e8e]" strokeWidth={2.2} />
+                )}
+              </div>
+              {isMe ? (
+                <Link href="/profile/edit" className="flex h-8 w-8 items-center justify-center text-[#262626]">
+                  <Settings size={24} strokeWidth={1.9} />
+                </Link>
               ) : (
-                <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white font-bold text-4xl">
-                  {user.username.charAt(0).toUpperCase()}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleFollow}
+                    className={`rounded-lg px-4 py-[7px] text-[14px] font-semibold leading-[18px] transition-colors ${
+                      following
+                        ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                        : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                    }`}
+                  >
+                    {following ? "フォロー中" : "フォローする"}
+                  </button>
+                  <Link
+                    href="/dm"
+                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  >
+                    メッセージ
+                  </Link>
+                  <button className="rounded-lg bg-[#efefef] p-2 text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+                    <MoreHorizontal size={18} strokeWidth={2.4} />
+                  </button>
                 </div>
+              )}
+            </div>
+
+            <div className="mb-0 hidden items-center gap-10 pt-5 text-[16px] leading-[18px] md:flex">
+              <span>投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件</span>
+              <button className="hover:opacity-70" onClick={() => openListModal("followers")}>
+                フォロワー <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
+              </button>
+              <button className="hover:opacity-70" onClick={() => openListModal("following")}>
+                フォロー中 <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
+              </button>
+            </div>
+
+            <div className="mt-1 grid grid-cols-3 text-center md:hidden">
+              <div>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(posts.length)}</div>
+                <div className="text-[14px] leading-5 text-[#8e8e8e]">投稿</div>
+              </div>
+              <button onClick={() => openListModal("followers")}>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(user.follower_count)}</div>
+                <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロワー</div>
+              </button>
+              <button onClick={() => openListModal("following")}>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(user.following_count)}</div>
+                <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロー中</div>
+              </button>
+            </div>
+
+            <div className="mt-2 md:mt-5">
+              <p className="hidden text-[14px] font-semibold leading-[18px] text-[#262626] md:block">
+                {user.username}
+              </p>
+              <div className="mt-4 flex items-center gap-2 md:hidden">
+                <h1 className="text-[14px] font-semibold leading-5 text-[#262626]">
+                  {user.username}
+                </h1>
+                {user.is_verified && (
+                  <BadgeCheck size={16} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
+                )}
+                {user.is_private && (
+                  <Lock size={13} className="text-[#8e8e8e]" strokeWidth={2.2} />
+                )}
+              </div>
+              {user.bio && (
+                <p className="mt-[6px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
+                  {user.bio}
+                </p>
               )}
             </div>
           </div>
         </div>
 
-        <div className="flex-1">
-          {/* ユーザー名行 */}
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <h1 className="text-xl font-light">{user.username}</h1>
-            {isMe && (
-              <Link href="/profile/edit" className="text-[#262626]">
-                <Settings size={18} strokeWidth={1.5} />
+        <div className="mt-5 hidden grid-cols-2 gap-2 md:ml-[321px] md:grid md:max-w-[451px]">
+          {isMe ? (
+            <>
+              <Link
+                href="/profile/edit"
+                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-center text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
+                プロフィールを編集
               </Link>
-            )}
-            {!isMe && (
+              <button className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+                アーカイブを表示
+              </button>
+            </>
+          ) : (
+            <>
               <button
                 onClick={handleFollow}
-                className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${
+                className={`flex h-8 min-w-0 items-center justify-center rounded-lg px-4 text-[14px] font-semibold leading-[18px] transition-colors ${
                   following
                     ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
                     : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
@@ -156,70 +293,119 @@ export default function ProfilePage() {
               >
                 {following ? "フォロー中" : "フォローする"}
               </button>
-            )}
+              <Link
+                href="/dm"
+                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-center text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
+                メッセージ
+              </Link>
+            </>
+          )}
+        </div>
+
+        {isMe && (
+          <div className="mt-[44px] hidden md:flex md:pl-[30px]">
+            <div className="flex flex-col items-center">
+              <div className="relative flex h-[77px] w-[77px] items-center justify-center rounded-full border border-[#dbdbdb]">
+                <div className="absolute inset-[5px] rounded-full border border-[#dbdbdb]" />
+                <CirclePlus size={38} strokeWidth={1.2} className="text-[#c7c7c7]" />
+              </div>
+              <span className="mt-[14px] text-[12px] font-semibold text-[#262626]">新規</span>
+            </div>
           </div>
+        )}
 
-          {/* 統計 */}
-          <div className="flex gap-8 mb-4 text-sm">
-            <span><strong>{posts.length}</strong> 投稿</span>
-            <button className="hover:opacity-70" onClick={() => openListModal("followers")}>
-              <strong>{user.follower_count}</strong> フォロワー
-            </button>
-            <button className="hover:opacity-70" onClick={() => openListModal("following")}>
-              <strong>{user.following_count}</strong> フォロー中
-            </button>
-          </div>
-
-          {/* 自己紹介 */}
-          {user.bio && <p className="text-sm whitespace-pre-wrap mb-4">{user.bio}</p>}
-
-          {/* アクションボタン（自分のプロフィールのみ） */}
-          {isMe && (
-            <div className="flex gap-2">
+        <div className="mt-6 flex gap-2 md:hidden">
+          {isMe ? (
+            <>
               <Link
                 href="/profile/edit"
-                className="flex-1 text-center bg-[#efefef] hover:bg-[#dbdbdb] rounded-lg py-1.5 text-sm font-semibold transition-colors"
+                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
               >
                 プロフィールを編集
               </Link>
-              <button className="flex-1 bg-[#efefef] hover:bg-[#dbdbdb] rounded-lg py-1.5 text-sm font-semibold transition-colors">
+              <button className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]">
                 アーカイブを表示
               </button>
-            </div>
+              <Link
+                href="/profile/edit"
+                className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
+                <Settings size={18} strokeWidth={1.9} />
+              </Link>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={handleFollow}
+                className={`flex-1 rounded-lg py-[7px] text-[14px] font-semibold transition-colors ${
+                  following
+                    ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                    : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                }`}
+              >
+                {following ? "フォロー中" : "フォローする"}
+              </button>
+              <Link
+                href="/dm"
+                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
+                メッセージ
+              </Link>
+              <button className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+                <MoreHorizontal size={18} strokeWidth={2.4} />
+              </button>
+            </>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* タブ */}
-      <div className="border-t border-[#dbdbdb]">
-        <div className="flex justify-center gap-12">
+      <section className="border-t border-[#dbdbdb]">
+        <div className="flex justify-center gap-0 md:gap-[62px]">
           <button
             onClick={() => setTab("posts")}
-            className={`flex items-center gap-2 py-4 text-xs uppercase tracking-wider font-semibold border-t-2 -mt-px transition-colors ${
+            className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
               tab === "posts" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
             }`}
           >
-            <Grid3x3 size={12} /> 投稿
+            <Grid3x3 size={12} />
+            <span className="hidden md:inline text-[12px]">投稿</span>
           </button>
-          {isMe && (
+          <button
+            type="button"
+            className="hidden items-center justify-center gap-2 border-t border-transparent py-[18px] text-[#8e8e8e] md:flex"
+          >
+            <Clapperboard size={12} />
+            <span className="text-[12px] uppercase tracking-[0.12em] font-semibold">リール</span>
+          </button>
+          {showSavedTab && (
             <button
               onClick={() => setTab("saved")}
-              className={`flex items-center gap-2 py-4 text-xs uppercase tracking-wider font-semibold border-t-2 -mt-px transition-colors ${
+              className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
                 tab === "saved" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
               }`}
             >
-              <Bookmark size={12} /> 保存済み
+              <Bookmark size={12} />
+              <span className="hidden md:inline text-[12px]">保存済み</span>
             </button>
           )}
+          <button
+            onClick={() => setTab("tagged")}
+            className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
+              tab === "tagged" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
+            }`}
+          >
+            <Tag size={12} />
+            <span className="hidden md:inline text-[12px]">タグ付け</span>
+          </button>
         </div>
 
-        {/* 投稿グリッド */}
-        <div className="grid grid-cols-3 gap-1 mt-1">
+        <div className="mt-[1px] grid grid-cols-3 gap-[1px] md:gap-[2px]">
           {displayPosts.map((post) => (
             <button
               key={post.post_id}
               onClick={() => setSelectedPostId(post.post_id)}
-              className="aspect-square relative overflow-hidden bg-[#efefef] group w-full"
+              className="group relative aspect-square w-full overflow-hidden bg-[#efefef]"
             >
               {post.media_files[0] && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -229,30 +415,58 @@ export default function ProfilePage() {
                   className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
                 />
               )}
-              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                <span className="text-white text-sm font-semibold">♥ {post.like_count}</span>
-                <span className="text-white text-sm font-semibold">💬 {post.comment_count}</span>
+              <div className="absolute inset-0 hidden items-center justify-center gap-7 bg-black/30 opacity-0 transition-opacity group-hover:flex group-hover:opacity-100">
+                <span className="text-[16px] font-semibold text-white">♥ {formatCount(post.like_count)}</span>
+                <span className="text-[16px] font-semibold text-white">💬 {formatCount(post.comment_count)}</span>
               </div>
             </button>
           ))}
         </div>
 
         {displayPosts.length === 0 && (
-          <div className="text-center text-[#8e8e8e] py-16">
-            {tab === "posts" ? (
+          <div className="px-6 py-16 text-center md:py-24">
+            {showPrivateNotice && tab === "posts" ? (
               <>
-                <Grid3x3 size={48} className="mx-auto mb-4 opacity-30" />
-                <p className="font-semibold">まだ投稿がありません</p>
+                <EmptyCircleIcon>
+                  <Lock size={26} strokeWidth={2.2} />
+                </EmptyCircleIcon>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">このアカウントは非公開です</p>
+                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
+                  フォローすると、写真や動画を見られるようになります。
+                </p>
+              </>
+            ) : tab === "posts" ? (
+              <>
+                <EmptyCircleIcon>
+                  <Grid3x3 size={26} strokeWidth={1.9} />
+                </EmptyCircleIcon>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">投稿</p>
+                <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">まだ投稿がありません</p>
+              </>
+            ) : tab === "saved" ? (
+              <>
+                <EmptyCircleIcon>
+                  <Bookmark size={24} strokeWidth={1.9} />
+                </EmptyCircleIcon>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">保存済み</p>
+                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
+                  保存した投稿はここに表示されます。保存済みの投稿は自分だけが見られます。
+                </p>
               </>
             ) : (
               <>
-                <Bookmark size={48} className="mx-auto mb-4 opacity-30" />
-                <p className="font-semibold">保存した投稿はありません</p>
+                <EmptyCircleIcon>
+                  <Tag size={24} strokeWidth={1.9} />
+                </EmptyCircleIcon>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">タグ付けされた写真</p>
+                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
+                  ユーザーがあなたをタグ付けした写真や動画がここに表示されます。
+                </p>
               </>
             )}
           </div>
         )}
-      </div>
+      </section>
 
       {/* フォロワー/フォロー中モーダル */}
       {listModal && (
