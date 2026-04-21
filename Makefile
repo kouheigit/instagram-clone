@@ -59,6 +59,10 @@ create-superuser:
 seed:
 	python3 scripts/seed.py
 
+## 既存DBの picsum URL を安定形式に一括更新
+fix-images:
+	python3 scripts/fix_picsum_urls.py
+
 ## ヘルスチェック
 health:
 	@echo "=== user-service ===" && curl -s http://localhost:8001/health | python3 -m json.tool
