@@ -82,7 +82,7 @@ def set_profile_image(token, profile_img):
 
 
 def create_post(token, post_num, author_num):
-    caption = random.choice(CAPTIONS)
+    caption = CAPTIONS[(author_num * 10 + post_num) % len(CAPTIONS)]
     img_id = (author_num * 10 + post_num) % 100 + 1
     payload = {
         "caption": caption,
