@@ -123,7 +123,9 @@ def main():
         if token:
             tokens[user["username"]] = token
             if user.get("profile_img"):
-                set_profile_image(token, user["profile_img"])
+                ok = set_profile_image(token, user["profile_img"])
+                if ok:
+                    print(f"    → プロフィール画像設定: {user['profile_img']}")
 
     if not tokens:
         print("✗ ユーザー登録に失敗しました")
