@@ -51,7 +51,7 @@ const RECENT_KEY = "ig_recent_searches";
 
 interface RecentItem {
   username: string;
-  display_name?: string;
+  name?: string;
   profile_img?: string;
 }
 
@@ -83,9 +83,9 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
       setLoading(true);
       try {
         const res = await searchApi.search(query.trim());
-        const users: RecentItem[] = (res.data.users ?? res.data ?? []).map((u: { username: string; display_name?: string; profile_img?: string }) => ({
+        const users: RecentItem[] = (res.data.users ?? res.data ?? []).map((u: { username: string; name?: string; profile_img?: string }) => ({
           username: u.username,
-          display_name: u.display_name,
+          name: u.name,
           profile_img: u.profile_img,
         }));
         setResults(users);
@@ -196,8 +196,8 @@ function SearchPanel({ onClose }: { onClose: () => void }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[14px] font-semibold text-[#262626] truncate">{item.username}</p>
-              {item.display_name && (
-                <p className="text-[13px] text-[#8e8e8e] truncate">{item.display_name}</p>
+              {item.name && item.name !== item.username && (
+                <p className="text-[13px] text-[#8e8e8e] truncate">{item.name}</p>
               )}
             </div>
             {showRecent && (
@@ -314,8 +314,8 @@ export function Sidebar({ onCreatePost }: Props) {
           top: 0,
           display: "flex",
           flexDirection: "column",
-          gap: "160px",
-          paddingTop: "12px",
+          gap: "100px",
+          paddingTop: "1px",
           paddingBottom: "20px",
           boxSizing: "border-box",
           zIndex: 60,
