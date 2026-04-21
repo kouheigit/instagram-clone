@@ -16,6 +16,8 @@ class UserIndex(models.Model):
     """
     user_id     = models.UUIDField(primary_key=True)
     username    = models.CharField(max_length=30, db_index=True)
+    name        = models.CharField(max_length=150, blank=True, default="")
+    email       = models.EmailField(blank=True, default="")
     bio         = models.TextField(max_length=150, blank=True)
     profile_img = models.CharField(max_length=512, blank=True)
     is_private  = models.BooleanField(default=False)
@@ -27,6 +29,10 @@ class UserIndex(models.Model):
         db_table = "search_users"
         indexes = [
             GinIndex(fields=["username"], name="search_users_username_gin",
+                     opclasses=["gin_trgm_ops"]),
+            GinIndex(fields=["name"], name="search_users_name_gin",
+                     opclasses=["gin_trgm_ops"]),
+            GinIndex(fields=["email"], name="search_users_email_gin",
                      opclasses=["gin_trgm_ops"]),
         ]
 

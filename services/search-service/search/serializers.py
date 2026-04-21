@@ -6,7 +6,7 @@ class UserIndexSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserIndex
         fields = [
-            "user_id", "username", "bio", "profile_img",
+            "user_id", "username", "name", "bio", "profile_img",
             "is_private", "is_verified", "follower_count",
         ]
 
