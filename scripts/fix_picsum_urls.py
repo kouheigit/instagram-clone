@@ -67,3 +67,17 @@ def fix_urls(dry_run: bool = False):
             conn.commit()
 
         print(f"更新完了: {updated}件")
+
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT COUNT(*) FROM post_media "
+                "WHERE media_url LIKE 'https://picsum.photos/1080/1080?random=%'"
+            )
+            remaining = cur.fetchone()[0]
+        print(f"残存する旧形式URL: {remaining}件")
+    finally:
+        conn.close()
+
+
+if __name__ == "__main__":
+    fix_urls(dry_run="--dry-run" in sys.argv)
