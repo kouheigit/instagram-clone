@@ -42,3 +42,13 @@ def fix_urls(dry_run: bool = False):
             return
 
         print(f"対象レコード数: {len(rows)}")
+
+        if dry_run:
+            print("\n--- dry-run プレビュー ---")
+            for media_id, url in rows:
+                m = OLD_PATTERN.match(url)
+                if m:
+                    print(f"  {url}")
+                    print(f"  → {NEW_TPL.format(m.group(1))}")
+            print("\n（--dry-run モード: 変更は適用されません）")
+            return
