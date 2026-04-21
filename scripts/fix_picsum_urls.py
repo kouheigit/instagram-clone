@@ -19,3 +19,26 @@ import sys
 DB_DSN = "postgresql://instagram:instagram_pass@localhost:5432/instagram_db"
 OLD_PATTERN = re.compile(r"https://picsum\.photos/1080/1080\?random=(\d+)")
 NEW_TPL = "https://picsum.photos/id/{}/1080/1080"
+
+
+def fix_urls(dry_run: bool = False):
+    try:
+        import psycopg2
+    except ImportError:
+        print("✗ psycopg2 が必要です: pip install psycopg2-binary")
+        sys.exit(1)
+
+    conn = psycopg2.connect(DB_DSN)
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT media_id, media_url FROM post_media "
+                "WHERE media_url LIKE 'https://picsum.photos/1080/1080?random=%'"
+            )
+            rows = cur.fetchall()
+
+        if not rows:
+            print("対象レコードが見つかりません（すでに更新済みの可能性があります）")
+            return
+
+        print(f"対象レコード数: {len(rows)}")
