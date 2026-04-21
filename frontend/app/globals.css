@@ -121,7 +121,7 @@ body {
 
 .ig-sidebar:not(.ig-sidebar-compact):hover .ig-sidebar-logo {
   width: 100%;
-  height: 56px;
+  height: 52px;
   justify-content: flex-start;
   gap: 16px;
   padding-left: 12px;
