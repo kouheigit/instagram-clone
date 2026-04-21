@@ -55,6 +55,10 @@ shell-post:
 create-superuser:
 	docker compose exec user-service python manage.py createsuperuser
 
+## シードデータ投入
+seed:
+	python3 scripts/seed.py
+
 ## ヘルスチェック
 health:
 	@echo "=== user-service ===" && curl -s http://localhost:8001/health | python3 -m json.tool
