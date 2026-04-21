@@ -88,7 +88,7 @@ def create_post(token, post_num, author_num):
         "caption": caption,
         "media_files": [{"media_url": f"{PICSUM_BASE_URL}/{img_id}/1080/1080", "media_order": 1}],
         "media_type": "photo",
-        "location": random.choice(LOCATIONS),
+        "location": LOCATIONS[(author_num + post_num) % len(LOCATIONS)],
     }
     headers = {"Authorization": f"Bearer {token}"}
     try:
