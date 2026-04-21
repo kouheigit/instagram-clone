@@ -90,6 +90,7 @@ KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"
 
 # サービス間通信 URL
 NOTIFICATION_SERVICE_URL = os.environ.get("NOTIFICATION_SERVICE_URL", "http://notification-service:8008")
+SEARCH_SERVICE_URL = os.environ.get("SEARCH_SERVICE_URL", "http://search-service:8006")
 
 # 国際化
 LANGUAGE_CODE = "ja"

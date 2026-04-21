@@ -39,7 +39,7 @@ def _send_notification(payload: dict):
 def _sync_to_search(user):
     """search-service の UserIndex にユーザー情報を同期する"""
     try:
-        base_url = getattr(settings, "SEARCH_SERVICE_URL", "http://search-service:8006")
+        base_url = getattr(settings, "SEARCH_SERVICE_URL", "http://search-service:8006").rstrip("/")
         follower_count = Follow.objects.filter(followee=user, status="active").count()
         payload = {
             "user_id": str(user.user_id),
@@ -54,7 +54,7 @@ def _sync_to_search(user):
         }
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
-            f"{base_url}/api/v1/search/internal/users/upsert/",
+            f"{base_url}/api/v1/search/internal/users/",
             data=data,
             headers={"Content-Type": "application/json"},
             method="POST",

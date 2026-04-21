@@ -179,6 +179,7 @@ def delete_history_item(request, history_id):
 # ===== 内部API (他サービスからインデックス同期) =====
 
 @api_view(["POST", "PUT"])
+@permission_classes([permissions.AllowAny])
 def upsert_user_index(request):
     """内部API: user-service からユーザー情報を同期"""
     user_id = request.data.get("user_id")
@@ -203,6 +204,7 @@ def upsert_user_index(request):
 
 
 @api_view(["POST", "PUT"])
+@permission_classes([permissions.AllowAny])
 def upsert_hashtag_index(request):
     """内部API: post-service からハッシュタグ情報を同期"""
     name = request.data.get("name", "").strip().lstrip("#")

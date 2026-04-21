@@ -8,5 +8,7 @@ urlpatterns = [
     path("history/", views.search_history, name="search-history"),
     path("history/<uuid:history_id>/", views.delete_history_item, name="search-history-delete"),
     path("internal/users/", views.upsert_user_index, name="search-internal-user"),
+    path("internal/users/upsert/", views.upsert_user_index, name="search-internal-user-upsert"),
     path("internal/hashtags/", views.upsert_hashtag_index, name="search-internal-hashtag"),
+    path("internal/hashtags/upsert/", views.upsert_hashtag_index, name="search-internal-hashtag-upsert"),
 ]
