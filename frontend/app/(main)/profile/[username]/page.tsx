@@ -276,100 +276,104 @@ export default function ProfilePage() {
   const showPrivateNotice = user.is_private && !isMe && !following && posts.length === 0;
 
   return (
-    <div className="mx-auto w-full max-w-[975px] px-0 pt-2 md:px-5 md:pt-[30px]">
-      <section className="border-b border-[#dbdbdb] px-4 pb-5 md:border-b-0 md:px-0 md:pb-[44px]">
-        <div className="grid grid-cols-[auto_1fr] gap-x-7 gap-y-4 md:grid-cols-[291px_minmax(0,1fr)] md:gap-x-[30px] md:gap-y-0">
-          <div className="flex justify-center md:justify-start md:pl-[28px] md:pt-[6px]">
+    <div className="mx-auto w-full max-w-[1360px] px-4 pt-3 md:px-6 lg:px-10 lg:pt-[18px]">
+      <section className="border-b border-[#dbdbdb] px-2 pb-5 md:px-0 md:pb-[32px]">
+        <div className="grid grid-cols-1 gap-y-6 md:grid-cols-[250px_minmax(0,1fr)] md:gap-x-[52px] lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-x-[66px]">
+          <div className="flex justify-center md:justify-center md:pt-[8px] lg:justify-start lg:pl-[36px]">
             <ProfileAvatar user={user} />
           </div>
 
-          <div className="min-w-0 md:pt-0">
-            <div className="hidden items-center gap-5 md:flex">
-              <div className="flex items-center gap-3">
-                <h1 className="text-[20px] font-bold leading-[24px] text-[#111111] md:text-[30px] md:leading-[36px]">
+          <div className="min-w-0 md:pt-[4px]">
+            <div className="hidden items-center gap-4 md:flex">
+              <div className="flex items-center gap-4">
+                <h1 className="text-[28px] font-semibold leading-[32px] tracking-[-0.01em] text-[#262626]">
                   {user.username}
                 </h1>
-                <Settings size={24} className="text-[#111111]" strokeWidth={2.3} />
-                {user.is_verified && <BadgeCheck size={17} className="fill-[#0095f6] text-white" strokeWidth={2.25} />}
-                {user.is_private && <Lock size={15} className="text-[#8e8e8e]" strokeWidth={2.2} />}
+                {isMe ? (
+                  <Link href="/profile/edit" className="text-[#262626]">
+                    <Settings size={30} strokeWidth={2} />
+                  </Link>
+                ) : (
+                  <button type="button" className="text-[#262626]">
+                    <MoreHorizontal size={28} strokeWidth={2.1} />
+                  </button>
+                )}
+                {user.is_verified && (
+                  <BadgeCheck size={18} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
+                )}
+                {user.is_private && (
+                  <Lock size={16} className="text-[#8e8e8e]" strokeWidth={2.2} />
+                )}
               </div>
-              {isMe ? (
-                <div />
-              ) : (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleFollow}
-                    className={`rounded-lg px-4 py-[7px] text-[14px] font-semibold leading-[18px] transition-colors ${
-                      following
-                        ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
-                        : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
-                    }`}
-                  >
-                    {following ? "フォロー中" : "フォローする"}
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                  >
-                    メッセージ
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-lg bg-[#efefef] p-2 text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                  >
-                    <MoreHorizontal size={18} strokeWidth={2.4} />
-                  </button>
-                </div>
-              )}
             </div>
 
-            <div className="mt-5 hidden text-[16px] leading-[18px] text-[#111111] md:block">
-              <p className="mb-5 text-[18px] leading-[22px] text-[#111111]">
-                {user.username}
+            <div className="hidden md:block">
+              <div className="mt-[18px] text-[18px] leading-[24px] text-[#262626]">
+                <span>{user.username}</span>
                 <span className="ml-1">🇯🇵</span>
-              </p>
-              <div className="mb-10 flex items-center gap-8 text-[18px] leading-[22px]">
+              </div>
+
+              <div className="mt-[18px] flex items-center gap-[42px] text-[17px] leading-[22px] text-[#262626]">
                 <span>
-                  投稿<strong className="font-bold">{formatCount(posts.length)}</strong>件
+                  投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件
                 </span>
                 <button type="button" className="hover:opacity-70" onClick={() => openListModal("followers")}>
-                  フォロワー<strong className="font-bold">{formatCount(user.follower_count)}</strong>人
+                  フォロワー <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
                 </button>
                 <button type="button" className="hover:opacity-70" onClick={() => openListModal("following")}>
-                  フォロー中<strong className="font-bold">{formatCount(user.following_count)}</strong>人
+                  フォロー中 <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
                 </button>
               </div>
-              <div className="max-w-[560px] text-[18px] leading-[1.35] text-[#1f1f1f]">
+
+              <div className="mt-[26px] max-w-[640px] space-y-[2px] text-[16px] leading-[1.45] text-[#262626]">
+                <p className="font-semibold">{user.username}</p>
                 {bioLines.map((line) => (
                   <p key={line}>{line}</p>
                 ))}
               </div>
-            </div>
 
-            <div className="mt-1 grid grid-cols-3 text-center md:hidden">
-              <div>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                  {formatCount(posts.length)}
-                </div>
-                <div className="text-[14px] leading-5 text-[#8e8e8e]">投稿</div>
+              <div className="mt-[24px] flex max-w-[690px] items-center gap-2">
+                {isMe ? (
+                  <>
+                    <Link
+                      href="/profile/edit"
+                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                    >
+                      プロフィールを編集
+                    </Link>
+                    <button
+                      type="button"
+                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                    >
+                      アーカイブを表示
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleFollow}
+                      className={`flex h-9 flex-1 items-center justify-center rounded-lg px-4 text-[14px] font-semibold transition-colors ${
+                        following
+                          ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                          : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                      }`}
+                    >
+                      {following ? "フォロー中" : "フォローする"}
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                    >
+                      メッセージ
+                    </button>
+                  </>
+                )}
               </div>
-              <button type="button" onClick={() => openListModal("followers")}>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                  {formatCount(user.follower_count)}
-                </div>
-                <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロワー</div>
-              </button>
-              <button type="button" onClick={() => openListModal("following")}>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                  {formatCount(user.following_count)}
-                </div>
-                <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロー中</div>
-              </button>
             </div>
 
             <div className="mt-2 md:hidden">
-              <div className="mt-4 flex items-center gap-2 md:hidden">
+              <div className="flex items-center gap-2">
                 <h1 className="text-[14px] font-semibold leading-5 text-[#262626]">
                   {user.username}
                 </h1>
@@ -380,7 +384,27 @@ export default function ProfilePage() {
                   <Lock size={13} className="text-[#8e8e8e]" strokeWidth={2.2} />
                 )}
               </div>
-              <div className="mt-[6px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
+              <div className="mt-3 grid grid-cols-3 text-center">
+                <div>
+                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                    {formatCount(posts.length)}
+                  </div>
+                  <div className="text-[14px] leading-5 text-[#8e8e8e]">投稿</div>
+                </div>
+                <button type="button" onClick={() => openListModal("followers")}>
+                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                    {formatCount(user.follower_count)}
+                  </div>
+                  <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロワー</div>
+                </button>
+                <button type="button" onClick={() => openListModal("following")}>
+                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                    {formatCount(user.following_count)}
+                  </div>
+                  <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロー中</div>
+                </button>
+              </div>
+              <div className="mt-[10px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
                 {bioLines.map((line) => (
                   <p key={line}>{line}</p>
                 ))}
@@ -389,53 +413,14 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="mt-7 hidden grid-cols-2 gap-4 md:grid md:max-w-none md:grid-cols-2">
-          {isMe ? (
-            <>
-              <Link
-                href="/profile/edit"
-                className="flex h-[60px] min-w-0 items-center justify-center rounded-[20px] bg-[#f3f4f6] px-4 text-center text-[14px] font-bold leading-[18px] text-[#111111]"
-              >
-                プロフィールを編集
-              </Link>
-              <button
-                type="button"
-                className="flex h-[60px] min-w-0 items-center justify-center rounded-[20px] bg-[#f3f4f6] px-4 text-[14px] font-bold leading-[18px] text-[#111111]"
-              >
-                アーカイブを表示
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={handleFollow}
-                className={`flex h-8 min-w-0 items-center justify-center rounded-lg px-4 text-[14px] font-semibold leading-[18px] transition-colors ${
-                  following
-                    ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
-                    : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
-                }`}
-              >
-                {following ? "フォロー中" : "フォローする"}
-              </button>
-              <button
-                type="button"
-                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-center text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                メッセージ
-              </button>
-            </>
-          )}
-        </div>
-
         {isMe && (
-          <div className="mt-[44px] hidden md:flex md:pl-[30px]">
+          <div className="mt-[44px] hidden md:flex md:pl-[42px]">
             <div className="flex flex-col items-center">
-              <div className="relative flex h-[77px] w-[77px] items-center justify-center rounded-full border border-[#dbdbdb]">
-                <div className="absolute inset-[5px] rounded-full border border-[#dbdbdb]" />
-                <CirclePlus size={38} strokeWidth={1.2} className="text-[#c7c7c7]" />
+              <div className="relative flex h-[82px] w-[82px] items-center justify-center rounded-full border-[4px] border-[#d9dee6]">
+                <div className="absolute inset-[6px] rounded-full border border-[#d9dee6]" />
+                <CirclePlus size={36} strokeWidth={1.2} className="text-[#c7c7c7]" />
               </div>
-              <span className="mt-[14px] text-[12px] font-semibold text-[#262626]">新規</span>
+              <span className="mt-[12px] text-[12px] font-semibold text-[#262626]">新規</span>
             </div>
           </div>
         )}
@@ -493,36 +478,36 @@ export default function ProfilePage() {
       </section>
 
       <section className="w-full border-t border-[#dbdbdb]">
-        <div className="mx-auto flex w-full max-w-[935px] justify-center gap-0 md:gap-[60px]">
+        <div className="mx-auto flex w-full max-w-[1240px] justify-center gap-0 md:gap-[72px] lg:gap-[104px]">
           <button
             type="button"
-            className="flex min-w-0 items-center justify-center gap-[6px] border-t border-[#262626] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#262626] md:px-0 md:py-[18px]"
+            className="flex min-w-0 items-center justify-center gap-[6px] border-t border-[#262626] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#262626] md:px-0 md:py-[18px]"
           >
             <GridTabIcon active />
-            <span className="hidden md:inline text-[12px]">投稿</span>
+            <span className="hidden md:inline text-[14px]">投稿</span>
           </button>
           <button
             type="button"
-            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
           >
             <ReelsTabIcon active={false} />
-            <span className="hidden md:inline text-[12px]">リール</span>
+            <span className="hidden md:inline text-[14px]">リール</span>
           </button>
           {showSavedTab && (
             <button
               type="button"
-              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
             >
               <SavedTabIcon active={false} />
-              <span className="hidden md:inline text-[12px]">保存済み</span>
+              <span className="hidden md:inline text-[14px]">保存済み</span>
             </button>
           )}
           <button
             type="button"
-            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
           >
             <TaggedTabIcon active={false} />
-            <span className="hidden md:inline text-[12px]">タグ付け</span>
+            <span className="hidden md:inline text-[14px]">タグ付け</span>
           </button>
         </div>
 
@@ -551,7 +536,7 @@ export default function ProfilePage() {
             )}
           </div>
         ) : (
-          <div className="mx-auto mt-[1px] grid w-full max-w-[935px] grid-cols-3 gap-[1px] md:gap-[2px]">
+          <div className="mx-auto mt-[1px] grid w-full max-w-[1240px] grid-cols-2 gap-[1px] md:grid-cols-3 md:gap-[2px] xl:grid-cols-4">
             {posts.map((post) => {
               const thumbnail = getPostThumbnail(post);
               const isMulti = post.media_files.length > 1 || post.media_type === "carousel";
