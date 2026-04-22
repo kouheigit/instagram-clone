@@ -150,6 +150,22 @@ function getPostThumbnail(post: Post) {
   return post.media_files[0]?.media_url ?? "";
 }
 
+function getBioLines(user: User) {
+  if (user.bio?.trim()) {
+    return user.bio
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(0, 3);
+  }
+
+  return [
+    "Born and raised in Tokyo 🗼",
+    "Exploring history and culture is my lifelong passion ✨",
+    "From famous landmarks to hidden... 続きを読む",
+  ];
+}
+
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const { user: me } = useAuth();
@@ -255,6 +271,7 @@ export default function ProfilePage() {
   }
 
   const isMe = me?.username === user.username;
+  const bioLines = getBioLines(user);
   const showSavedTab = isMe;
   const showPrivateNotice = user.is_private && !isMe && !following && posts.length === 0;
 
@@ -269,37 +286,15 @@ export default function ProfilePage() {
           <div className="min-w-0 md:pt-0">
             <div className="hidden items-center gap-5 md:flex">
               <div className="flex items-center gap-3">
-                <h1 className="text-[20px] font-normal leading-[24px] text-[#262626]">
+                <h1 className="text-[20px] font-bold leading-[24px] text-[#111111] md:text-[30px] md:leading-[36px]">
                   {user.username}
                 </h1>
-                {user.is_verified && (
-                  <BadgeCheck size={17} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
-                )}
-                {user.is_private && (
-                  <Lock size={15} className="text-[#8e8e8e]" strokeWidth={2.2} />
-                )}
+                <Settings size={24} className="text-[#111111]" strokeWidth={2.3} />
+                {user.is_verified && <BadgeCheck size={17} className="fill-[#0095f6] text-white" strokeWidth={2.25} />}
+                {user.is_private && <Lock size={15} className="text-[#8e8e8e]" strokeWidth={2.2} />}
               </div>
               {isMe ? (
-                <>
-                  <Link
-                    href="/profile/edit"
-                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                  >
-                    プロフィールを編集
-                  </Link>
-                  <button
-                    type="button"
-                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                  >
-                    アーカイブを表示
-                  </button>
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                  >
-                    <Settings size={17} strokeWidth={2} />
-                  </button>
-                </>
+                <div />
               ) : (
                 <div className="flex items-center gap-2">
                   <button
@@ -329,18 +324,27 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <div className="mb-0 hidden items-center gap-10 pt-5 text-[16px] leading-[18px] md:flex">
-              <span>
-                投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件
-              </span>
-              <button type="button" className="hover:opacity-70" onClick={() => openListModal("followers")}>
-                フォロワー{" "}
-                <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
-              </button>
-              <button type="button" className="hover:opacity-70" onClick={() => openListModal("following")}>
-                フォロー中{" "}
-                <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
-              </button>
+            <div className="mt-5 hidden text-[16px] leading-[18px] text-[#111111] md:block">
+              <p className="mb-5 text-[18px] leading-[22px] text-[#111111]">
+                {user.username}
+                <span className="ml-1">🇯🇵</span>
+              </p>
+              <div className="mb-10 flex items-center gap-8 text-[18px] leading-[22px]">
+                <span>
+                  投稿<strong className="font-bold">{formatCount(posts.length)}</strong>件
+                </span>
+                <button type="button" className="hover:opacity-70" onClick={() => openListModal("followers")}>
+                  フォロワー<strong className="font-bold">{formatCount(user.follower_count)}</strong>人
+                </button>
+                <button type="button" className="hover:opacity-70" onClick={() => openListModal("following")}>
+                  フォロー中<strong className="font-bold">{formatCount(user.following_count)}</strong>人
+                </button>
+              </div>
+              <div className="max-w-[560px] text-[18px] leading-[1.35] text-[#1f1f1f]">
+                {bioLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
             </div>
 
             <div className="mt-1 grid grid-cols-3 text-center md:hidden">
@@ -364,10 +368,7 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            <div className="mt-2 md:mt-5">
-              <p className="hidden text-[14px] font-semibold leading-[18px] text-[#262626] md:block">
-                {user.username}
-              </p>
+            <div className="mt-2 md:hidden">
               <div className="mt-4 flex items-center gap-2 md:hidden">
                 <h1 className="text-[14px] font-semibold leading-5 text-[#262626]">
                   {user.username}
@@ -379,27 +380,27 @@ export default function ProfilePage() {
                   <Lock size={13} className="text-[#8e8e8e]" strokeWidth={2.2} />
                 )}
               </div>
-              {user.bio && (
-                <p className="mt-[6px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
-                  {user.bio}
-                </p>
-              )}
+              <div className="mt-[6px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
+                {bioLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-5 hidden grid-cols-2 gap-2 md:ml-[321px] md:grid md:max-w-[451px]">
+        <div className="mt-7 hidden grid-cols-2 gap-4 md:grid md:max-w-none md:grid-cols-2">
           {isMe ? (
             <>
               <Link
                 href="/profile/edit"
-                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-center text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                className="flex h-[60px] min-w-0 items-center justify-center rounded-[20px] bg-[#f3f4f6] px-4 text-center text-[14px] font-bold leading-[18px] text-[#111111]"
               >
                 プロフィールを編集
               </Link>
               <button
                 type="button"
-                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                className="flex h-[60px] min-w-0 items-center justify-center rounded-[20px] bg-[#f3f4f6] px-4 text-[14px] font-bold leading-[18px] text-[#111111]"
               >
                 アーカイブを表示
               </button>
