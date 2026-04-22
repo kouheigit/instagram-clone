@@ -1,27 +1,21 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   BadgeCheck,
-  Bookmark,
   CirclePlus,
-  Clapperboard,
-  Grid3x3,
   Lock,
   MoreHorizontal,
   Settings,
-  Tag,
-  X,
 } from "lucide-react";
-import { usersApi, postsApi } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/Avatar";
 import { PostDetailModal } from "@/components/PostDetailModal";
-import type { User, Post } from "@/lib/types";
+import { postsApi, usersApi } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import type { Post, User } from "@/lib/types";
 
-type Tab = "posts" | "saved" | "tagged";
 type ListModal = "followers" | "following" | null;
 type SelectedPost = string | null;
 
@@ -62,10 +56,98 @@ function EmptyCircleIcon({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto mb-4 flex h-[62px] w-[62px] items-center justify-center rounded-full border-2 border-[#262626] ${className}`}>
+    <div
+      className={`mx-auto mb-4 flex h-[62px] w-[62px] items-center justify-center rounded-full border-2 border-[#262626] ${className}`}
+    >
       {children}
     </div>
   );
+}
+
+function GridTabIcon({ active }: { active: boolean }) {
+  const color = active ? "#262626" : "#8e8e8e";
+
+  return (
+    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+      <rect x="0.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="4.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="8.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="0.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="4.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="8.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="0.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="4.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect x="8.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function ReelsTabIcon({ active }: { active: boolean }) {
+  const color = active ? "#262626" : "#8e8e8e";
+
+  return (
+    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+      <rect x="1" y="1" width="10" height="10" rx="2" stroke={color} strokeWidth="1.5" />
+      <path d="M4.7 1.3 6.8 4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M7.4 1.3 9.5 4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 5.1v2.6l2.3-1.3L5 5.1Z" fill={color} />
+    </svg>
+  );
+}
+
+function SavedTabIcon({ active }: { active: boolean }) {
+  const color = active ? "#262626" : "#8e8e8e";
+
+  return (
+    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+      <path
+        d="M3 1.25h6c.41 0 .75.34.75.75V10.4L6 8.15 2.25 10.4V2c0-.41.34-.75.75-.75Z"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function TaggedTabIcon({ active }: { active: boolean }) {
+  const color = active ? "#262626" : "#8e8e8e";
+
+  return (
+    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+      <rect x="1.25" y="1.25" width="9.5" height="9.5" rx="2.25" stroke={color} strokeWidth="1.5" />
+      <circle cx="6" cy="4.7" r="1.2" stroke={color} strokeWidth="1.5" />
+      <path d="M3.8 9.2c.4-1.55 1.37-2.4 2.2-2.4s1.8.85 2.2 2.4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MultiPostBadge() {
+  return (
+    <svg aria-hidden="true" className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
+      <path d="M7 3.75A3.25 3.25 0 0 1 10.25.5h8.5A3.25 3.25 0 0 1 22 3.75v8.5A3.25 3.25 0 0 1 18.75 15.5h-8.5A3.25 3.25 0 0 1 7 12.25v-8.5Z" fill="white" />
+      <path d="M2 8.75A3.25 3.25 0 0 1 5.25 5.5H6v6.75A4.75 4.75 0 0 0 10.75 17H17v.75A3.25 3.25 0 0 1 13.75 21h-8.5A3.25 3.25 0 0 1 2 17.75v-9Z" fill="white" fillOpacity="0.72" />
+    </svg>
+  );
+}
+
+function VideoPostBadge() {
+  return (
+    <svg aria-hidden="true" className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M6.75 3.75h10.5A3 3 0 0 1 20.25 6.75v10.5a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V6.75a3 3 0 0 1 3-3Z"
+        stroke="white"
+        strokeWidth="2"
+      />
+      <path d="M10 8.8v6.4l5.1-3.2L10 8.8Z" fill="white" />
+      <path d="m7.2 3.8 3 4.2" stroke="white" strokeWidth="2" strokeLinecap="round" />
+      <path d="m13.8 3.8 3 4.2" stroke="white" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function getPostThumbnail(post: Post) {
+  return post.media_files[0]?.media_url ?? "";
 }
 
 export default function ProfilePage() {
@@ -73,21 +155,16 @@ export default function ProfilePage() {
   const { user: me } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [savedPosts, setSavedPosts] = useState<Post[]>([]);
   const [following, setFollowing] = useState(false);
-  const [tab, setTab] = useState<Tab>("posts");
   const [loading, setLoading] = useState(true);
-
-  // 投稿詳細モーダル
   const [selectedPostId, setSelectedPostId] = useState<SelectedPost>(null);
-
-  // フォロワー/フォロー中モーダル
   const [listModal, setListModal] = useState<ListModal>(null);
   const [listUsers, setListUsers] = useState<User[]>([]);
   const [listLoading, setListLoading] = useState(false);
 
   useEffect(() => {
     if (!username) return;
+
     const load = async () => {
       setLoading(true);
       try {
@@ -95,17 +172,13 @@ export default function ProfilePage() {
         const profileUser: User = uRes.data;
         setUser(profileUser);
 
-        const promises: Promise<unknown>[] = [postsApi.userPosts(profileUser.user_id)];
+        const requests: Promise<unknown>[] = [postsApi.userPosts(profileUser.user_id)];
         if (me && me.username !== username) {
-          promises.push(
-            usersApi.isFollowing(username).catch(() => ({ data: { is_following: false } }))
+          requests.push(
+            usersApi.isFollowing(username).catch(() => ({ data: { is_following: false } })),
           );
         }
-        if (me && me.username === username) {
-          promises.push(postsApi.savedPosts());
-        }
-
-        const results = await Promise.all(promises);
+        const results = await Promise.all(requests);
         const pRes = results[0] as { data: { results?: Post[] } | Post[] };
         const pData = (pRes.data as { results?: Post[] }).results ?? (pRes.data as Post[]) ?? [];
         setPosts(pData);
@@ -114,63 +187,79 @@ export default function ProfilePage() {
           const followRes = results[1] as { data: { is_following: boolean } };
           setFollowing(followRes.data.is_following);
         }
-        if (me && me.username === username && results[1]) {
-          const savedRes = results[1] as { data: Post[] };
-          setSavedPosts(savedRes.data ?? []);
-        }
-      } catch { /* ignore */ } finally {
+      } catch {
+        setUser(null);
+      } finally {
         setLoading(false);
       }
     };
+
     load();
   }, [username, me]);
 
   const handleFollow = async () => {
     if (!user) return;
+
     try {
       if (following) {
         await usersApi.unfollow(user.username);
         setFollowing(false);
-        setUser((u) => u ? { ...u, follower_count: u.follower_count - 1 } : u);
-      } else {
-        await usersApi.follow(user.username);
-        setFollowing(true);
-        setUser((u) => u ? { ...u, follower_count: u.follower_count + 1 } : u);
+        setUser((current) =>
+          current
+            ? { ...current, follower_count: Math.max(0, current.follower_count - 1) }
+            : current,
+        );
+        return;
       }
-    } catch { /* ignore */ }
+
+      await usersApi.follow(user.username);
+      setFollowing(true);
+      setUser((current) =>
+        current ? { ...current, follower_count: current.follower_count + 1 } : current,
+      );
+    } catch {
+      // ignore
+    }
   };
 
   const openListModal = async (type: ListModal) => {
     if (!user || !type) return;
+
     setListModal(type);
     setListLoading(true);
     setListUsers([]);
+
     try {
-      const res = type === "followers"
-        ? await usersApi.followers(user.username)
-        : await usersApi.following(user.username);
+      const res =
+        type === "followers"
+          ? await usersApi.followers(user.username)
+          : await usersApi.following(user.username);
       setListUsers(res.data ?? []);
-    } catch { /* ignore */ } finally {
+    } catch {
+      setListUsers([]);
+    } finally {
       setListLoading(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-[#dbdbdb] border-t-[#0095f6] rounded-full animate-spin" />
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
       </div>
     );
   }
-  if (!user) return <p className="text-center mt-20">ユーザーが見つかりません</p>;
+
+  if (!user) {
+    return <p className="mt-20 text-center">ユーザーが見つかりません</p>;
+  }
 
   const isMe = me?.username === user.username;
-  const displayPosts = tab === "posts" ? posts : tab === "saved" ? savedPosts : [];
   const showSavedTab = isMe;
   const showPrivateNotice = user.is_private && !isMe && !following && posts.length === 0;
 
   return (
-    <div className="mx-auto max-w-[975px] px-0 pt-2 md:px-5 md:pt-[30px]">
+    <div className="mx-auto w-full max-w-[975px] px-0 pt-2 md:px-5 md:pt-[30px]">
       <section className="border-b border-[#dbdbdb] px-4 pb-5 md:border-b-0 md:px-0 md:pb-[44px]">
         <div className="grid grid-cols-[auto_1fr] gap-x-7 gap-y-4 md:grid-cols-[291px_minmax(0,1fr)] md:gap-x-[30px] md:gap-y-0">
           <div className="flex justify-center md:justify-start md:pl-[28px] md:pt-[6px]">
@@ -191,12 +280,30 @@ export default function ProfilePage() {
                 )}
               </div>
               {isMe ? (
-                <Link href="/profile/edit" className="flex h-8 w-8 items-center justify-center text-[#262626]">
-                  <Settings size={24} strokeWidth={1.9} />
-                </Link>
+                <>
+                  <Link
+                    href="/profile/edit"
+                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  >
+                    プロフィールを編集
+                  </Link>
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  >
+                    アーカイブを表示
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  >
+                    <Settings size={17} strokeWidth={2} />
+                  </button>
+                </>
               ) : (
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={handleFollow}
                     className={`rounded-lg px-4 py-[7px] text-[14px] font-semibold leading-[18px] transition-colors ${
                       following
@@ -206,13 +313,16 @@ export default function ProfilePage() {
                   >
                     {following ? "フォロー中" : "フォローする"}
                   </button>
-                  <Link
-                    href="/dm"
+                  <button
+                    type="button"
                     className="rounded-lg bg-[#efefef] px-4 py-[7px] text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                   >
                     メッセージ
-                  </Link>
-                  <button className="rounded-lg bg-[#efefef] p-2 text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[#efefef] p-2 text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  >
                     <MoreHorizontal size={18} strokeWidth={2.4} />
                   </button>
                 </div>
@@ -220,26 +330,36 @@ export default function ProfilePage() {
             </div>
 
             <div className="mb-0 hidden items-center gap-10 pt-5 text-[16px] leading-[18px] md:flex">
-              <span>投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件</span>
-              <button className="hover:opacity-70" onClick={() => openListModal("followers")}>
-                フォロワー <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
+              <span>
+                投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件
+              </span>
+              <button type="button" className="hover:opacity-70" onClick={() => openListModal("followers")}>
+                フォロワー{" "}
+                <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
               </button>
-              <button className="hover:opacity-70" onClick={() => openListModal("following")}>
-                フォロー中 <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
+              <button type="button" className="hover:opacity-70" onClick={() => openListModal("following")}>
+                フォロー中{" "}
+                <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
               </button>
             </div>
 
             <div className="mt-1 grid grid-cols-3 text-center md:hidden">
               <div>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(posts.length)}</div>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                  {formatCount(posts.length)}
+                </div>
                 <div className="text-[14px] leading-5 text-[#8e8e8e]">投稿</div>
               </div>
-              <button onClick={() => openListModal("followers")}>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(user.follower_count)}</div>
+              <button type="button" onClick={() => openListModal("followers")}>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                  {formatCount(user.follower_count)}
+                </div>
                 <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロワー</div>
               </button>
-              <button onClick={() => openListModal("following")}>
-                <div className="text-[14px] font-semibold leading-5 text-[#262626]">{formatCount(user.following_count)}</div>
+              <button type="button" onClick={() => openListModal("following")}>
+                <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                  {formatCount(user.following_count)}
+                </div>
                 <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロー中</div>
               </button>
             </div>
@@ -277,13 +397,17 @@ export default function ProfilePage() {
               >
                 プロフィールを編集
               </Link>
-              <button className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+              <button
+                type="button"
+                className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
                 アーカイブを表示
               </button>
             </>
           ) : (
             <>
               <button
+                type="button"
                 onClick={handleFollow}
                 className={`flex h-8 min-w-0 items-center justify-center rounded-lg px-4 text-[14px] font-semibold leading-[18px] transition-colors ${
                   following
@@ -293,12 +417,12 @@ export default function ProfilePage() {
               >
                 {following ? "フォロー中" : "フォローする"}
               </button>
-              <Link
-                href="/dm"
+              <button
+                type="button"
                 className="flex h-8 min-w-0 items-center justify-center rounded-lg bg-[#efefef] px-4 text-center text-[14px] font-semibold leading-[18px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
               >
                 メッセージ
-              </Link>
+              </button>
             </>
           )}
         </div>
@@ -324,7 +448,10 @@ export default function ProfilePage() {
               >
                 プロフィールを編集
               </Link>
-              <button className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+              <button
+                type="button"
+                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
                 アーカイブを表示
               </button>
               <Link
@@ -337,6 +464,7 @@ export default function ProfilePage() {
           ) : (
             <>
               <button
+                type="button"
                 onClick={handleFollow}
                 className={`flex-1 rounded-lg py-[7px] text-[14px] font-semibold transition-colors ${
                   following
@@ -346,13 +474,16 @@ export default function ProfilePage() {
               >
                 {following ? "フォロー中" : "フォローする"}
               </button>
-              <Link
-                href="/dm"
+              <button
+                type="button"
                 className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
               >
                 メッセージ
-              </Link>
-              <button className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]">
+              </button>
+              <button
+                type="button"
+                className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+              >
                 <MoreHorizontal size={18} strokeWidth={2.4} />
               </button>
             </>
@@ -360,151 +491,152 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      <section className="border-t border-[#dbdbdb]">
-        <div className="flex justify-center gap-0 md:gap-[62px]">
+      <section className="w-full border-t border-[#dbdbdb]">
+        <div className="mx-auto flex w-full max-w-[935px] justify-center gap-0 md:gap-[60px]">
           <button
-            onClick={() => setTab("posts")}
-            className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
-              tab === "posts" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
-            }`}
+            type="button"
+            className="flex min-w-0 items-center justify-center gap-[6px] border-t border-[#262626] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#262626] md:px-0 md:py-[18px]"
           >
-            <Grid3x3 size={12} />
+            <GridTabIcon active />
             <span className="hidden md:inline text-[12px]">投稿</span>
           </button>
           <button
             type="button"
-            className="hidden items-center justify-center gap-2 border-t border-transparent py-[18px] text-[#8e8e8e] md:flex"
+            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
           >
-            <Clapperboard size={12} />
-            <span className="text-[12px] uppercase tracking-[0.12em] font-semibold">リール</span>
+            <ReelsTabIcon active={false} />
+            <span className="hidden md:inline text-[12px]">リール</span>
           </button>
           {showSavedTab && (
             <button
-              onClick={() => setTab("saved")}
-              className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
-                tab === "saved" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
-              }`}
+              type="button"
+              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
             >
-              <Bookmark size={12} />
+              <SavedTabIcon active={false} />
               <span className="hidden md:inline text-[12px]">保存済み</span>
             </button>
           )}
           <button
-            onClick={() => setTab("tagged")}
-            className={`flex min-w-0 items-center justify-center gap-1 px-6 py-3 text-[12px] uppercase tracking-[0.12em] font-semibold border-t md:px-0 md:py-[18px] ${
-              tab === "tagged" ? "border-[#262626] text-[#262626]" : "border-transparent text-[#8e8e8e]"
-            }`}
+            type="button"
+            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#8e8e8e] md:px-0 md:py-[18px]"
           >
-            <Tag size={12} />
+            <TaggedTabIcon active={false} />
             <span className="hidden md:inline text-[12px]">タグ付け</span>
           </button>
         </div>
 
-        <div className="mt-[1px] grid grid-cols-3 gap-[1px] md:gap-[2px]">
-          {displayPosts.map((post) => (
-            <button
-              key={post.post_id}
-              onClick={() => setSelectedPostId(post.post_id)}
-              className="group relative aspect-square w-full overflow-hidden bg-[#efefef]"
-            >
-              {post.media_files[0] && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={post.media_files[0].media_url}
-                  alt={post.caption}
-                  className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
-                />
-              )}
-              <div className="absolute inset-0 hidden items-center justify-center gap-7 bg-black/30 opacity-0 transition-opacity group-hover:flex group-hover:opacity-100">
-                <span className="text-[16px] font-semibold text-white">♥ {formatCount(post.like_count)}</span>
-                <span className="text-[16px] font-semibold text-white">💬 {formatCount(post.comment_count)}</span>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {displayPosts.length === 0 && (
+        {posts.length === 0 ? (
           <div className="px-6 py-16 text-center md:py-24">
-            {showPrivateNotice && tab === "posts" ? (
+            {showPrivateNotice ? (
               <>
                 <EmptyCircleIcon>
                   <Lock size={26} strokeWidth={2.2} />
                 </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">このアカウントは非公開です</p>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">
+                  このアカウントは非公開です
+                </p>
                 <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
                   フォローすると、写真や動画を見られるようになります。
-                </p>
-              </>
-            ) : tab === "posts" ? (
-              <>
-                <EmptyCircleIcon>
-                  <Grid3x3 size={26} strokeWidth={1.9} />
-                </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">投稿</p>
-                <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">まだ投稿がありません</p>
-              </>
-            ) : tab === "saved" ? (
-              <>
-                <EmptyCircleIcon>
-                  <Bookmark size={24} strokeWidth={1.9} />
-                </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">保存済み</p>
-                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
-                  保存した投稿はここに表示されます。保存済みの投稿は自分だけが見られます。
                 </p>
               </>
             ) : (
               <>
                 <EmptyCircleIcon>
-                  <Tag size={24} strokeWidth={1.9} />
+                  <GridTabIcon active />
                 </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">タグ付けされた写真</p>
-                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
-                  ユーザーがあなたをタグ付けした写真や動画がここに表示されます。
-                </p>
+                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">投稿</p>
+                <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">まだ投稿がありません</p>
               </>
             )}
+          </div>
+        ) : (
+          <div className="mx-auto mt-[1px] grid w-full max-w-[935px] grid-cols-3 gap-[1px] md:gap-[2px]">
+            {posts.map((post) => {
+              const thumbnail = getPostThumbnail(post);
+              const isMulti = post.media_files.length > 1 || post.media_type === "carousel";
+              const isVideo = post.media_type === "video";
+
+              return (
+                <button
+                  key={post.post_id}
+                  type="button"
+                  onClick={() => setSelectedPostId(post.post_id)}
+                  className="group relative aspect-square w-full overflow-hidden bg-[#efefef]"
+                >
+                  {thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={thumbnail}
+                      alt={post.caption}
+                      className="h-full w-full object-cover transition-opacity group-hover:opacity-80"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-[#8e8e8e]">
+                      No Image
+                    </div>
+                  )}
+
+                  {(isMulti || isVideo) && (
+                    <div className="absolute right-3 top-3 text-white">
+                      {isMulti ? <MultiPostBadge /> : <VideoPostBadge />}
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 hidden items-center justify-center gap-7 bg-black/30 opacity-0 transition-opacity group-hover:flex group-hover:opacity-100">
+                    <span className="text-[16px] font-semibold text-white">
+                      ♥ {formatCount(post.like_count)}
+                    </span>
+                    <span className="text-[16px] font-semibold text-white">
+                      💬 {formatCount(post.comment_count)}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
       </section>
 
-      {/* フォロワー/フォロー中モーダル */}
       {listModal && (
         <div
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setListModal(null)}
         >
           <div
-            className="bg-white rounded-xl w-full max-w-sm max-h-[80vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+            className="flex max-h-[80vh] w-full max-w-sm flex-col rounded-xl bg-white"
+            onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[#dbdbdb]">
-              <span className="font-semibold text-sm">
+            <div className="flex items-center justify-between border-b border-[#dbdbdb] px-4 py-3">
+              <span className="text-sm font-semibold">
                 {listModal === "followers" ? "フォロワー" : "フォロー中"}
               </span>
-              <button onClick={() => setListModal(null)}>
-                <X size={20} />
+              <button type="button" onClick={() => setListModal(null)}>
+                ×
               </button>
             </div>
-            <div className="overflow-y-auto flex-1 p-2">
+            <div className="flex-1 overflow-y-auto p-2">
               {listLoading ? (
                 <div className="flex justify-center py-8">
-                  <div className="w-6 h-6 border-2 border-[#dbdbdb] border-t-[#0095f6] rounded-full animate-spin" />
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
                 </div>
               ) : listUsers.length === 0 ? (
-                <p className="text-center text-[#8e8e8e] text-sm py-8">ユーザーがいません</p>
+                <p className="py-8 text-center text-sm text-[#8e8e8e]">ユーザーがいません</p>
               ) : (
-                listUsers.map((u) => (
+                listUsers.map((listUser) => (
                   <Link
-                    key={u.user_id}
-                    href={`/profile/${u.username}`}
+                    key={listUser.user_id}
+                    href={`/profile/${listUser.username}`}
                     onClick={() => setListModal(null)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#fafafa]"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#fafafa]"
                   >
-                    <Avatar src={u.profile_img} username={u.username} size={40} />
+                    <Avatar src={listUser.profile_img} username={listUser.username} size={40} />
                     <div>
-                      <p className="font-semibold text-sm">{u.username}</p>
-                      {u.bio && <p className="text-[#8e8e8e] text-xs truncate max-w-[200px]">{u.bio}</p>}
+                      <p className="text-sm font-semibold">{listUser.username}</p>
+                      {listUser.bio && (
+                        <p className="max-w-[200px] truncate text-xs text-[#8e8e8e]">
+                          {listUser.bio}
+                        </p>
+                      )}
                     </div>
                   </Link>
                 ))
@@ -514,12 +646,8 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* 投稿詳細モーダル */}
       {selectedPostId && (
-        <PostDetailModal
-          postId={selectedPostId}
-          onClose={() => setSelectedPostId(null)}
-        />
+        <PostDetailModal postId={selectedPostId} onClose={() => setSelectedPostId(null)} />
       )}
     </div>
   );
