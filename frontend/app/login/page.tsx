@@ -67,7 +67,7 @@ export default function LoginPage() {
 
           <aside className="flex min-w-0 justify-center border-t border-[#e5e7eb] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12">
             <div className="flex w-full max-w-[420px] flex-col justify-center">
-              <h2 className="mb-6 text-[1.9rem] leading-tight font-bold tracking-[-0.03em] text-[#111827]">
+              <h2 className="mb-8 text-[1.9rem] leading-tight font-bold tracking-[-0.03em] text-[#111827]">
                 Instagramにログイン
               </h2>
 
@@ -97,7 +97,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || !username || !password}
-                  className="mt-1 min-h-[46px] w-full rounded-xl bg-[#0095f6] px-4 text-[15px] font-semibold text-white shadow-[0_12px_24px_rgba(0,149,246,0.2)] transition hover:bg-[#1877f2] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-2 min-h-[46px] w-full rounded-xl bg-[#0095f6] px-4 text-[15px] font-semibold text-white shadow-[0_12px_24px_rgba(0,149,246,0.2)] transition hover:bg-[#1877f2] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {loading ? "ログイン中..." : "ログイン"}
                 </button>
