@@ -387,6 +387,10 @@ export default function ProfilePage() {
     loadSavedPosts();
   }, [username, me, activeTab]);
 
+  useEffect(() => {
+    setSelectedPostId(null);
+  }, [activeTab, username]);
+
   const handleFollow = async () => {
     if (!user) return;
 
