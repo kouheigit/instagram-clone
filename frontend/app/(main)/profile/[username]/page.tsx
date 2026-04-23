@@ -17,6 +17,7 @@ import type { Post, User } from "@/lib/types";
 
 type ListModal = "followers" | "following" | null;
 type SelectedPost = string | null;
+type ProfileTab = "posts" | "videos" | "saved";
 
 function formatCount(value: number) {
   return new Intl.NumberFormat("ja-JP").format(value);
@@ -222,36 +223,6 @@ function SavedTabIcon({ active }: { active: boolean }) {
   );
 }
 
-function TaggedTabIcon({ active }: { active: boolean }) {
-  const color = active ? "#000000" : "#8e8e8e";
-
-  return (
-    <svg
-      aria-hidden="true"
-      className="h-[15px] w-[15px] md:h-4 md:w-4"
-      viewBox="0 0 12 12"
-      fill="none"
-    >
-      <rect
-        x="1.25"
-        y="1.25"
-        width="9.5"
-        height="9.5"
-        rx="2.25"
-        stroke={color}
-        strokeWidth="1.5"
-      />
-      <circle cx="6" cy="4.7" r="1.2" stroke={color} strokeWidth="1.5" />
-      <path
-        d="M3.8 9.2c.4-1.55 1.37-2.4 2.2-2.4s1.8.85 2.2 2.4"
-        stroke={color}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function MultiPostBadge() {
   return (
     <svg
@@ -328,12 +299,15 @@ export default function ProfilePage() {
   const { user: me } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [savedPosts, setSavedPosts] = useState<Post[]>([]);
   const [following, setFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [savedLoading, setSavedLoading] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<SelectedPost>(null);
   const [listModal, setListModal] = useState<ListModal>(null);
   const [listUsers, setListUsers] = useState<User[]>([]);
   const [listLoading, setListLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<ProfileTab>("posts");
 
   useEffect(() => {
     if (!username) return;
@@ -362,6 +336,7 @@ export default function ProfilePage() {
           (pRes.data as Post[]) ??
           [];
         setPosts(pData);
+        setActiveTab("posts");
 
         if (me && me.username !== username && results[1]) {
           const followRes = results[1] as { data: { is_following: boolean } };
@@ -375,6 +350,33 @@ export default function ProfilePage() {
     };
 
     load();
+  }, [username, me]);
+
+  useEffect(() => {
+    if (!me || me.username !== username) {
+      setSavedPosts([]);
+      setSavedLoading(false);
+      if (activeTab === "saved") {
+        setActiveTab("posts");
+      }
+      return;
+    }
+
+    const loadSavedPosts = async () => {
+      setSavedLoading(true);
+      try {
+        const res = await postsApi.savedPosts();
+        const data =
+          (res.data as { results?: Post[] }).results ?? (res.data as Post[]) ?? [];
+        setSavedPosts(data);
+      } catch {
+        setSavedPosts([]);
+      } finally {
+        setSavedLoading(false);
+      }
+    };
+
+    loadSavedPosts();
   }, [username, me]);
 
   const handleFollow = async () => {
@@ -444,6 +446,40 @@ export default function ProfilePage() {
   const showSavedTab = isMe;
   const showPrivateNotice =
     user.is_private && !isMe && !following && posts.length === 0;
+  const imagePosts = posts.filter((post) => post.media_type !== "video");
+  const videoPosts = posts.filter((post) => post.media_type === "video");
+  const activePosts =
+    activeTab === "videos"
+      ? videoPosts
+      : activeTab === "saved"
+        ? savedPosts
+        : imagePosts;
+  const isTabLoading = loading || (activeTab === "saved" && savedLoading);
+  const isCurrentTabEmpty = activePosts.length === 0;
+
+  const emptyState = (() => {
+    if (activeTab === "videos") {
+      return {
+        icon: <ReelsTabIcon active />,
+        title: "動画",
+        description: "まだ動画がありません",
+      };
+    }
+
+    if (activeTab === "saved") {
+      return {
+        icon: <SavedTabIcon active />,
+        title: "保存済み",
+        description: "まだ保存済みの投稿がありません",
+      };
+    }
+
+    return {
+      icon: <GridTabIcon active />,
+      title: "投稿",
+      description: "まだ投稿がありません",
+    };
+  })();
 
   return (
     <div className="box-border w-full min-w-0 px-4 pt-3 md:px-0 md:pt-[30px]">
@@ -703,40 +739,63 @@ export default function ProfilePage() {
           <div className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]">
             <button
               type="button"
-              aria-label="投稿"
-              className="relative flex h-[44px] flex-1 items-center justify-center text-black md:h-[52px]"
+              aria-label="画像一覧"
+              onClick={() => setActiveTab("posts")}
+              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
+              }`}
             >
-              <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
-              <GridTabIcon active />
+              {activeTab === "posts" && (
+                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+              )}
+              <GridTabIcon active={activeTab === "posts"} />
+              <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
+                投稿
+              </span>
             </button>
             <button
               type="button"
-              aria-label="リール"
-              className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
+              aria-label="投稿動画一覧"
+              onClick={() => setActiveTab("videos")}
+              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
+              }`}
             >
-              <ReelsTabIcon active={false} />
+              {activeTab === "videos" && (
+                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+              )}
+              <ReelsTabIcon active={activeTab === "videos"} />
+              <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
+                動画
+              </span>
             </button>
             {showSavedTab && (
               <button
                 type="button"
-                aria-label="保存済み"
-                className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
+                aria-label="お気に入り画像一覧"
+                onClick={() => setActiveTab("saved")}
+                className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                  activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
+                }`}
               >
-                <SavedTabIcon active={false} />
+                {activeTab === "saved" && (
+                  <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+                )}
+                <SavedTabIcon active={activeTab === "saved"} />
+                <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
+                  保存済み
+                </span>
               </button>
             )}
-            <button
-              type="button"
-              aria-label="タグ付け"
-              className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
-            >
-              <TaggedTabIcon active={false} />
-            </button>
           </div>
 
-          {posts.length === 0 ? (
+          {isTabLoading ? (
+            <div className="flex h-64 items-center justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
+            </div>
+          ) : isCurrentTabEmpty ? (
             <div className="px-6 py-16 text-center md:pt-[28px] md:pb-24">
-              {showPrivateNotice ? (
+              {activeTab === "posts" && showPrivateNotice ? (
                 <>
                   <EmptyCircleIcon>
                     <Lock size={26} strokeWidth={2.2} />
@@ -750,21 +809,19 @@ export default function ProfilePage() {
                 </>
               ) : (
                 <>
-                  <EmptyCircleIcon>
-                    <GridTabIcon active />
-                  </EmptyCircleIcon>
+                  <EmptyCircleIcon>{emptyState.icon}</EmptyCircleIcon>
                   <p className="text-[28px] font-extrabold leading-8 text-[#262626]">
-                    投稿
+                    {emptyState.title}
                   </p>
                   <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">
-                    まだ投稿がありません
+                    {emptyState.description}
                   </p>
                 </>
               )}
             </div>
           ) : (
             <div className="posts-grid mt-2 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:mt-3 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
-              {posts.map((post) => {
+              {activePosts.map((post) => {
                 const thumbnail = getPostThumbnail(post);
                 const isMulti =
                   post.media_files.length > 1 || post.media_type === "carousel";
