@@ -742,11 +742,11 @@ export default function ProfilePage() {
 
         <section className="posts-section box-border w-full max-w-[935px] min-w-0">
           {isTabLoading ? (
-            <div className="flex h-64 items-center justify-center">
+            <div className="flex min-h-[280px] items-center justify-center pb-3 md:min-h-[320px] md:pb-4">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
             </div>
           ) : isCurrentTabEmpty ? (
-            <div className="px-6 py-16 text-center md:pt-[28px] md:pb-24">
+            <div className="px-6 py-16 text-center md:pt-[28px] md:pb-10">
               {activeTab === "posts" && showPrivateNotice ? (
                 <>
                   <EmptyCircleIcon>
@@ -772,7 +772,7 @@ export default function ProfilePage() {
               )}
             </div>
           ) : (
-            <div className="posts-grid mb-2 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:mb-3 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
+            <div className="posts-grid mb-3 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] border-b border-[#dbdbdb] pb-3 md:mb-4 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1 md:pb-4">
               {activePosts.map((post) => {
                 const thumbnail = getPostThumbnail(post);
                 const isMulti =
