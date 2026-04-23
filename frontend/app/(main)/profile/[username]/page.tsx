@@ -81,10 +81,15 @@ function EmptyCircleIcon({
 }
 
 function GridTabIcon({ active }: { active: boolean }) {
-  const color = active ? "#262626" : "#8e8e8e";
+  const color = active ? "#000000" : "#8e8e8e";
 
   return (
-    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+    <svg
+      aria-hidden="true"
+      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      viewBox="0 0 12 12"
+      fill="none"
+    >
       <rect
         x="0.75"
         y="0.75"
@@ -162,10 +167,15 @@ function GridTabIcon({ active }: { active: boolean }) {
 }
 
 function ReelsTabIcon({ active }: { active: boolean }) {
-  const color = active ? "#262626" : "#8e8e8e";
+  const color = active ? "#000000" : "#8e8e8e";
 
   return (
-    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+    <svg
+      aria-hidden="true"
+      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      viewBox="0 0 12 12"
+      fill="none"
+    >
       <rect
         x="1"
         y="1"
@@ -193,10 +203,15 @@ function ReelsTabIcon({ active }: { active: boolean }) {
 }
 
 function SavedTabIcon({ active }: { active: boolean }) {
-  const color = active ? "#262626" : "#8e8e8e";
+  const color = active ? "#000000" : "#8e8e8e";
 
   return (
-    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+    <svg
+      aria-hidden="true"
+      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      viewBox="0 0 12 12"
+      fill="none"
+    >
       <path
         d="M3 1.25h6c.41 0 .75.34.75.75V10.4L6 8.15 2.25 10.4V2c0-.41.34-.75.75-.75Z"
         stroke={color}
@@ -208,10 +223,15 @@ function SavedTabIcon({ active }: { active: boolean }) {
 }
 
 function TaggedTabIcon({ active }: { active: boolean }) {
-  const color = active ? "#262626" : "#8e8e8e";
+  const color = active ? "#000000" : "#8e8e8e";
 
   return (
-    <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+    <svg
+      aria-hidden="true"
+      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      viewBox="0 0 12 12"
+      fill="none"
+    >
       <rect
         x="1.25"
         y="1.25"
@@ -679,38 +699,43 @@ export default function ProfilePage() {
           </div>
         </section>
 
-        <section className="posts-section box-border w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]">
-          <div className="box-border flex w-full min-w-0 justify-center gap-0 md:gap-[60px]">
+        <section className="posts-section box-border w-full max-w-[935px] min-w-0">
+          <div className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]">
             <button
               type="button"
-              className="flex min-w-0 items-center justify-center border-t border-black px-6 py-3 text-black md:px-0 md:py-[18px]"
+              aria-label="投稿"
+              className="relative flex h-[44px] flex-1 items-center justify-center text-black md:h-[52px]"
             >
+              <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
               <GridTabIcon active />
             </button>
             <button
               type="button"
-              className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
+              aria-label="リール"
+              className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
             >
               <ReelsTabIcon active={false} />
             </button>
             {showSavedTab && (
               <button
                 type="button"
-                className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
+                aria-label="保存済み"
+                className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
               >
                 <SavedTabIcon active={false} />
               </button>
             )}
             <button
               type="button"
-              className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
+              aria-label="タグ付け"
+              className="relative flex h-[44px] flex-1 items-center justify-center text-[#8e8e8e] md:h-[52px]"
             >
               <TaggedTabIcon active={false} />
             </button>
           </div>
 
           {posts.length === 0 ? (
-            <div className="px-6 py-16 text-center md:py-24">
+            <div className="px-6 py-16 text-center md:pt-[28px] md:pb-24">
               {showPrivateNotice ? (
                 <>
                   <EmptyCircleIcon>
@@ -738,7 +763,7 @@ export default function ProfilePage() {
               )}
             </div>
           ) : (
-            <div className="posts-grid mt-[18px] box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
+            <div className="posts-grid mt-2 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:mt-3 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
               {posts.map((post) => {
                 const thumbnail = getPostThumbnail(post);
                 const isMulti =
