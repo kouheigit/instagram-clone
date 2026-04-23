@@ -223,6 +223,14 @@ function SavedTabIcon({ active }: { active: boolean }) {
   );
 }
 
+function TabCount({ value }: { value: number }) {
+  return (
+    <span className="hidden text-[11px] font-semibold leading-none text-inherit md:inline-block">
+      {formatCount(value)}
+    </span>
+  );
+}
+
 function MultiPostBadge() {
   return (
     <svg
@@ -753,6 +761,7 @@ export default function ProfilePage() {
               <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
                 投稿
               </span>
+              <TabCount value={imagePosts.length} />
             </button>
             <button
               type="button"
@@ -769,6 +778,7 @@ export default function ProfilePage() {
               <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
                 動画
               </span>
+              <TabCount value={videoPosts.length} />
             </button>
             {showSavedTab && (
               <button
@@ -786,6 +796,7 @@ export default function ProfilePage() {
                 <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
                   保存済み
                 </span>
+                <TabCount value={savedImagePosts.length} />
               </button>
             )}
           </div>
