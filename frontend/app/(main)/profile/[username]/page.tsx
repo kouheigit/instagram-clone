@@ -683,33 +683,29 @@ export default function ProfilePage() {
           <div className="box-border flex w-full min-w-0 justify-center gap-0 md:gap-[60px]">
             <button
               type="button"
-              className="flex min-w-0 items-center justify-center gap-[6px] border-t border-black px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-black md:px-0 md:py-[18px]"
+              className="flex min-w-0 items-center justify-center border-t border-black px-6 py-3 text-black md:px-0 md:py-[18px]"
             >
               <GridTabIcon active />
-              <span className="hidden md:inline text-[14px]">投稿</span>
             </button>
             <button
               type="button"
-              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+              className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
             >
               <ReelsTabIcon active={false} />
-              <span className="hidden md:inline text-[14px]">リール</span>
             </button>
             {showSavedTab && (
               <button
                 type="button"
-                className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+                className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
               >
                 <SavedTabIcon active={false} />
-                <span className="hidden md:inline text-[14px]">保存済み</span>
               </button>
             )}
             <button
               type="button"
-              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+              className="flex cursor-default min-w-0 items-center justify-center border-t border-transparent px-6 py-3 text-[#8e8e8e] md:px-0 md:py-[18px]"
             >
               <TaggedTabIcon active={false} />
-              <span className="hidden md:inline text-[14px]">タグ付け</span>
             </button>
           </div>
 
