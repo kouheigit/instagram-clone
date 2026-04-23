@@ -831,7 +831,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "posts"}
               onClick={() => setActiveTab("posts")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
+              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
                 activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -847,7 +847,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "videos"}
               onClick={() => setActiveTab("videos")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
+              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
                 activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -864,7 +864,7 @@ export default function ProfilePage() {
                 role="tab"
                 aria-selected={activeTab === "saved"}
                 onClick={() => setActiveTab("saved")}
-                className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
+                className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
                   activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
                 }`}
               >
