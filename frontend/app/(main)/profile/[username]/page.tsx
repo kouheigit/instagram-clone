@@ -87,7 +87,7 @@ function GridTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -173,7 +173,7 @@ function ReelsTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -209,7 +209,7 @@ function SavedTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[15px] w-[15px] md:h-4 md:w-4"
+      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -820,7 +820,7 @@ export default function ProfilePage() {
           )}
 
           <div
-            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb] bg-white"
+            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb] bg-white px-4 md:px-0"
             role="tablist"
             aria-label="プロフィールメディア"
           >
@@ -831,7 +831,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "posts"}
               onClick={() => setActiveTab("posts")}
-              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+              className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
                 activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -847,7 +847,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "videos"}
               onClick={() => setActiveTab("videos")}
-              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+              className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
                 activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -864,7 +864,7 @@ export default function ProfilePage() {
                 role="tab"
                 aria-selected={activeTab === "saved"}
                 onClick={() => setActiveTab("saved")}
-                className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                className={`relative flex h-[56px] flex-1 items-center justify-center md:h-[72px] ${
                   activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
                 }`}
               >
