@@ -35,9 +35,9 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1220px] items-center justify-center px-6 py-10 lg:px-10 lg:py-14">
-        <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.17fr)_minmax(420px,0.99fr)] lg:gap-12">
-          <section className="min-w-0 px-1 lg:pr-14">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1420px] items-center justify-center px-6 py-10 lg:px-10 lg:py-14">
+        <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(640px,0.88fr)] lg:gap-12">
+          <section className="min-w-0 px-1 lg:pr-[4.5rem]">
             <div className="mx-auto max-w-[640px]">
               <div
                 className="mb-8 text-[42px] leading-none font-bold tracking-[-0.04em] text-black sm:text-[58px]"
@@ -65,53 +65,55 @@ export default function LoginPage() {
             </div>
           </section>
 
-          <aside className="flex min-w-0 justify-center border-t border-[#e5e7eb] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12">
-            <div className="flex w-full max-w-[420px] flex-col justify-center">
-              <h2 className="mb-8 text-[1.9rem] leading-tight font-bold tracking-[-0.03em] text-[#111827]">
+          <aside className="flex min-w-0 justify-center border-t border-[#e6e6e6] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-[3.75rem]">
+            <div className="flex w-full max-w-[620px] flex-col justify-center">
+              <h2 className="mb-7 text-[1.7rem] leading-tight font-semibold tracking-[-0.03em] text-[#111111]">
                 Instagramにログイン
               </h2>
 
               <form onSubmit={handleSubmit} className="ig-login-form">
-                <input
-                  type="text"
-                  placeholder="携帯電話番号、ユーザーネームまたはメールアドレス"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  autoComplete="username"
-                  spellCheck={false}
-                  required
-                  aria-label="ユーザー名またはメールアドレス"
-                  data-state="active"
-                  className="ig-login-input ig-login-input-active"
-                />
-                <input
-                  type="password"
-                  placeholder="パスワード"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                  aria-label="パスワード"
-                  data-state="default"
-                  className="ig-login-input"
-                />
+                <label className="ig-login-field" data-filled={username ? "true" : "false"}>
+                  <span className="ig-login-label">携帯電話番号、ユーザーネームまたはメールアドレス</span>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    autoComplete="username"
+                    spellCheck={false}
+                    required
+                    aria-label="ユーザー名またはメールアドレス"
+                    className="ig-login-input"
+                  />
+                </label>
+                <label className="ig-login-field" data-filled={password ? "true" : "false"}>
+                  <span className="ig-login-label">パスワード</span>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    required
+                    aria-label="パスワード"
+                    className="ig-login-input"
+                  />
+                </label>
                 {error && <p className="text-center text-xs text-[#ed4956]">{error}</p>}
                 <button
                   type="submit"
                   disabled={loading || !username || !password}
-                  className="mt-2 min-h-[46px] w-full rounded-xl bg-[#0095f6] px-4 text-[15px] font-semibold text-white shadow-[0_12px_24px_rgba(0,149,246,0.2)] transition hover:bg-[#1877f2] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="mt-2 min-h-[50px] w-full rounded-full bg-[#9bc4ee] px-4 text-[0.95rem] font-semibold text-white transition hover:bg-[#86b4e4] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? "ログイン中..." : "ログイン"}
                 </button>
               </form>
 
-              <Link href="#" className="mt-3 text-center text-sm text-[#00376b]">
+              <Link href="#" className="mt-5 text-center text-[0.95rem] font-medium text-[#111111]">
                 パスワードを忘れた場合
               </Link>
 
-              <div className="my-6 flex items-center gap-4 text-[11px] font-semibold tracking-[0.14em] text-[#6b7280]">
+              <div className="my-10 flex items-center gap-4 text-[0.85rem] font-semibold text-[#8d8d8d]">
                 <div className="h-px flex-1 bg-[#e5e7eb]" />
                 <span>または</span>
                 <div className="h-px flex-1 bg-[#e5e7eb]" />
@@ -119,20 +121,20 @@ export default function LoginPage() {
 
               <button
                 type="button"
-                className="min-h-[46px] w-full rounded-xl bg-[#1877f2] px-4 text-[15px] font-semibold text-white transition hover:bg-[#166fe5]"
+                className="min-h-[50px] w-full rounded-full border border-[#d9dee5] bg-white px-6 text-[0.95rem] font-semibold text-[#1d1d1f] transition hover:bg-[#fafafa]"
               >
                 Facebookでログイン
               </button>
 
               <Link
                 href="/register"
-                className="mt-3 flex min-h-[46px] items-center justify-center rounded-xl border border-[#e6eaf2] bg-[#f5f7fb] px-4 text-[15px] font-semibold text-[#111827] transition hover:bg-[#eef2f8]"
+                className="mt-4 flex min-h-[50px] items-center justify-center rounded-full border border-[#2d7df6] bg-white px-6 text-[0.95rem] font-semibold text-[#1877f2] transition hover:bg-[#f8fbff]"
               >
                 新しいアカウントを作成
               </Link>
 
-              <div className="mt-7 text-center text-[1.05rem] font-bold tracking-[0.02em] text-[#1f2937]">
-                <span className="mr-1 font-extrabold text-[#2563eb]">∞</span>Meta
+              <div className="mt-8 text-center text-[0.9rem] font-semibold tracking-[0.01em] text-[#1f2937]">
+                <span className="mr-1 font-extrabold text-[#1877f2]">∞</span>Meta
               </div>
             </div>
           </aside>
