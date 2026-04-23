@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   BadgeCheck,
-  CirclePlus,
   Lock,
   MoreHorizontal,
   Settings,
@@ -23,14 +22,31 @@ function formatCount(value: number) {
   return new Intl.NumberFormat("ja-JP").format(value);
 }
 
+function ThreadsBadgeIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 192 192"
+      fill="none"
+    >
+      <path
+        d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.324 83.0954 59.0076 96.9879 60.0361 116.292C60.5584 126.084 65.4326 134.508 73.7577 140.011C80.7953 144.663 89.8601 146.938 99.2814 146.423C111.723 145.74 121.489 140.987 128.301 132.296C133.47 125.696 136.74 117.143 138.181 106.366C144.096 109.935 148.478 114.631 150.897 120.274C155.008 129.871 155.247 145.651 142.37 158.517C131.088 169.791 117.528 174.669 97.0749 174.819C74.3884 174.65 57.2339 167.375 46.2029 153.189C35.8723 139.912 30.5301 120.73 30.3309 96C30.5301 71.27 35.8723 52.0881 46.2029 38.8108C57.2339 24.6248 74.3879 17.3493 97.0744 17.1805C119.922 17.3504 137.372 24.661 148.73 38.9207C154.302 45.9147 158.502 54.7121 161.271 64.9599L177.412 60.6548C174.055 48.0478 168.771 37.1855 161.584 28.1603C147.017 9.86801 125.723 0.495544 97.134 0.294434H97.0153C68.4853 0.495544 47.4268 9.90299 33.5711 28.2571C21.2419 44.5883 14.8821 67.3141 14.6719 95.9335L14.6714 96L14.6719 96.0665C14.8821 124.686 21.2419 147.412 33.5711 163.743C47.4268 182.097 68.4853 191.505 97.0153 191.706H97.134C122.503 191.527 140.385 184.885 155.113 170.16C174.378 150.903 173.797 126.769 167.448 111.954C162.893 101.327 154.214 92.699 141.537 88.9883ZM100.38 129.507C89.959 130.094 79.1329 125.417 78.599 115.811C78.2029 108.702 83.6409 100.769 101.039 99.7673C103.031 99.6527 104.985 99.5969 106.904 99.5969C113.219 99.5969 119.128 100.211 124.5 101.388C122.495 126.423 110.733 128.935 100.38 129.507Z"
+        fill="#262626"
+      />
+    </svg>
+  );
+}
+
 function ProfileAvatar({ user }: { user: User }) {
   return (
-    <div className="relative flex-shrink-0">
+    <div className="relative flex-shrink-0 md:-translate-x-[24px]">
       <div className="absolute left-[18px] top-[-16px] hidden rounded-[18px] bg-white px-[16px] py-[10px] text-[14px] font-normal leading-none text-[#737373] shadow-[0_6px_18px_rgba(0,0,0,0.14)] md:block">
         ノート...
         <div className="absolute bottom-[-5px] left-[26px] h-[10px] w-[10px] rotate-45 rounded-[2px] bg-white" />
       </div>
-      <div className="h-[77px] w-[77px] rounded-full border border-[#dbdbdb] p-[2px] md:h-[150px] md:w-[150px]">
+      <div className="h-[77px] w-[77px] rounded-full border border-[#dbdbdb] p-[2px] md:h-[160px] md:w-[160px]">
         {user.profile_img ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -69,15 +85,78 @@ function GridTabIcon({ active }: { active: boolean }) {
 
   return (
     <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
-      <rect x="0.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="4.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="8.75" y="0.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="0.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="4.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="8.75" y="4.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="0.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="4.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
-      <rect x="8.75" y="8.75" width="2.5" height="2.5" stroke={color} strokeWidth="1.5" />
+      <rect
+        x="0.75"
+        y="0.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="4.75"
+        y="0.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="8.75"
+        y="0.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="0.75"
+        y="4.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="4.75"
+        y="4.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="8.75"
+        y="4.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="0.75"
+        y="8.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="4.75"
+        y="8.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <rect
+        x="8.75"
+        y="8.75"
+        width="2.5"
+        height="2.5"
+        stroke={color}
+        strokeWidth="1.5"
+      />
     </svg>
   );
 }
@@ -87,9 +166,27 @@ function ReelsTabIcon({ active }: { active: boolean }) {
 
   return (
     <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
-      <rect x="1" y="1" width="10" height="10" rx="2" stroke={color} strokeWidth="1.5" />
-      <path d="M4.7 1.3 6.8 4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M7.4 1.3 9.5 4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <rect
+        x="1"
+        y="1"
+        width="10"
+        height="10"
+        rx="2"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <path
+        d="M4.7 1.3 6.8 4"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.4 1.3 9.5 4"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
       <path d="M5 5.1v2.6l2.3-1.3L5 5.1Z" fill={color} />
     </svg>
   );
@@ -115,33 +212,73 @@ function TaggedTabIcon({ active }: { active: boolean }) {
 
   return (
     <svg aria-hidden="true" className="h-3 w-3" viewBox="0 0 12 12" fill="none">
-      <rect x="1.25" y="1.25" width="9.5" height="9.5" rx="2.25" stroke={color} strokeWidth="1.5" />
+      <rect
+        x="1.25"
+        y="1.25"
+        width="9.5"
+        height="9.5"
+        rx="2.25"
+        stroke={color}
+        strokeWidth="1.5"
+      />
       <circle cx="6" cy="4.7" r="1.2" stroke={color} strokeWidth="1.5" />
-      <path d="M3.8 9.2c.4-1.55 1.37-2.4 2.2-2.4s1.8.85 2.2 2.4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M3.8 9.2c.4-1.55 1.37-2.4 2.2-2.4s1.8.85 2.2 2.4"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function MultiPostBadge() {
   return (
-    <svg aria-hidden="true" className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
-      <path d="M7 3.75A3.25 3.25 0 0 1 10.25.5h8.5A3.25 3.25 0 0 1 22 3.75v8.5A3.25 3.25 0 0 1 18.75 15.5h-8.5A3.25 3.25 0 0 1 7 12.25v-8.5Z" fill="white" />
-      <path d="M2 8.75A3.25 3.25 0 0 1 5.25 5.5H6v6.75A4.75 4.75 0 0 0 10.75 17H17v.75A3.25 3.25 0 0 1 13.75 21h-8.5A3.25 3.25 0 0 1 2 17.75v-9Z" fill="white" fillOpacity="0.72" />
+    <svg
+      aria-hidden="true"
+      className="h-[18px] w-[18px]"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M7 3.75A3.25 3.25 0 0 1 10.25.5h8.5A3.25 3.25 0 0 1 22 3.75v8.5A3.25 3.25 0 0 1 18.75 15.5h-8.5A3.25 3.25 0 0 1 7 12.25v-8.5Z"
+        fill="white"
+      />
+      <path
+        d="M2 8.75A3.25 3.25 0 0 1 5.25 5.5H6v6.75A4.75 4.75 0 0 0 10.75 17H17v.75A3.25 3.25 0 0 1 13.75 21h-8.5A3.25 3.25 0 0 1 2 17.75v-9Z"
+        fill="white"
+        fillOpacity="0.72"
+      />
     </svg>
   );
 }
 
 function VideoPostBadge() {
   return (
-    <svg aria-hidden="true" className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
+    <svg
+      aria-hidden="true"
+      className="h-[18px] w-[18px]"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
       <path
         d="M6.75 3.75h10.5A3 3 0 0 1 20.25 6.75v10.5a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V6.75a3 3 0 0 1 3-3Z"
         stroke="white"
         strokeWidth="2"
       />
       <path d="M10 8.8v6.4l5.1-3.2L10 8.8Z" fill="white" />
-      <path d="m7.2 3.8 3 4.2" stroke="white" strokeWidth="2" strokeLinecap="round" />
-      <path d="m13.8 3.8 3 4.2" stroke="white" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="m7.2 3.8 3 4.2"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="m13.8 3.8 3 4.2"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -188,15 +325,22 @@ export default function ProfilePage() {
         const profileUser: User = uRes.data;
         setUser(profileUser);
 
-        const requests: Promise<unknown>[] = [postsApi.userPosts(profileUser.user_id)];
+        const requests: Promise<unknown>[] = [
+          postsApi.userPosts(profileUser.user_id),
+        ];
         if (me && me.username !== username) {
           requests.push(
-            usersApi.isFollowing(username).catch(() => ({ data: { is_following: false } })),
+            usersApi
+              .isFollowing(username)
+              .catch(() => ({ data: { is_following: false } })),
           );
         }
         const results = await Promise.all(requests);
         const pRes = results[0] as { data: { results?: Post[] } | Post[] };
-        const pData = (pRes.data as { results?: Post[] }).results ?? (pRes.data as Post[]) ?? [];
+        const pData =
+          (pRes.data as { results?: Post[] }).results ??
+          (pRes.data as Post[]) ??
+          [];
         setPosts(pData);
 
         if (me && me.username !== username && results[1]) {
@@ -222,7 +366,10 @@ export default function ProfilePage() {
         setFollowing(false);
         setUser((current) =>
           current
-            ? { ...current, follower_count: Math.max(0, current.follower_count - 1) }
+            ? {
+                ...current,
+                follower_count: Math.max(0, current.follower_count - 1),
+              }
             : current,
         );
         return;
@@ -231,7 +378,9 @@ export default function ProfilePage() {
       await usersApi.follow(user.username);
       setFollowing(true);
       setUser((current) =>
-        current ? { ...current, follower_count: current.follower_count + 1 } : current,
+        current
+          ? { ...current, follower_count: current.follower_count + 1 }
+          : current,
       );
     } catch {
       // ignore
@@ -273,368 +422,438 @@ export default function ProfilePage() {
   const isMe = me?.username === user.username;
   const bioLines = getBioLines(user);
   const showSavedTab = isMe;
-  const showPrivateNotice = user.is_private && !isMe && !following && posts.length === 0;
+  const showPrivateNotice =
+    user.is_private && !isMe && !following && posts.length === 0;
 
   return (
-    <div className="mx-auto w-full max-w-[1360px] px-4 pt-3 md:px-6 lg:px-10 lg:pt-[18px]">
-      <section className="border-b border-[#dbdbdb] px-2 pb-5 md:px-0 md:pb-[32px]">
-        <div className="grid grid-cols-1 gap-y-6 md:grid-cols-[250px_minmax(0,1fr)] md:gap-x-[52px] lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-x-[66px]">
-          <div className="flex justify-center md:justify-center md:pt-[8px] lg:justify-start lg:pl-[36px]">
-            <ProfileAvatar user={user} />
-          </div>
-
-          <div className="min-w-0 md:pt-[4px]">
-            <div className="hidden items-center gap-4 md:flex">
-              <div className="flex items-center gap-4">
-                <h1 className="text-[28px] font-semibold leading-[32px] tracking-[-0.01em] text-[#262626]">
-                  {user.username}
-                </h1>
-                {isMe ? (
-                  <Link href="/profile/edit" className="text-[#262626]">
-                    <Settings size={30} strokeWidth={2} />
-                  </Link>
-                ) : (
-                  <button type="button" className="text-[#262626]">
-                    <MoreHorizontal size={28} strokeWidth={2.1} />
-                  </button>
-                )}
-                {user.is_verified && (
-                  <BadgeCheck size={18} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
-                )}
-                {user.is_private && (
-                  <Lock size={16} className="text-[#8e8e8e]" strokeWidth={2.2} />
-                )}
-              </div>
+    <div className="box-border w-full min-w-0 px-4 pt-3 md:px-0 md:pt-[30px]">
+      <div className="mx-auto box-border w-full max-w-[935px] min-w-0">
+        <section className="border-b border-[#dbdbdb] px-2 pb-5 md:px-0 md:pb-[44px]">
+          <div className="grid grid-cols-1 gap-y-6 md:grid-cols-[291px_minmax(0,613px)] md:items-start md:gap-x-[18px]">
+            <div className="flex justify-center md:justify-center md:pt-[8px] md:translate-x-[48px]">
+              <ProfileAvatar user={user} />
             </div>
 
-            <div className="hidden md:block">
-              <div className="mt-[18px] text-[18px] leading-[24px] text-[#262626]">
-                <span>{user.username}</span>
-                <span className="ml-1">🇯🇵</span>
-              </div>
-
-              <div className="mt-[18px] flex items-center gap-[42px] text-[17px] leading-[22px] text-[#262626]">
-                <span>
-                  投稿 <strong className="font-semibold">{formatCount(posts.length)}</strong>件
-                </span>
-                <button type="button" className="hover:opacity-70" onClick={() => openListModal("followers")}>
-                  フォロワー <strong className="font-semibold">{formatCount(user.follower_count)}</strong>人
-                </button>
-                <button type="button" className="hover:opacity-70" onClick={() => openListModal("following")}>
-                  フォロー中 <strong className="font-semibold">{formatCount(user.following_count)}</strong>人
-                </button>
-              </div>
-
-              <div className="mt-[26px] max-w-[640px] space-y-[2px] text-[16px] leading-[1.45] text-[#262626]">
-                <p className="font-semibold">{user.username}</p>
-                {bioLines.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-              </div>
-
-              <div className="mt-[24px] flex max-w-[690px] items-center gap-2">
-                {isMe ? (
-                  <>
-                    <Link
-                      href="/profile/edit"
-                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                    >
-                      プロフィールを編集
-                    </Link>
-                    <button
-                      type="button"
-                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                    >
-                      アーカイブを表示
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={handleFollow}
-                      className={`flex h-9 flex-1 items-center justify-center rounded-lg px-4 text-[14px] font-semibold transition-colors ${
-                        following
-                          ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
-                          : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
-                      }`}
-                    >
-                      {following ? "フォロー中" : "フォローする"}
-                    </button>
-                    <button
-                      type="button"
-                      className="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-4 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                    >
-                      メッセージ
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-2 md:hidden">
-              <div className="flex items-center gap-2">
-                <h1 className="text-[14px] font-semibold leading-5 text-[#262626]">
+            <div className="min-w-0 md:max-w-[613px] md:pt-0">
+              <div className="hidden items-center gap-3 md:flex">
+                <h1 className="text-[20px] font-normal leading-[25px] text-[#262626]">
                   {user.username}
                 </h1>
+                <ThreadsBadgeIcon size={20} />
                 {user.is_verified && (
-                  <BadgeCheck size={16} className="fill-[#0095f6] text-white" strokeWidth={2.25} />
+                  <BadgeCheck
+                    size={18}
+                    className="fill-[#0095f6] text-white"
+                    strokeWidth={2.25}
+                  />
                 )}
                 {user.is_private && (
-                  <Lock size={13} className="text-[#8e8e8e]" strokeWidth={2.2} />
+                  <Lock
+                    size={16}
+                    className="text-[#8e8e8e]"
+                    strokeWidth={2.2}
+                  />
                 )}
               </div>
-              <div className="mt-3 grid grid-cols-3 text-center">
-                <div>
-                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                    {formatCount(posts.length)}
-                  </div>
-                  <div className="text-[14px] leading-5 text-[#8e8e8e]">投稿</div>
+
+              <div className="hidden md:block">
+                <div className="mt-[14px] text-[16px] leading-[22px] text-[#262626]">
+                  <span>{user.username}</span>
+                  <span className="ml-1">🇯🇵</span>
                 </div>
-                <button type="button" onClick={() => openListModal("followers")}>
-                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                    {formatCount(user.follower_count)}
-                  </div>
-                  <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロワー</div>
-                </button>
-                <button type="button" onClick={() => openListModal("following")}>
-                  <div className="text-[14px] font-semibold leading-5 text-[#262626]">
-                    {formatCount(user.following_count)}
-                  </div>
-                  <div className="text-[14px] leading-5 text-[#8e8e8e]">フォロー中</div>
-                </button>
+
+                <div className="mt-[16px] flex items-center gap-7 text-[16px] leading-[24px] text-[#262626]">
+                  <span>
+                    投稿
+                    <strong className="font-semibold">
+                      {formatCount(posts.length)}
+                    </strong>
+                    件
+                  </span>
+                  <button
+                    type="button"
+                    className="hover:opacity-70"
+                    onClick={() => openListModal("followers")}
+                  >
+                    フォロワー
+                    <strong className="font-semibold">
+                      {formatCount(user.follower_count)}
+                    </strong>
+                    人
+                  </button>
+                  <button
+                    type="button"
+                    className="hover:opacity-70"
+                    onClick={() => openListModal("following")}
+                  >
+                    フォロー中
+                    <strong className="font-semibold">
+                      {formatCount(user.following_count)}
+                    </strong>
+                    人
+                  </button>
+                </div>
+
+                <div className="mt-[16px] max-w-[613px] space-y-[2px] text-[14px] leading-[18px] text-[#262626]">
+                  <p className="font-semibold">{user.username}</p>
+                  {bioLines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+
+                <div className="mt-[16px] flex max-w-[613px] items-center gap-2 md:-ml-[252px] md:w-[800px] md:max-w-none">
+                  {isMe ? (
+                    <>
+                      <Link
+                        href="/profile/edit"
+                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                      >
+                        プロフィールを編集
+                      </Link>
+                      <button
+                        type="button"
+                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                      >
+                        アーカイブを表示
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleFollow}
+                        className={`flex h-10 flex-1 items-center justify-center rounded-lg px-5 text-[14px] font-semibold transition-colors ${
+                          following
+                            ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                            : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                        }`}
+                      >
+                        {following ? "フォロー中" : "フォローする"}
+                      </button>
+                      <button
+                        type="button"
+                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                      >
+                        メッセージ
+                      </button>
+                      <button
+                        type="button"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                        aria-label="その他"
+                      >
+                        <MoreHorizontal size={18} strokeWidth={2.2} />
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-              <div className="mt-[10px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
-                {bioLines.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
+
+              <div className="mt-2 md:hidden">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-[14px] font-semibold leading-5 text-[#262626]">
+                    {user.username}
+                  </h1>
+                  {user.is_verified && (
+                    <BadgeCheck
+                      size={16}
+                      className="fill-[#0095f6] text-white"
+                      strokeWidth={2.25}
+                    />
+                  )}
+                  {user.is_private && (
+                    <Lock
+                      size={13}
+                      className="text-[#8e8e8e]"
+                      strokeWidth={2.2}
+                    />
+                  )}
+                </div>
+                <div className="mt-3 grid grid-cols-3 text-center">
+                  <div>
+                    <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                      {formatCount(posts.length)}
+                    </div>
+                    <div className="text-[14px] leading-5 text-[#8e8e8e]">
+                      投稿
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openListModal("followers")}
+                  >
+                    <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                      {formatCount(user.follower_count)}
+                    </div>
+                    <div className="text-[14px] leading-5 text-[#8e8e8e]">
+                      フォロワー
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openListModal("following")}
+                  >
+                    <div className="text-[14px] font-semibold leading-5 text-[#262626]">
+                      {formatCount(user.following_count)}
+                    </div>
+                    <div className="text-[14px] leading-5 text-[#8e8e8e]">
+                      フォロー中
+                    </div>
+                  </button>
+                </div>
+                <div className="mt-[10px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
+                  {bioLines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {isMe && (
-          <div className="mt-[44px] hidden md:flex md:pl-[42px]">
-            <div className="flex flex-col items-center">
-              <div className="relative flex h-[82px] w-[82px] items-center justify-center rounded-full border-[4px] border-[#d9dee6]">
-                <div className="absolute inset-[6px] rounded-full border border-[#d9dee6]" />
-                <CirclePlus size={36} strokeWidth={1.2} className="text-[#c7c7c7]" />
+          {isMe && (
+            <div className="mt-[24px] hidden md:grid md:grid-cols-[291px_minmax(0,613px)] md:gap-x-[18px]">
+              <div className="flex flex-col items-center">
+                <div className="relative flex h-[96px] w-[96px] items-center justify-center rounded-full border-[5px] border-[#d9dee2] bg-white">
+                  <div className="absolute inset-[6px] rounded-full bg-[#fafafa]" />
+                  <div className="absolute h-[38px] w-[38px]">
+                    <div className="absolute left-1/2 top-0 h-full w-[5px] -translate-x-1/2 rounded-full bg-[#c4c4c4]" />
+                    <div className="absolute left-0 top-1/2 h-[5px] w-full -translate-y-1/2 rounded-full bg-[#c4c4c4]" />
+                  </div>
+                </div>
+                <span className="mt-[13px] text-[13px] font-bold leading-none text-[#111111]">
+                  新規
+                </span>
               </div>
-              <span className="mt-[12px] text-[12px] font-semibold text-[#262626]">新規</span>
+              <div />
             </div>
-          </div>
-        )}
-
-        <div className="mt-6 flex gap-2 md:hidden">
-          {isMe ? (
-            <>
-              <Link
-                href="/profile/edit"
-                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                プロフィールを編集
-              </Link>
-              <button
-                type="button"
-                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                アーカイブを表示
-              </button>
-              <Link
-                href="/profile/edit"
-                className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                <Settings size={18} strokeWidth={1.9} />
-              </Link>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={handleFollow}
-                className={`flex-1 rounded-lg py-[7px] text-[14px] font-semibold transition-colors ${
-                  following
-                    ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
-                    : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
-                }`}
-              >
-                {following ? "フォロー中" : "フォローする"}
-              </button>
-              <button
-                type="button"
-                className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                メッセージ
-              </button>
-              <button
-                type="button"
-                className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-              >
-                <MoreHorizontal size={18} strokeWidth={2.4} />
-              </button>
-            </>
           )}
-        </div>
-      </section>
 
-      <section className="w-full border-t border-[#dbdbdb]">
-        <div className="mx-auto flex w-full max-w-[1240px] justify-center gap-0 md:gap-[72px] lg:gap-[104px]">
-          <button
-            type="button"
-            className="flex min-w-0 items-center justify-center gap-[6px] border-t border-[#262626] px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#262626] md:px-0 md:py-[18px]"
-          >
-            <GridTabIcon active />
-            <span className="hidden md:inline text-[14px]">投稿</span>
-          </button>
-          <button
-            type="button"
-            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
-          >
-            <ReelsTabIcon active={false} />
-            <span className="hidden md:inline text-[14px]">リール</span>
-          </button>
-          {showSavedTab && (
+          <div className="mt-6 flex gap-2 md:hidden">
+            {isMe ? (
+              <>
+                <Link
+                  href="/profile/edit"
+                  className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  プロフィールを編集
+                </Link>
+                <button
+                  type="button"
+                  className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  アーカイブを表示
+                </button>
+                <Link
+                  href="/profile/edit"
+                  className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  <Settings size={18} strokeWidth={1.9} />
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={handleFollow}
+                  className={`flex-1 rounded-lg py-[7px] text-[14px] font-semibold transition-colors ${
+                    following
+                      ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                      : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                  }`}
+                >
+                  {following ? "フォロー中" : "フォローする"}
+                </button>
+                <button
+                  type="button"
+                  className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  メッセージ
+                </button>
+                <button
+                  type="button"
+                  className="rounded-lg bg-[#efefef] p-[7px] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  <MoreHorizontal size={18} strokeWidth={2.4} />
+                </button>
+              </>
+            )}
+          </div>
+        </section>
+
+        <section className="posts-section box-border w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]">
+          <div className="box-border flex w-full min-w-0 justify-center gap-0 md:gap-[60px]">
+            <button
+              type="button"
+              className="flex min-w-0 items-center justify-center gap-[6px] border-t border-black px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-black md:px-0 md:py-[18px]"
+            >
+              <GridTabIcon active />
+              <span className="hidden md:inline text-[14px]">投稿</span>
+            </button>
             <button
               type="button"
               className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
             >
-              <SavedTabIcon active={false} />
-              <span className="hidden md:inline text-[14px]">保存済み</span>
+              <ReelsTabIcon active={false} />
+              <span className="hidden md:inline text-[14px]">リール</span>
             </button>
-          )}
-          <button
-            type="button"
-            className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
-          >
-            <TaggedTabIcon active={false} />
-            <span className="hidden md:inline text-[14px]">タグ付け</span>
-          </button>
-        </div>
-
-        {posts.length === 0 ? (
-          <div className="px-6 py-16 text-center md:py-24">
-            {showPrivateNotice ? (
-              <>
-                <EmptyCircleIcon>
-                  <Lock size={26} strokeWidth={2.2} />
-                </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">
-                  このアカウントは非公開です
-                </p>
-                <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
-                  フォローすると、写真や動画を見られるようになります。
-                </p>
-              </>
-            ) : (
-              <>
-                <EmptyCircleIcon>
-                  <GridTabIcon active />
-                </EmptyCircleIcon>
-                <p className="text-[28px] font-extrabold leading-8 text-[#262626]">投稿</p>
-                <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">まだ投稿がありません</p>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="mx-auto mt-[1px] grid w-full max-w-[1240px] grid-cols-2 gap-[1px] md:grid-cols-3 md:gap-[2px] xl:grid-cols-4">
-            {posts.map((post) => {
-              const thumbnail = getPostThumbnail(post);
-              const isMulti = post.media_files.length > 1 || post.media_type === "carousel";
-              const isVideo = post.media_type === "video";
-
-              return (
-                <button
-                  key={post.post_id}
-                  type="button"
-                  onClick={() => setSelectedPostId(post.post_id)}
-                  className="group relative aspect-square w-full overflow-hidden bg-[#efefef]"
-                >
-                  {thumbnail ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={thumbnail}
-                      alt={post.caption}
-                      className="h-full w-full object-cover transition-opacity group-hover:opacity-80"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-sm text-[#8e8e8e]">
-                      No Image
-                    </div>
-                  )}
-
-                  {(isMulti || isVideo) && (
-                    <div className="absolute right-3 top-3 text-white">
-                      {isMulti ? <MultiPostBadge /> : <VideoPostBadge />}
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 hidden items-center justify-center gap-7 bg-black/30 opacity-0 transition-opacity group-hover:flex group-hover:opacity-100">
-                    <span className="text-[16px] font-semibold text-white">
-                      ♥ {formatCount(post.like_count)}
-                    </span>
-                    <span className="text-[16px] font-semibold text-white">
-                      💬 {formatCount(post.comment_count)}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {listModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setListModal(null)}
-        >
-          <div
-            className="flex max-h-[80vh] w-full max-w-sm flex-col rounded-xl bg-white"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-[#dbdbdb] px-4 py-3">
-              <span className="text-sm font-semibold">
-                {listModal === "followers" ? "フォロワー" : "フォロー中"}
-              </span>
-              <button type="button" onClick={() => setListModal(null)}>
-                ×
+            {showSavedTab && (
+              <button
+                type="button"
+                className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+              >
+                <SavedTabIcon active={false} />
+                <span className="hidden md:inline text-[14px]">保存済み</span>
               </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-2">
-              {listLoading ? (
-                <div className="flex justify-center py-8">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
-                </div>
-              ) : listUsers.length === 0 ? (
-                <p className="py-8 text-center text-sm text-[#8e8e8e]">ユーザーがいません</p>
+            )}
+            <button
+              type="button"
+              className="flex cursor-default min-w-0 items-center justify-center gap-[6px] border-t border-transparent px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8e8e8e] md:px-0 md:py-[18px]"
+            >
+              <TaggedTabIcon active={false} />
+              <span className="hidden md:inline text-[14px]">タグ付け</span>
+            </button>
+          </div>
+
+          {posts.length === 0 ? (
+            <div className="px-6 py-16 text-center md:py-24">
+              {showPrivateNotice ? (
+                <>
+                  <EmptyCircleIcon>
+                    <Lock size={26} strokeWidth={2.2} />
+                  </EmptyCircleIcon>
+                  <p className="text-[28px] font-extrabold leading-8 text-[#262626]">
+                    このアカウントは非公開です
+                  </p>
+                  <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-5 text-[#8e8e8e]">
+                    フォローすると、写真や動画を見られるようになります。
+                  </p>
+                </>
               ) : (
-                listUsers.map((listUser) => (
-                  <Link
-                    key={listUser.user_id}
-                    href={`/profile/${listUser.username}`}
-                    onClick={() => setListModal(null)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#fafafa]"
-                  >
-                    <Avatar src={listUser.profile_img} username={listUser.username} size={40} />
-                    <div>
-                      <p className="text-sm font-semibold">{listUser.username}</p>
-                      {listUser.bio && (
-                        <p className="max-w-[200px] truncate text-xs text-[#8e8e8e]">
-                          {listUser.bio}
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                ))
+                <>
+                  <EmptyCircleIcon>
+                    <GridTabIcon active />
+                  </EmptyCircleIcon>
+                  <p className="text-[28px] font-extrabold leading-8 text-[#262626]">
+                    投稿
+                  </p>
+                  <p className="mt-3 text-[14px] leading-5 text-[#8e8e8e]">
+                    まだ投稿がありません
+                  </p>
+                </>
               )}
             </div>
-          </div>
-        </div>
-      )}
+          ) : (
+            <div className="posts-grid mt-[18px] box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
+              {posts.map((post) => {
+                const thumbnail = getPostThumbnail(post);
+                const isMulti =
+                  post.media_files.length > 1 || post.media_type === "carousel";
+                const isVideo = post.media_type === "video";
 
-      {selectedPostId && (
-        <PostDetailModal postId={selectedPostId} onClose={() => setSelectedPostId(null)} />
-      )}
+                return (
+                  <button
+                    key={post.post_id}
+                    type="button"
+                    onClick={() => setSelectedPostId(post.post_id)}
+                    className="post-card group relative w-full min-w-0 overflow-hidden bg-[#efefef]"
+                  >
+                    {thumbnail ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumbnail}
+                        alt={post.caption}
+                        className="block aspect-square w-full object-cover transition-opacity group-hover:opacity-80"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-sm text-[#8e8e8e]">
+                        No Image
+                      </div>
+                    )}
+
+                    {(isMulti || isVideo) && (
+                      <div className="absolute right-3 top-3 text-white">
+                        {isMulti ? <MultiPostBadge /> : <VideoPostBadge />}
+                      </div>
+                    )}
+
+                    <div className="absolute inset-0 hidden items-center justify-center gap-7 bg-black/30 opacity-0 transition-opacity group-hover:flex group-hover:opacity-100">
+                      <span className="text-[16px] font-semibold text-white">
+                        ♥ {formatCount(post.like_count)}
+                      </span>
+                      <span className="text-[16px] font-semibold text-white">
+                        💬 {formatCount(post.comment_count)}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {listModal && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+            onClick={() => setListModal(null)}
+          >
+            <div
+              className="flex max-h-[80vh] w-full max-w-sm flex-col rounded-xl bg-white"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-[#dbdbdb] px-4 py-3">
+                <span className="text-sm font-semibold">
+                  {listModal === "followers" ? "フォロワー" : "フォロー中"}
+                </span>
+                <button type="button" onClick={() => setListModal(null)}>
+                  ×
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-2">
+                {listLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
+                  </div>
+                ) : listUsers.length === 0 ? (
+                  <p className="py-8 text-center text-sm text-[#8e8e8e]">
+                    ユーザーがいません
+                  </p>
+                ) : (
+                  listUsers.map((listUser) => (
+                    <Link
+                      key={listUser.user_id}
+                      href={`/profile/${listUser.username}`}
+                      onClick={() => setListModal(null)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#fafafa]"
+                    >
+                      <Avatar
+                        src={listUser.profile_img}
+                        username={listUser.username}
+                        size={40}
+                      />
+                      <div>
+                        <p className="text-sm font-semibold">
+                          {listUser.username}
+                        </p>
+                        {listUser.bio && (
+                          <p className="max-w-[200px] truncate text-xs text-[#8e8e8e]">
+                            {listUser.bio}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {selectedPostId && (
+          <PostDetailModal
+            postId={selectedPostId}
+            onClose={() => setSelectedPostId(null)}
+          />
+        )}
+      </div>
     </div>
   );
 }

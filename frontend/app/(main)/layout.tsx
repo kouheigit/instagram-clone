@@ -7,7 +7,11 @@ import { Sidebar } from "@/components/Sidebar";
 import { BottomNav } from "@/components/BottomNav";
 import { CreatePostModal } from "@/components/CreatePostModal";
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [showCreate, setShowCreate] = useState(false);
@@ -34,7 +38,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* メインコンテンツ */}
-      <main className="flex-1 lg:ml-[73px] pb-12 lg:pb-0" key={feedKey}>
+      <main className="min-w-0 flex-1 lg:ml-[73px] pb-12 lg:pb-0" key={feedKey}>
         {children}
       </main>
 
@@ -48,7 +52,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           onCreated={() => setFeedKey((k) => k + 1)}
         />
       )}
-
     </div>
   );
 }
