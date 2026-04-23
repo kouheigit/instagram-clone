@@ -820,7 +820,7 @@ export default function ProfilePage() {
           )}
 
           <div
-            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]"
+            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb] bg-white"
             role="tablist"
             aria-label="プロフィールメディア"
           >
@@ -836,7 +836,7 @@ export default function ProfilePage() {
               }`}
             >
               {activeTab === "posts" && (
-                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
               )}
               <GridTabIcon active={activeTab === "posts"} />
             </button>
@@ -852,7 +852,7 @@ export default function ProfilePage() {
               }`}
             >
               {activeTab === "videos" && (
-                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
               )}
               <ReelsTabIcon active={activeTab === "videos"} />
             </button>
@@ -869,7 +869,7 @@ export default function ProfilePage() {
                 }`}
               >
                 {activeTab === "saved" && (
-                  <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+                  <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
                 )}
                 <SavedTabIcon active={activeTab === "saved"} />
               </button>
