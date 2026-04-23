@@ -177,4 +177,5 @@ body {
 
 .ig-login-input-active {
   border-color: #222;
+  box-shadow: inset 0 0 0 1px #222;
 }
