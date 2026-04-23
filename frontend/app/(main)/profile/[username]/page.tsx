@@ -223,14 +223,6 @@ function SavedTabIcon({ active }: { active: boolean }) {
   );
 }
 
-function TabCount({ value }: { value: number }) {
-  return (
-    <span className="hidden text-[11px] font-semibold leading-none text-inherit md:inline-block">
-      {formatCount(value)}
-    </span>
-  );
-}
-
 function MultiPostBadge() {
   return (
     <svg
@@ -749,75 +741,6 @@ export default function ProfilePage() {
         </section>
 
         <section className="posts-section box-border w-full max-w-[935px] min-w-0">
-          <div
-            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]"
-            role="tablist"
-            aria-label="プロフィールメディア"
-          >
-            <button
-              type="button"
-              aria-label="画像一覧"
-              aria-pressed={activeTab === "posts"}
-              role="tab"
-              aria-selected={activeTab === "posts"}
-              onClick={() => setActiveTab("posts")}
-              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
-                activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
-              }`}
-            >
-              {activeTab === "posts" && (
-                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
-              )}
-              <GridTabIcon active={activeTab === "posts"} />
-              <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
-                投稿
-              </span>
-              <TabCount value={imagePosts.length} />
-            </button>
-            <button
-              type="button"
-              aria-label="投稿動画一覧"
-              aria-pressed={activeTab === "videos"}
-              role="tab"
-              aria-selected={activeTab === "videos"}
-              onClick={() => setActiveTab("videos")}
-              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
-                activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
-              }`}
-            >
-              {activeTab === "videos" && (
-                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
-              )}
-              <ReelsTabIcon active={activeTab === "videos"} />
-              <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
-                動画
-              </span>
-              <TabCount value={videoPosts.length} />
-            </button>
-            {showSavedTab && (
-              <button
-                type="button"
-                aria-label="お気に入り画像一覧"
-                aria-pressed={activeTab === "saved"}
-                role="tab"
-                aria-selected={activeTab === "saved"}
-                onClick={() => setActiveTab("saved")}
-                className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
-                  activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
-                }`}
-              >
-                {activeTab === "saved" && (
-                  <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
-                )}
-                <SavedTabIcon active={activeTab === "saved"} />
-                <span className="hidden text-xs font-semibold tracking-[0.12em] md:inline-block">
-                  保存済み
-                </span>
-                <TabCount value={savedImagePosts.length} />
-              </button>
-            )}
-          </div>
-
           {isTabLoading ? (
             <div className="flex h-64 items-center justify-center">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
@@ -849,7 +772,7 @@ export default function ProfilePage() {
               )}
             </div>
           ) : (
-            <div className="posts-grid mt-2 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:mt-3 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
+            <div className="posts-grid mb-2 box-border grid w-full min-w-0 grid-cols-2 gap-[1px] md:mb-3 md:grid-cols-[repeat(3,minmax(0,1fr))] md:gap-1">
               {activePosts.map((post) => {
                 const thumbnail = getPostThumbnail(post);
                 const isMulti =
@@ -895,6 +818,63 @@ export default function ProfilePage() {
               })}
             </div>
           )}
+
+          <div
+            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]"
+            role="tablist"
+            aria-label="プロフィールメディア"
+          >
+            <button
+              type="button"
+              aria-label="画像一覧"
+              aria-pressed={activeTab === "posts"}
+              role="tab"
+              aria-selected={activeTab === "posts"}
+              onClick={() => setActiveTab("posts")}
+              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
+              }`}
+            >
+              {activeTab === "posts" && (
+                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+              )}
+              <GridTabIcon active={activeTab === "posts"} />
+            </button>
+            <button
+              type="button"
+              aria-label="投稿動画一覧"
+              aria-pressed={activeTab === "videos"}
+              role="tab"
+              aria-selected={activeTab === "videos"}
+              onClick={() => setActiveTab("videos")}
+              className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
+              }`}
+            >
+              {activeTab === "videos" && (
+                <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+              )}
+              <ReelsTabIcon active={activeTab === "videos"} />
+            </button>
+            {showSavedTab && (
+              <button
+                type="button"
+                aria-label="お気に入り画像一覧"
+                aria-pressed={activeTab === "saved"}
+                role="tab"
+                aria-selected={activeTab === "saved"}
+                onClick={() => setActiveTab("saved")}
+                className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
+                  activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
+                }`}
+              >
+                {activeTab === "saved" && (
+                  <span className="absolute left-1/2 top-[-1px] h-px w-[32px] -translate-x-1/2 bg-black md:w-[36px]" />
+                )}
+                <SavedTabIcon active={activeTab === "saved"} />
+              </button>
+            )}
+          </div>
         </section>
 
         {listModal && (
