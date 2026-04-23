@@ -745,10 +745,17 @@ export default function ProfilePage() {
         </section>
 
         <section className="posts-section box-border w-full max-w-[935px] min-w-0">
-          <div className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]">
+          <div
+            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb]"
+            role="tablist"
+            aria-label="プロフィールメディア"
+          >
             <button
               type="button"
               aria-label="画像一覧"
+              aria-pressed={activeTab === "posts"}
+              role="tab"
+              aria-selected={activeTab === "posts"}
               onClick={() => setActiveTab("posts")}
               className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
                 activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
@@ -766,6 +773,9 @@ export default function ProfilePage() {
             <button
               type="button"
               aria-label="投稿動画一覧"
+              aria-pressed={activeTab === "videos"}
+              role="tab"
+              aria-selected={activeTab === "videos"}
               onClick={() => setActiveTab("videos")}
               className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
                 activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
@@ -784,6 +794,9 @@ export default function ProfilePage() {
               <button
                 type="button"
                 aria-label="お気に入り画像一覧"
+                aria-pressed={activeTab === "saved"}
+                role="tab"
+                aria-selected={activeTab === "saved"}
                 onClick={() => setActiveTab("saved")}
                 className={`relative flex h-[44px] flex-1 items-center justify-center gap-1.5 md:h-[52px] md:gap-[6px] ${
                   activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
