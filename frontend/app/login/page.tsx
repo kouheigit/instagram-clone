@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-
-const heroImages = ["/login/instagram.webp", "/login/profile2.webp"];
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -12,12 +10,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(heroImages[0]);
-
-  useEffect(() => {
-    const selected = heroImages[Math.floor(Math.random() * heroImages.length)];
-    setSelectedImage(selected);
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,27 +31,40 @@ export default function LoginPage() {
         <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(640px,0.88fr)] lg:gap-12">
           <section className="min-w-0 px-1 lg:pr-[4.5rem]">
             <div className="mx-auto max-w-[640px]">
-              <div
-                className="mb-8 text-[42px] leading-none font-bold tracking-[-0.04em] text-black sm:text-[58px]"
-                style={{ fontFamily: "Billabong, cursive" }}
-              >
-                Instagram
+              <div className="mb-9">
+                <svg viewBox="0 0 120 120" className="h-[76px] w-[76px] sm:h-[86px] sm:w-[86px]" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#feda75" />
+                      <stop offset="28%" stopColor="#fa7e1e" />
+                      <stop offset="55%" stopColor="#d62976" />
+                      <stop offset="78%" stopColor="#962fbf" />
+                      <stop offset="100%" stopColor="#4f5bd5" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="18" y="18" width="84" height="84" rx="24" fill="none" stroke="url(#igGradient)" strokeWidth="8.5" />
+                  <circle cx="60" cy="60" r="22" fill="none" stroke="url(#igGradient)" strokeWidth="8.5" />
+                  <circle cx="87" cy="33" r="5.25" fill="url(#igGradient)" />
+                </svg>
               </div>
 
-              <h1 className="mb-6 text-[2.5rem] leading-[0.98] font-bold tracking-[-0.06em] text-[#111827] sm:text-[3.4rem] lg:text-[4.25rem]">
-                <span className="bg-[linear-gradient(90deg,#f58529_0%,#feda77_18%,#dd2a7b_44%,#8134af_70%,#515bd4_100%)] bg-clip-text text-transparent">
-                  親しい友達
-                </span>
-                の日常の瞬間を見て
-                <br />
-                みよう。
-              </h1>
+              <div className="mb-10 text-center">
+                <h1 className="text-[1.7rem] leading-[1.14] font-normal tracking-[-0.05em] text-[#111111] sm:text-[2.3rem] lg:text-[2.65rem]">
+                  <span className="bg-[linear-gradient(90deg,#f37335_0%,#fd1d1d_24%,#ff2d55_44%,#e130c1_72%,#b332d0_100%)] bg-clip-text text-transparent">
+                    親しい友達
+                  </span>
+                  の日常の瞬間を見て
+                </h1>
+                <p className="mt-5 text-[1.7rem] leading-none font-normal tracking-[-0.05em] text-[#111111] sm:text-[2.3rem] lg:text-[2.65rem]">
+                  みよう。
+                </p>
+              </div>
 
               <div className="flex min-h-[360px] w-full items-center justify-center px-2 py-3 sm:min-h-[420px] lg:min-h-[500px]">
                 <img
-                  src={selectedImage}
+                  src="/login/instagram.webp"
                   alt="Instagram visual"
-                  className="block max-h-[68vh] w-full max-w-[620px] object-contain object-center drop-shadow-[0_30px_40px_rgba(0,0,0,0.14)]"
+                  className="block max-h-[68vh] w-full max-w-[620px] object-contain object-center drop-shadow-[0_34px_46px_rgba(0,0,0,0.16)]"
                 />
               </div>
             </div>
