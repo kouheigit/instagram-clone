@@ -66,7 +66,7 @@ export default function LoginPage() {
           </section>
 
           <aside className="flex min-w-0 justify-center border-t border-[#e5e7eb] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12">
-            <div className="flex w-full max-w-[360px] flex-col justify-center">
+            <div className="flex w-full max-w-[420px] flex-col justify-center">
               <h2 className="mb-6 text-[1.9rem] leading-tight font-bold tracking-[-0.03em] text-[#111827]">
                 Instagramにログイン
               </h2>
