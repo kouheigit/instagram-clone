@@ -353,10 +353,10 @@ export default function ProfilePage() {
   }, [username, me]);
 
   useEffect(() => {
-    if (!me || me.username !== username) {
+    if (!me || me.username !== username || activeTab !== "saved") {
       setSavedPosts([]);
       setSavedLoading(false);
-      if (activeTab === "saved") {
+      if (me?.username !== username && activeTab === "saved") {
         setActiveTab("posts");
       }
       return;
@@ -377,7 +377,7 @@ export default function ProfilePage() {
     };
 
     loadSavedPosts();
-  }, [username, me]);
+  }, [username, me, activeTab]);
 
   const handleFollow = async () => {
     if (!user) return;
@@ -448,11 +448,12 @@ export default function ProfilePage() {
     user.is_private && !isMe && !following && posts.length === 0;
   const imagePosts = posts.filter((post) => post.media_type !== "video");
   const videoPosts = posts.filter((post) => post.media_type === "video");
+  const savedImagePosts = savedPosts.filter((post) => post.media_type !== "video");
   const activePosts =
     activeTab === "videos"
       ? videoPosts
       : activeTab === "saved"
-        ? savedPosts
+        ? savedImagePosts
         : imagePosts;
   const isTabLoading = loading || (activeTab === "saved" && savedLoading);
   const isCurrentTabEmpty = activePosts.length === 0;
