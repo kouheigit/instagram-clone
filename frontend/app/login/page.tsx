@@ -82,6 +82,8 @@ export default function LoginPage() {
                   autoComplete="username"
                   spellCheck={false}
                   required
+                  aria-label="ユーザー名またはメールアドレス"
+                  data-state="active"
                   className="ig-login-input ig-login-input-active"
                 />
                 <input
@@ -91,6 +93,8 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
+                  aria-label="パスワード"
+                  data-state="default"
                   className="ig-login-input"
                 />
                 {error && <p className="text-center text-xs text-[#ed4956]">{error}</p>}
