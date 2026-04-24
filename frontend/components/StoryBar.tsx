@@ -222,7 +222,7 @@ export function StoryBar() {
                   }`}
                 >
                   <div className={`rounded-full ${group.stories.length > 0 ? "p-[2px] bg-white" : ""}`}>
-                    <Avatar src={group.user.profile_img} username={group.user.username} size={64} />
+                    <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
                   </div>
                 </div>
               </div>
