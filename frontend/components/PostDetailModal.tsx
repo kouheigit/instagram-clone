@@ -20,6 +20,7 @@ import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
 import { Avatar } from "@/components/Avatar";
 import { PostMenuModal, type PostMenuItem } from "@/components/PostMenuModal";
+import { VideoPlayer } from "@/components/VideoPlayer";
 import type { Post, User, Comment } from "@/lib/types";
 
 function formatTimeAgo(dateStr: string): string {
@@ -278,7 +279,13 @@ export function PostDetailModal({ postId, onClose }: Props) {
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              {media && (
+              {media && post.media_type === "video" ? (
+                <VideoPlayer
+                  src={media.media_url}
+                  poster={media.thumbnail_url ?? undefined}
+                  className="w-full h-full"
+                />
+              ) : media ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={media.media_url}
@@ -286,7 +293,7 @@ export function PostDetailModal({ postId, onClose }: Props) {
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
-              )}
+              ) : null}
               {post.media_files.length > 1 && (
                 <>
                   {imgIdx > 0 && (
