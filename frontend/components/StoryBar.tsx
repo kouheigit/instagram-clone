@@ -186,7 +186,7 @@ export function StoryBar() {
     <>
       {/* フォロー中プロフィールバー（横スクロール） */}
       <div className="mb-4 bg-white py-5 overflow-x-auto scrollbar-hide">
-        <div className="flex gap-4 px-2">
+        <div className="flex gap-2 px-2">
           {groups.map((group) => (
             <button
               key={group.user.user_id}
@@ -204,11 +204,11 @@ export function StoryBar() {
                   }`}
                 >
                   <div className={`rounded-full ${group.stories.length > 0 ? "p-[2px] bg-white" : ""}`}>
-                    <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
+                    <Avatar src={group.user.profile_img} username={group.user.username} size={68} />
                   </div>
                 </div>
               </div>
-              <span className="w-20 truncate text-center text-xs text-[#262626]">
+              <span className="w-16 truncate text-center text-xs text-[#262626]">
                 {group.user.username}
               </span>
             </button>
