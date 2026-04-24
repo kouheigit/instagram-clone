@@ -204,7 +204,7 @@ export function StoryBar() {
         )}
 
         {/* プロフィール一覧 */}
-        <div className="flex flex-1 justify-around gap-3 px-5">
+        <div className="flex flex-1 justify-around gap-4 px-6">
           {visibleGroups.map((group) => (
             <button
               key={group.user.user_id}
