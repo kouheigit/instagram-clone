@@ -196,7 +196,7 @@ export function StoryBar() {
         {page > 0 && (
           <button
             onClick={() => setPage((p) => p - 1)}
-            className="absolute left-0 z-10 w-7 h-7 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
+            className="absolute left-0 z-10 w-8 h-8 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
             aria-label="前へ"
           >
             <ChevronLeft size={16} strokeWidth={2} />
@@ -237,7 +237,7 @@ export function StoryBar() {
         {page < totalPages - 1 && (
           <button
             onClick={() => setPage((p) => p + 1)}
-            className="absolute right-0 z-10 w-7 h-7 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
+            className="absolute right-0 z-10 w-8 h-8 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
             aria-label="次へ"
           >
             <ChevronRight size={16} strokeWidth={2} />
