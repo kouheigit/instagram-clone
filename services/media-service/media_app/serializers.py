@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import MediaFile
 
-# 画像: 10MB, 動画: 200MB
+# 画像: 10MB, 動画: 100MB
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
-MAX_VIDEO_SIZE = 200 * 1024 * 1024
+MAX_VIDEO_SIZE = 100 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/x-m4v"}
 
@@ -12,11 +12,11 @@ class MediaFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaFile
         fields = [
-            "media_id", "user_id", "media_type", "url",
+            "media_id", "user_id", "media_type", "url", "thumbnail_url",
             "width", "height", "duration", "file_size",
             "status", "created_at",
         ]
-        read_only_fields = ["media_id", "user_id", "url", "file_size", "status", "created_at"]
+        read_only_fields = ["media_id", "user_id", "url", "thumbnail_url", "file_size", "status", "created_at"]
 
 
 class MediaUploadSerializer(serializers.Serializer):
@@ -41,6 +41,6 @@ class MediaUploadSerializer(serializers.Serializer):
                     f"動画は MP4/MOV のみ対応しています (受信: {content_type})"
                 )
             if file.size > MAX_VIDEO_SIZE:
-                raise serializers.ValidationError("動画は200MB以下にしてください")
+                raise serializers.ValidationError("動画は100MB以下にしてください")
 
         return data

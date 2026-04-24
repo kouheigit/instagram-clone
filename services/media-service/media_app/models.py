@@ -33,16 +33,17 @@ class MediaFile(models.Model):
         (STATUS_FAILED,     "失敗"),
     ]
 
-    media_id    = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id     = models.UUIDField(db_index=True)
-    media_type  = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    file        = models.FileField(upload_to=media_upload_path)
-    url         = models.CharField(max_length=512, blank=True)   # 公開URL (Nginx経由)
-    width       = models.IntegerField(null=True, blank=True)
-    height      = models.IntegerField(null=True, blank=True)
-    duration    = models.IntegerField(null=True, blank=True)  # 動画: 秒数
-    file_size   = models.PositiveIntegerField(default=0)      # bytes
-    status      = models.CharField(max_length=15, choices=STATUS_CHOICES, default=STATUS_READY)
+    media_id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id       = models.UUIDField(db_index=True)
+    media_type    = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    file          = models.FileField(upload_to=media_upload_path)
+    url           = models.CharField(max_length=512, blank=True)            # 公開URL (Nginx経由)
+    thumbnail_url = models.CharField(max_length=512, blank=True)            # 動画サムネイル
+    width         = models.IntegerField(null=True, blank=True)
+    height        = models.IntegerField(null=True, blank=True)
+    duration      = models.IntegerField(null=True, blank=True)              # 動画: 秒数
+    file_size     = models.PositiveIntegerField(default=0)                  # bytes
+    status        = models.CharField(max_length=15, choices=STATUS_CHOICES, default=STATUS_READY)
     created_at  = models.DateTimeField(auto_now_add=True)
 
     class Meta:
