@@ -14,7 +14,7 @@ interface StoryGroup {
   hasUnviewed: boolean;
 }
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 5;
 
 export function StoryBar() {
   const { user: me } = useAuth();
@@ -191,7 +191,7 @@ export function StoryBar() {
   return (
     <>
       {/* フォロー中プロフィールバー（6件ずつ・矢印ナビ） */}
-      <div className="relative mb-4 flex items-center bg-white px-3 py-5">
+      <div className="relative mb-4 flex items-center bg-white px-3 py-5 overflow-hidden">
         {/* 前へ矢印 */}
         {page > 0 && (
           <button
@@ -204,12 +204,12 @@ export function StoryBar() {
         )}
 
         {/* プロフィール一覧 */}
-        <div className="flex flex-1 justify-around gap-4 px-6">
+        <div className="flex flex-1 justify-around gap-2 px-4">
           {visibleGroups.map((group) => (
             <button
               key={group.user.user_id}
               onClick={() => openStory(group)}
-              className="flex flex-col items-center gap-1 flex-shrink-0 min-w-0"
+              className="flex flex-col items-center gap-1 min-w-0"
             >
               <div className="relative">
                 <div
