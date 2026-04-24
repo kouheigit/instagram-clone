@@ -71,9 +71,9 @@ MEDIA_ROOT = "/var/media"
 MEDIA_URL = "/media/"
 MEDIA_BASE_URL = os.environ.get("MEDIA_BASE_URL", "http://localhost:8080")
 
-# アップロード制限
-DATA_UPLOAD_MAX_MEMORY_SIZE = 210 * 1024 * 1024  # 210MB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 210 * 1024 * 1024
+# アップロード制限 (動画最大100MB + オーバーヘッド)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 110 * 1024 * 1024  # 110MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 110 * 1024 * 1024
 
 LANGUAGE_CODE = "ja"
 TIME_ZONE = "Asia/Tokyo"
