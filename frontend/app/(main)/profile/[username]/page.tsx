@@ -275,7 +275,11 @@ function VideoPostBadge() {
 }
 
 function getPostThumbnail(post: Post) {
-  return post.media_files[0]?.media_url ?? "";
+  const first = post.media_files[0];
+  if (!first) return "";
+  // 動画投稿はサムネイル画像を優先
+  if (post.media_type === "video" && first.thumbnail_url) return first.thumbnail_url;
+  return first.media_url;
 }
 
 function getBioLines(user: User) {
