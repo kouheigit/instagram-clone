@@ -226,7 +226,7 @@ export function StoryBar() {
                   </div>
                 </div>
               </div>
-              <span className="w-16 truncate text-center text-xs text-[#262626]">
+              <span className="w-20 truncate text-center text-xs text-[#262626]">
                 {group.user.username}
               </span>
             </button>
