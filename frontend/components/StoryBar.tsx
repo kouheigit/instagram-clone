@@ -191,7 +191,7 @@ export function StoryBar() {
   return (
     <>
       {/* フォロー中プロフィールバー（6件ずつ・矢印ナビ） */}
-      <div className="relative mb-4 flex items-center bg-white px-3 py-4">
+      <div className="relative mb-4 flex items-center bg-white px-3 py-5">
         {/* 前へ矢印 */}
         {page > 0 && (
           <button
