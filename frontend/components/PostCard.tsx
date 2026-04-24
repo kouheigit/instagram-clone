@@ -11,6 +11,7 @@ import { useToast } from "@/lib/toast";
 import { Avatar } from "./Avatar";
 import { PostMenuModal, type PostMenuItem } from "./PostMenuModal";
 import { PostDetailModal } from "./PostDetailModal";
+import { VideoPlayer } from "./VideoPlayer";
 import type { Post, User } from "@/lib/types";
 
 interface Props {
@@ -221,9 +222,18 @@ export function PostCard({ post, author, onDelete }: Props) {
           </button>
         </div>
 
-        {/* 画像 */}
-        <div className="relative aspect-square bg-black" onClick={handleImageTap}>
-          {media && !imgError ? (
+        {/* メディア（画像 or 動画） */}
+        <div
+          className="relative aspect-square bg-black"
+          onClick={post.media_type === "video" ? undefined : handleImageTap}
+        >
+          {post.media_type === "video" && media ? (
+            <VideoPlayer
+              src={media.media_url}
+              poster={media.thumbnail_url ?? undefined}
+              className="w-full h-full"
+            />
+          ) : media && !imgError ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={media.media_url}
@@ -238,8 +248,9 @@ export function PostCard({ post, author, onDelete }: Props) {
               <span className="text-xs">画像を表示できません</span>
             </div>
           ) : null}
-          {/* ダブルタップいいねアニメーション */}
-          {showHeartAnim && (
+
+          {/* ダブルタップいいねアニメーション（画像投稿のみ） */}
+          {post.media_type !== "video" && showHeartAnim && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Heart
                 size={80}
@@ -248,6 +259,8 @@ export function PostCard({ post, author, onDelete }: Props) {
               />
             </div>
           )}
+
+          {/* カルーセルドット */}
           {post.media_files.length > 1 && (
             <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
               {post.media_files.map((_, i) => (
