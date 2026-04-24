@@ -48,7 +48,7 @@ export default function LoginPage() {
                 </svg>
               </div>
 
-              <div className="mb-10 text-center">
+              <div className="mb-8 text-center lg:relative lg:-top-3 lg:left-4">
                 <h1 className="text-[1.7rem] leading-[1.14] font-normal tracking-[-0.05em] text-[#111111] sm:text-[2.3rem] lg:text-[2.65rem]">
                   <span className="bg-[linear-gradient(90deg,#f37335_0%,#fd1d1d_24%,#ff2d55_44%,#e130c1_72%,#b332d0_100%)] bg-clip-text text-transparent">
                     親しい友達
@@ -60,7 +60,7 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <div className="flex min-h-[360px] w-full items-center justify-center px-2 py-3 sm:min-h-[420px] lg:min-h-[500px]">
+              <div className="flex min-h-[360px] w-full items-center justify-center px-2 py-3 sm:min-h-[420px] lg:relative lg:-top-12 lg:min-h-[500px]">
                 <img
                   src="/login/instagram.webp"
                   alt="Instagram visual"
@@ -72,7 +72,7 @@ export default function LoginPage() {
 
           <aside className="flex min-w-0 justify-center border-t border-[#e6e6e6] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-[3.75rem]">
             <div className="flex w-full max-w-[620px] flex-col justify-center">
-              <h2 className="mb-7 text-[1.7rem] leading-tight font-semibold tracking-[-0.03em] text-[#111111]">
+              <h2 className="mb-7 text-[1.4rem] leading-tight font-normal tracking-[-0.02em] text-[#111111]">
                 Instagramにログイン
               </h2>
 

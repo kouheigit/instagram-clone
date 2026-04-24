@@ -196,7 +196,7 @@ export function PostCard({ post, author, onDelete }: Props) {
         items={menuItems}
       />
 
-      <article className="bg-white border border-[#dbdbdb] rounded-sm mb-6 max-w-[470px] mx-auto">
+      <article className="mx-auto mb-6 w-full max-w-[520px] overflow-hidden bg-white">
         {/* ヘッダー */}
         <div className="flex items-center justify-between px-4 py-3">
           <Link href={`/profile/${author?.username ?? ""}`} className="flex items-center gap-3">

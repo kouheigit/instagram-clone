@@ -191,7 +191,7 @@ export function StoryBar() {
   return (
     <>
       {/* フォロー中プロフィールバー（6件ずつ・矢印ナビ） */}
-      <div className="relative flex items-center border-b border-[#dbdbdb] px-2 py-3">
+      <div className="relative mb-4 flex items-center bg-white px-3 py-4">
         {/* 前へ矢印 */}
         {page > 0 && (
           <button
@@ -204,7 +204,7 @@ export function StoryBar() {
         )}
 
         {/* プロフィール一覧 */}
-        <div className="flex gap-2 justify-around flex-1 px-4">
+        <div className="flex flex-1 justify-around gap-3 px-5">
           {visibleGroups.map((group) => (
             <button
               key={group.user.user_id}
@@ -222,11 +222,11 @@ export function StoryBar() {
                   }`}
                 >
                   <div className={`rounded-full ${group.stories.length > 0 ? "p-[2px] bg-white" : ""}`}>
-                    <Avatar src={group.user.profile_img} username={group.user.username} size={56} />
+                    <Avatar src={group.user.profile_img} username={group.user.username} size={64} />
                   </div>
                 </div>
               </div>
-              <span className="text-xs w-14 truncate text-center text-[#262626]">
+              <span className="w-16 truncate text-center text-xs text-[#262626]">
                 {group.user.username}
               </span>
             </button>

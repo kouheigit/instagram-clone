@@ -104,7 +104,7 @@ export default function FeedPage() {
   return (
     <div className="flex justify-center">
       {/* フィードカラム */}
-      <div className="w-full max-w-[470px] pt-4">
+      <div className="w-full max-w-[520px] pt-4">
         <StoryBar />
         <div className="px-4 lg:px-0 pt-4">
           {posts.length === 0 ? (
