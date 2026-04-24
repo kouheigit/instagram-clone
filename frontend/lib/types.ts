@@ -13,6 +13,7 @@ export interface User {
 export interface PostMedia {
   media_id: string;
   media_url: string;
+  thumbnail_url: string | null;
   media_order: number;
   width: number | null;
   height: number | null;

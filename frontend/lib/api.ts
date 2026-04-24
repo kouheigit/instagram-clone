@@ -60,7 +60,7 @@ export const postsApi = {
   list: (cursor?: string) =>
     api.get("/posts/", { params: cursor ? { cursor } : {} }),
   get: (postId: string) => api.get(`/posts/${postId}/`),
-  create: (data: { caption: string; media_files: { media_url: string; media_order: number }[]; media_type: string; location?: string }) =>
+  create: (data: { caption: string; media_files: { media_url: string; media_order: number; thumbnail_url?: string; duration?: number }[]; media_type: string; location?: string }) =>
     api.post("/posts/", data),
   delete: (postId: string) => api.delete(`/posts/${postId}/`),
   like: (postId: string) => api.post(`/posts/${postId}/like/`),
@@ -143,10 +143,15 @@ export const storiesExtApi = {
 
 // --- Media ---
 export const mediaApi = {
-  upload: (formData: FormData) =>
+  upload: (formData: FormData, onProgress?: (percent: number) => void) =>
     api.post("/media/upload/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
-      timeout: 30000,
+      timeout: 180000, // 3分（大容量動画対応）
+      onUploadProgress: (e) => {
+        if (onProgress && e.total) {
+          onProgress(Math.round((e.loaded * 100) / e.total));
+        }
+      },
     }),
 };
 
