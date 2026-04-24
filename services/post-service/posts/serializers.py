@@ -6,7 +6,7 @@ from .models import Post, PostMedia, Like, Comment, SavedPost, Hashtag
 class PostMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostMedia
-        fields = ["media_id", "media_url", "media_order", "width", "height", "duration"]
+        fields = ["media_id", "media_url", "thumbnail_url", "media_order", "width", "height", "duration"]
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -43,6 +43,12 @@ class PostCreateSerializer(serializers.ModelSerializer):
         model = Post
         fields = ["post_id", "caption", "media_type", "location", "media_files"]
         read_only_fields = ["post_id"]
+
+    def validate_media_type(self, value):
+        # 'image' → 'photo' の正規化（フロントエンドとの互換）
+        if value == "image":
+            return "photo"
+        return value
 
     def validate_media_files(self, value):
         if not value:
