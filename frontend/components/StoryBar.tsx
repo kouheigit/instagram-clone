@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { usersApi, storiesApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
@@ -14,13 +14,10 @@ interface StoryGroup {
   hasUnviewed: boolean;
 }
 
-const PAGE_SIZE = 6;
-
 export function StoryBar() {
   const { user: me } = useAuth();
   const { showToast } = useToast();
   const [groups, setGroups] = useState<StoryGroup[]>([]);
-  const [page, setPage] = useState(0);
   const [viewer, setViewer] = useState<{ group: StoryGroup; idx: number } | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [storyFile, setStoryFile] = useState<File | null>(null);
@@ -185,31 +182,16 @@ export function StoryBar() {
 
   if (groups.length === 0) return null;
 
-  const totalPages = Math.ceil(groups.length / PAGE_SIZE);
-  const visibleGroups = groups.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
-
   return (
     <>
-      {/* フォロー中プロフィールバー（6件ずつ・矢印ナビ） */}
-      <div className="relative mb-4 flex items-center bg-white px-3 py-5 overflow-hidden">
-        {/* 前へ矢印 */}
-        {page > 0 && (
-          <button
-            onClick={() => setPage((p) => p - 1)}
-            className="absolute left-0 z-10 w-8 h-8 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
-            aria-label="前へ"
-          >
-            <ChevronLeft size={16} strokeWidth={2} />
-          </button>
-        )}
-
-        {/* プロフィール一覧 */}
-        <div className="flex justify-start gap-3 pl-2 pr-8">
-          {visibleGroups.map((group) => (
+      {/* フォロー中プロフィールバー（横スクロール） */}
+      <div className="mb-4 bg-white py-5 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-4 px-2">
+          {groups.map((group) => (
             <button
               key={group.user.user_id}
               onClick={() => openStory(group)}
-              className="flex flex-col items-center gap-1 min-w-0"
+              className="flex flex-col items-center gap-1 flex-shrink-0"
             >
               <div className="relative">
                 <div
@@ -232,17 +214,6 @@ export function StoryBar() {
             </button>
           ))}
         </div>
-
-        {/* 次へ矢印 */}
-        {page < totalPages - 1 && (
-          <button
-            onClick={() => setPage((p) => p + 1)}
-            className="absolute right-0 z-10 w-8 h-8 bg-white border border-[#dbdbdb] rounded-full shadow flex items-center justify-center hover:bg-[#f5f5f5] transition-colors"
-            aria-label="次へ"
-          >
-            <ChevronRight size={16} strokeWidth={2} />
-          </button>
-        )}
       </div>
 
       {/* ストーリー作成モーダル */}
