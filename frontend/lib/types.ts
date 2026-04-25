@@ -30,12 +30,23 @@ export interface Post {
   location: string;
   like_count: number;
   comment_count: number;
+  view_count: number;
   media_files: PostMedia[];
   is_liked: boolean;
   is_saved: boolean;
   created_at: string;
   // フロントで結合するユーザー情報
   author?: User;
+}
+
+export interface UploadedMedia {
+  media_id: string;
+  media_type: "image" | "video";
+  url: string;
+  thumbnail_url: string | null;
+  hls_url: string | null;
+  duration: number | null;
+  status: "pending" | "processing" | "ready" | "failed";
 }
 
 export interface Comment {

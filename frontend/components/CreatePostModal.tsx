@@ -17,6 +17,7 @@ import {
 import { postsApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "./Avatar";
+import type { UploadedMedia } from "@/lib/types";
 
 type Step = "select" | "crop" | "caption" | "sharing" | "done";
 type Ratio = "1:1" | "4:5" | "16:9";
@@ -47,6 +48,29 @@ function formatDuration(sec: number): string {
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
   return m > 0 ? `${m}分${s}秒` : `${s}秒`;
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function absoluteMediaUrl(raw: string | null | undefined): string {
+  if (!raw) return "";
+  return raw.startsWith("/") ? `http://localhost:8888${raw}` : raw;
+}
+
+async function waitForMediaReady(initial: UploadedMedia): Promise<UploadedMedia> {
+  if (initial.media_type !== "video" || initial.status === "ready") return initial;
+  if (initial.status === "failed") throw new Error("動画処理に失敗しました。別の動画でお試しください。");
+
+  const maxAttempts = 90;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    await sleep(2000);
+    const res = await mediaApi.get(initial.media_id);
+    const media = res.data as UploadedMedia;
+    if (media.status === "ready") return media;
+    if (media.status === "failed") throw new Error("動画処理に失敗しました。別の動画でお試しください。");
+  }
+
+  throw new Error("動画処理がタイムアウトしました。しばらく待ってから再度お試しください。");
 }
 
 export function CreatePostModal({ onClose, onCreated }: Props) {
@@ -148,15 +172,13 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
           setUploadProgress(percent);
         });
 
-        const raw: string = res.data.url ?? res.data.media_url ?? "";
-        mediaUrl = raw.startsWith("/") ? `http://localhost:8888${raw}` : raw;
+        const uploaded = await waitForMediaReady(res.data as UploadedMedia);
+        mediaUrl = absoluteMediaUrl(uploaded.url);
 
         if (isVideo) {
-          const thumbRaw: string = res.data.thumbnail_url ?? "";
-          const hlsRaw: string = res.data.hls_url ?? "";
-          thumbnailUrl = thumbRaw.startsWith("/") ? `http://localhost:8888${thumbRaw}` : thumbRaw;
-          hlsUrl = hlsRaw.startsWith("/") ? `http://localhost:8888${hlsRaw}` : hlsRaw;
-          duration = res.data.duration ?? undefined;
+          thumbnailUrl = absoluteMediaUrl(uploaded.thumbnail_url);
+          hlsUrl = absoluteMediaUrl(uploaded.hls_url);
+          duration = uploaded.duration ?? undefined;
         }
       }
 
@@ -186,6 +208,7 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
+        (err as { message?: string })?.message ??
         "投稿に失敗しました。再度お試しください。";
       setUploadError(msg);
       setStep("caption");

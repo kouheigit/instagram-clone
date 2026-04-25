@@ -65,6 +65,7 @@ export const postsApi = {
   delete: (postId: string) => api.delete(`/posts/${postId}/`),
   like: (postId: string) => api.post(`/posts/${postId}/like/`),
   unlike: (postId: string) => api.delete(`/posts/${postId}/like/`),
+  view: (postId: string) => api.post(`/posts/${postId}/view/`),
   likes: (postId: string) => api.get(`/posts/${postId}/likes/`),
   save: (postId: string) => api.post(`/posts/${postId}/save/`),
   unsave: (postId: string) => api.delete(`/posts/${postId}/save/`),
@@ -153,6 +154,7 @@ export const mediaApi = {
         }
       },
     }),
+  get: (mediaId: string) => api.get(`/media/${mediaId}/`),
 };
 
 // --- Search ---
