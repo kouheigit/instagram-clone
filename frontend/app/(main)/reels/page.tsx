@@ -27,6 +27,17 @@ interface ReelCardProps {
   active: boolean;
 }
 
+function isVideoPost(post: Post): boolean {
+  const media = post.media_files[0];
+  if (!media) return false;
+  return (
+    post.media_type === "video" ||
+    Boolean(media.thumbnail_url) ||
+    media.duration !== null ||
+    /\.(mp4|mov|m4v|webm|avi)$/i.test(media.media_url)
+  );
+}
+
 function ReelCard({ post, author, active }: ReelCardProps) {
   const { user: me } = useAuth();
   const [liked, setLiked] = useState(post.is_liked);
@@ -38,7 +49,7 @@ function ReelCard({ post, author, active }: ReelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const media = post.media_files[0];
-  const isVideo = post.media_type === "video" && media?.media_url?.match(/\.(mp4|webm|mov)$/i);
+  const isVideo = isVideoPost(post);
 
   useEffect(() => {
     if (!videoRef.current) return;
