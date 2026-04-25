@@ -25,6 +25,7 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
 
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -78,6 +79,17 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
     const video = videoRef.current;
     if (!video) return;
     video.muted = !video.muted;
+    setMuted(video.muted);
+  }, []);
+
+  const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    const nextVolume = Number(e.target.value);
+    video.volume = nextVolume;
+    video.muted = nextVolume === 0;
+    setVolume(nextVolume);
     setMuted(video.muted);
   }, []);
 
@@ -175,6 +187,17 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
             >
               {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={muted ? 0 : volume}
+              onChange={handleVolumeChange}
+              onClick={(e) => e.stopPropagation()}
+              className="hidden h-1 w-20 accent-white sm:block"
+              aria-label="音量"
+            />
             <span className="min-w-[86px] text-xs font-medium tabular-nums text-white">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
