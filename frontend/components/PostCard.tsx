@@ -20,6 +20,16 @@ interface Props {
   onDelete?: (postId: string) => void;
 }
 
+function isVideoMedia(media: Post["media_files"][number] | undefined, postType: Post["media_type"]): boolean {
+  if (!media) return false;
+  return (
+    postType === "video" ||
+    Boolean(media.thumbnail_url) ||
+    media.duration !== null ||
+    /\.(mp4|mov|m4v|webm|avi)$/i.test(media.media_url)
+  );
+}
+
 export function PostCard({ post, author, onDelete }: Props) {
   const { user: me } = useAuth();
   const { showToast } = useToast();
@@ -99,6 +109,7 @@ export function PostCard({ post, author, onDelete }: Props) {
   };
 
   const media = post.media_files[imgIdx];
+  const mediaIsVideo = isVideoMedia(media, post.media_type);
   const timeAgo = formatTimeAgo(post.created_at);
   const [imgError, setImgError] = useState(false);
 
@@ -225,9 +236,9 @@ export function PostCard({ post, author, onDelete }: Props) {
         {/* メディア（画像 or 動画） */}
         <div
           className="relative aspect-square bg-black"
-          onClick={post.media_type === "video" ? undefined : handleImageTap}
+          onClick={mediaIsVideo ? undefined : handleImageTap}
         >
-          {post.media_type === "video" && media ? (
+          {mediaIsVideo && media ? (
             <VideoPlayer
               src={media.media_url}
               poster={media.thumbnail_url ?? undefined}
@@ -251,7 +262,7 @@ export function PostCard({ post, author, onDelete }: Props) {
           ) : null}
 
           {/* ダブルタップいいねアニメーション（画像投稿のみ） */}
-          {post.media_type !== "video" && showHeartAnim && (
+          {!mediaIsVideo && showHeartAnim && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Heart
                 size={80}
