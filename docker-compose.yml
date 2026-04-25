@@ -303,6 +303,7 @@ services:
       - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/7
       - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
       - MEDIA_BASE_URL=http://localhost:8080
+      - MEDIA_PROCESSING_ASYNC=True
       - DEBUG=True
     depends_on:
       postgres:
@@ -385,6 +386,31 @@ services:
       - USER_SERVICE_URL=http://user-service:8001
       - FEED_SERVICE_URL=http://feed-service:8003
       - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - instagram_net
+    restart: unless-stopped
+
+  media-celery-worker:
+    build:
+      context: ./services/media-service
+      dockerfile: Dockerfile
+    container_name: instagram_media_celery_worker
+    command: celery -A config worker --loglevel=info --concurrency=1
+    volumes:
+      - ./services/media-service:/app
+      - media_data:/var/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-instagram}:${POSTGRES_PASSWORD:-instagram_pass}@postgres:5432/${POSTGRES_DB:-instagram_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_pass}@redis:6379/7
+      - SECRET_KEY=${DJANGO_SECRET_KEY:-dev-secret-key}
+      - MEDIA_BASE_URL=http://localhost:8080
+      - MEDIA_PROCESSING_ASYNC=True
     depends_on:
       postgres:
         condition: service_healthy

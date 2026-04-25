@@ -75,6 +75,11 @@ MEDIA_BASE_URL = os.environ.get("MEDIA_BASE_URL", "http://localhost:8080")
 DATA_UPLOAD_MAX_MEMORY_SIZE = 110 * 1024 * 1024  # 110MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 110 * 1024 * 1024
 
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://:redis_pass@redis:6379/7")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://:redis_pass@redis:6379/7")
+CELERY_TASK_ALWAYS_EAGER = os.environ.get("CELERY_TASK_ALWAYS_EAGER", "False").lower() == "true"
+MEDIA_PROCESSING_ASYNC = os.environ.get("MEDIA_PROCESSING_ASYNC", "True").lower() == "true"
+
 LANGUAGE_CODE = "ja"
 TIME_ZONE = "Asia/Tokyo"
 USE_I18N = True
