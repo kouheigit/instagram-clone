@@ -25,9 +25,15 @@
 | `frontend/components/VideoPlayer.tsx` | **新規** HTML5 動画プレーヤー、音量調整、再生時間表示、画面内自動再生、ネイティブ HLS 対応 |
 | `frontend/components/PostCard.tsx` | 動画投稿・カルーセル内動画で `VideoPlayer` を表示 |
 | `frontend/components/PostDetailModal.tsx` | 詳細モーダルでも `VideoPlayer` を表示、カルーセル内動画対応 |
-| `frontend/components/CreatePostModal.tsx` | 動画プレビュー・バリデーション・進捗バー |
+| `frontend/components/CreatePostModal.tsx` | 動画プレビュー・バリデーション・進捗バー、非同期動画処理完了までポーリング |
 | `frontend/app/(main)/profile/[username]/page.tsx` | `getPostThumbnail()` が動画サムネイルを優先 |
-| `frontend/app/(main)/reels/page.tsx` | 縦スクロール動画フィード、HLS 再生対応 |
+| `frontend/app/(main)/reels/page.tsx` | 縦スクロール動画フィード、HLS 再生対応、再生回数表示 |
+| `services/media-service/config/celery.py` | media-service 用 Celery アプリ追加 |
+| `services/media-service/media_app/tasks.py` | 動画サムネイル生成・圧縮・HLS 生成タスク |
+| `docker-compose.yml` | media-service 用 Celery worker 追加 |
+| `services/post-service/posts/migrations/0004_post_view_count.py` | `view_count` マイグレーション |
+| `frontend/playwright.config.ts` | Playwright E2E 設定 |
+| `frontend/tests/e2e/video-upload.spec.ts` | 動画アップロード → フィード表示 E2E |
 
 ---
 
@@ -38,7 +44,9 @@
   ↓ POST /api/v1/media/upload/  (multipart, video file)
 [Nginx :8888]
   ↓
-[media-service :8004]  ← ffmpeg/ffprobe でサムネイル生成・duration 検証
+[media-service :8004]  ← ffprobe で duration 検証、Celery へ動画処理を投入
+  ↓
+[media-celery-worker]  ← ffmpeg でサムネイル生成・圧縮・HLS 生成
   → /var/media/{user_id}/{media_id}.mp4   (動画)
   → /var/media/{user_id}/video_{media_id}.mp4   (H.264/AAC 圧縮済み動画)
   → /var/media/{user_id}/thumb_{media_id}.jpg  (サムネイル)
@@ -65,18 +73,18 @@
 - [x] **動画圧縮**: ffmpeg で H.264 + AAC に再エンコードしてファイルサイズを削減
   - `ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac output.mp4`
 - [x] **HLS ストリーミング**: ffmpeg で `.m3u8` に変換して低速回線対応
-- [ ] **非同期処理**: Celery タスクでサムネイル生成・圧縮を非同期化（現在は同期処理）
+- [x] **非同期処理**: Celery タスクでサムネイル生成・圧縮・HLS 生成を非同期化
 - [x] **AVI 対応**: media-service serializer の `ALLOWED_VIDEO_TYPES` に `video/avi` を追加
 - [x] **動画音量調整**: VideoPlayer に音量スライダーを追加
 - [x] **動画再生時間表示**: コントロールバーに `00:30 / 01:00` 形式で時間表示
 - [x] **自動再生**: フィードスクロール時に画面内の動画を自動再生（Intersection Observer 拡張）
 - [x] **Reels ページ**: 縦スクロール TikTok 風動画フィード（`/reels` ページ）
-- [ ] **E2E テスト**: Playwright で動画アップロード → フィード表示のテスト追加
+- [x] **E2E テスト**: Playwright で動画アップロード → フィード表示のテスト追加
 
 ### フロントエンド改善
-- [ ] `PostCard.tsx`: 動画の再生回数（view_count）表示
+- [x] `PostCard.tsx`: 動画の再生回数（view_count）表示
 - [x] カルーセル投稿での動画混在（現状は1枚目が動画の場合のみ対応）
-- [ ] モバイル: 動画のタップで音量オン/オフ切り替え
+- [x] モバイル: 動画のタップで音量オン/オフ切り替え
 
 ---
 
@@ -103,6 +111,15 @@ docker exec instagram_post_service python manage.py migrate
 # ⑥ フィードに動画投稿が表示され、クリックで再生できることを確認
 # ⑦ プロフィールページで動画サムネイルに▶マークが表示されることを確認
 ```
+
+### E2E テスト
+
+```bash
+cd frontend
+E2E_USERNAME=<既存ユーザー名> E2E_PASSWORD=<パスワード> npm run test:e2e -- tests/e2e/video-upload.spec.ts
+```
+
+> テスト内で `ffmpeg` を使って3秒の一時動画を生成します。ローカルに `ffmpeg` が必要です。
 
 ---
 

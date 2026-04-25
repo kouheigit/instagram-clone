@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Eye, Heart, MessageCircle, Bookmark, MoreHorizontal, Volume2, VolumeX } from "lucide-react";
 import { postsApi, usersApi } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/Avatar";
 import { PostDetailModal } from "@/components/PostDetailModal";
 import type { Post, User } from "@/lib/types";
@@ -39,7 +38,6 @@ function isVideoPost(post: Post): boolean {
 }
 
 function ReelCard({ post, author, active }: ReelCardProps) {
-  const { user: me } = useAuth();
   const [liked, setLiked] = useState(post.is_liked);
   const [likeCount, setLikeCount] = useState(post.like_count);
   const [viewCount, setViewCount] = useState(post.view_count ?? 0);
