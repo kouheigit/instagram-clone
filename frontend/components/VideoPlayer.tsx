@@ -10,6 +10,13 @@ interface Props {
   loop?: boolean;
 }
 
+function formatTime(value: number): string {
+  if (!Number.isFinite(value)) return "00:00";
+  const minutes = Math.floor(value / 60);
+  const seconds = Math.floor(value % 60);
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 export function VideoPlayer({ src, poster, className = "", loop = true }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,6 +26,8 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [showControls, setShowControls] = useState(true);
 
   // スクロールで画面外に出たら自動停止
@@ -75,6 +84,8 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
   const handleTimeUpdate = useCallback(() => {
     const video = videoRef.current;
     if (!video || !video.duration) return;
+    setCurrentTime(video.currentTime);
+    setDuration(video.duration);
     setProgress((video.currentTime / video.duration) * 100);
   }, []);
 
@@ -112,6 +123,7 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
         playsInline
         preload="metadata"
         onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={() => setDuration(videoRef.current?.duration ?? 0)}
         onEnded={() => { setPlaying(false); setShowControls(true); }}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
@@ -163,6 +175,9 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
             >
               {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
+            <span className="min-w-[86px] text-xs font-medium tabular-nums text-white">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
           </div>
           <button
             onClick={handleFullscreen}
