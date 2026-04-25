@@ -10,6 +10,7 @@ interface Props {
   className?: string;
   loop?: boolean;
   autoPlayWhenVisible?: boolean;
+  onViewed?: () => void;
 }
 
 function formatTime(value: number): string {
@@ -19,11 +20,13 @@ function formatTime(value: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, autoPlayWhenVisible = false }: Props) {
+export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, autoPlayWhenVisible = false, onViewed }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const controlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const viewedRef = useRef(false);
+  const ignoreNextClickRef = useRef(false);
 
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
@@ -92,13 +95,17 @@ export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, 
     }
   }, [revealControls]);
 
-  const toggleMute = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const toggleMutedState = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     video.muted = !video.muted;
     setMuted(video.muted);
   }, []);
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleMutedState();
+  }, [toggleMutedState]);
 
   const handleVolumeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
@@ -117,7 +124,11 @@ export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, 
     setCurrentTime(video.currentTime);
     setDuration(video.duration);
     setProgress((video.currentTime / video.duration) * 100);
-  }, []);
+    if (!viewedRef.current && video.currentTime >= Math.min(2, video.duration * 0.5)) {
+      viewedRef.current = true;
+      onViewed?.();
+    }
+  }, [onViewed]);
 
   const handleProgressClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -135,11 +146,28 @@ export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, 
     if (video?.requestFullscreen) video.requestFullscreen();
   }, []);
 
+  const handleContainerClick = useCallback(() => {
+    if (ignoreNextClickRef.current) {
+      ignoreNextClickRef.current = false;
+      return;
+    }
+    togglePlay();
+  }, [togglePlay]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      ignoreNextClickRef.current = true;
+      toggleMutedState();
+      revealControls();
+    }
+  }, [revealControls, toggleMutedState]);
+
   return (
     <div
       ref={containerRef}
       className={`relative bg-black cursor-pointer select-none overflow-hidden ${className}`}
-      onClick={togglePlay}
+      onClick={handleContainerClick}
+      onTouchEnd={handleTouchEnd}
       onMouseMove={revealControls}
       onMouseLeave={() => playing && setShowControls(false)}
     >

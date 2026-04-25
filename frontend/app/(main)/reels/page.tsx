@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Heart, MessageCircle, Bookmark, MoreHorizontal, Volume2, VolumeX } from "lucide-react";
+import { Eye, Heart, MessageCircle, Bookmark, MoreHorizontal, Volume2, VolumeX } from "lucide-react";
 import { postsApi, usersApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/Avatar";
@@ -42,11 +42,13 @@ function ReelCard({ post, author, active }: ReelCardProps) {
   const { user: me } = useAuth();
   const [liked, setLiked] = useState(post.is_liked);
   const [likeCount, setLikeCount] = useState(post.like_count);
+  const [viewCount, setViewCount] = useState(post.view_count ?? 0);
   const [saved, setSaved] = useState(post.is_saved);
   const [muted, setMuted] = useState(true);
   const [captionExpanded, setCaptionExpanded] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const viewReportedRef = useRef(false);
 
   const media = post.media_files[0];
   const isVideo = isVideoPost(post);
@@ -89,6 +91,23 @@ function ReelCard({ post, author, active }: ReelCardProps) {
     } catch { /* ignore */ }
   };
 
+  const recordVideoView = async () => {
+    if (viewReportedRef.current) return;
+    viewReportedRef.current = true;
+    try {
+      const res = await postsApi.view(post.post_id);
+      setViewCount(res.data.view_count ?? viewCount);
+    } catch { /* ignore */ }
+  };
+
+  const handleVideoTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video?.duration) return;
+    if (video.currentTime >= Math.min(2, video.duration * 0.5)) {
+      recordVideoView();
+    }
+  };
+
   return (
     <>
       <div className="relative w-full h-[calc(100dvh-0px)] lg:h-screen bg-black flex items-center justify-center snap-start snap-always overflow-hidden">
@@ -101,6 +120,8 @@ function ReelCard({ post, author, active }: ReelCardProps) {
             muted={muted}
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
+            onClick={() => setMuted((m) => !m)}
+            onTimeUpdate={handleVideoTimeUpdate}
           />
         ) : media ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -133,6 +154,13 @@ function ReelCard({ post, author, active }: ReelCardProps) {
             <MessageCircle size={28} strokeWidth={1.75} className="stroke-white" />
             <span className="text-white text-xs font-semibold drop-shadow">{post.comment_count}</span>
           </button>
+
+          {isVideo && (
+            <div className="flex flex-col items-center gap-1">
+              <Eye size={26} strokeWidth={1.75} className="stroke-white" />
+              <span className="text-white text-xs font-semibold drop-shadow">{viewCount}</span>
+            </div>
+          )}
 
           {/* 保存 */}
           <button type="button" onClick={toggleSave} className="flex flex-col items-center gap-1">

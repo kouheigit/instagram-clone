@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, MessageCircle, Bookmark, MoreHorizontal } from "lucide-react";
+import { Eye, Heart, MessageCircle, Bookmark, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { postsApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -37,8 +37,10 @@ export function PostCard({ post, author, onDelete }: Props) {
   const [liked, setLiked] = useState(post.is_liked);
   const [likeCount, setLikeCount] = useState(post.like_count);
   const [saved, setSaved] = useState(post.is_saved);
+  const [viewCount, setViewCount] = useState(post.view_count ?? 0);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
+  const viewReportedRef = useRef(false);
 
   // メニューモーダル
   const [menuOpen, setMenuOpen] = useState(false);
@@ -90,6 +92,15 @@ export function PostCard({ post, author, onDelete }: Props) {
         await postsApi.save(post.post_id);
       }
       setSaved(!saved);
+    } catch { /* ignore */ }
+  };
+
+  const recordVideoView = async () => {
+    if (viewReportedRef.current) return;
+    viewReportedRef.current = true;
+    try {
+      const res = await postsApi.view(post.post_id);
+      setViewCount(res.data.view_count ?? viewCount);
     } catch { /* ignore */ }
   };
 
@@ -245,6 +256,7 @@ export function PostCard({ post, author, onDelete }: Props) {
               poster={media.thumbnail_url ?? undefined}
               className="w-full h-full"
               autoPlayWhenVisible
+              onViewed={recordVideoView}
             />
           ) : media && !imgError ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -320,6 +332,13 @@ export function PostCard({ post, author, onDelete }: Props) {
 
           {likeCount > 0 && (
             <p className="font-semibold text-sm mb-1">{likeCount.toLocaleString()}件のいいね</p>
+          )}
+
+          {mediaIsVideo && viewCount > 0 && (
+            <p className="mb-1 flex items-center gap-1 text-sm font-semibold text-[#262626]">
+              <Eye size={14} strokeWidth={1.75} />
+              {viewCount.toLocaleString()}回再生
+            </p>
           )}
 
           {post.caption && (
