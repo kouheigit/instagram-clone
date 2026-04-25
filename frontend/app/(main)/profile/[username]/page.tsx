@@ -797,7 +797,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "posts"}
               onClick={() => setActiveTab("posts")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+              className={`relative flex h-[48px] flex-1 items-start justify-center pt-[18px] transition-colors md:h-[52px] ${
                 activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -813,7 +813,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "videos"}
               onClick={() => setActiveTab("videos")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+              className={`relative flex h-[48px] flex-1 items-start justify-center pt-[18px] transition-colors md:h-[52px] ${
                 activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
@@ -830,7 +830,7 @@ export default function ProfilePage() {
                 role="tab"
                 aria-selected={activeTab === "saved"}
                 onClick={() => setActiveTab("saved")}
-                className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+                className={`relative flex h-[48px] flex-1 items-start justify-center pt-[18px] transition-colors md:h-[52px] ${
                   activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
                 }`}
               >
@@ -847,7 +847,7 @@ export default function ProfilePage() {
               role="tab"
               aria-selected={activeTab === "tagged"}
               onClick={() => setActiveTab("tagged")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+              className={`relative flex h-[48px] flex-1 items-start justify-center pt-[18px] transition-colors md:h-[52px] ${
                 activeTab === "tagged" ? "text-black" : "text-[#8e8e8e]"
               }`}
             >
