@@ -23,6 +23,15 @@ type Ratio = "1:1" | "4:5" | "16:9";
 
 const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024; // 100MB
 const MAX_VIDEO_DURATION_SEC = 60;
+const ACCEPTED_MEDIA_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/heic",
+  "video/mp4",
+  "video/quicktime",
+  "video/avi",
+  "video/x-msvideo",
+].join(",");
 
 interface Props {
   onClose: () => void;
@@ -281,7 +290,7 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
             <p className="text-xl text-[#262626]">写真や動画をここにドラッグ</p>
             <p className="text-sm text-[#8e8e8e]">
               写真: JPEG / PNG（最大10MB）<br />
-              動画: MP4 / MOV（最大100MB・60秒以内）
+              動画: MP4 / MOV / AVI（最大100MB・60秒以内）
             </p>
 
             {uploadError && (
@@ -293,7 +302,7 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/heic,video/mp4,video/quicktime,video/avi"
+              accept={ACCEPTED_MEDIA_TYPES}
               className="hidden"
               onChange={handleFileChange}
             />
