@@ -802,7 +802,7 @@ export default function ProfilePage() {
               }`}
             >
               {activeTab === "posts" && (
-                <span className="absolute top-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
+                <span className="absolute bottom-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
               )}
               <GridTabIcon active={activeTab === "posts"} />
             </button>
@@ -818,7 +818,7 @@ export default function ProfilePage() {
               }`}
             >
               {activeTab === "videos" && (
-                <span className="absolute top-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
+                <span className="absolute bottom-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
               )}
               <ReelsTabIcon active={activeTab === "videos"} />
             </button>
@@ -835,7 +835,7 @@ export default function ProfilePage() {
                 }`}
               >
                 {activeTab === "saved" && (
-                  <span className="absolute top-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
+                  <span className="absolute bottom-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
                 )}
                 <SavedTabIcon active={activeTab === "saved"} />
               </button>
@@ -852,7 +852,7 @@ export default function ProfilePage() {
               }`}
             >
               {activeTab === "tagged" && (
-                <span className="absolute top-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
+                <span className="absolute bottom-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
               )}
               <TaggedTabIcon active={activeTab === "tagged"} />
             </button>
