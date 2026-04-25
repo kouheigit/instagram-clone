@@ -17,7 +17,7 @@ import type { Post, User } from "@/lib/types";
 
 type ListModal = "followers" | "following" | null;
 type SelectedPost = string | null;
-type ProfileTab = "posts" | "videos" | "saved";
+type ProfileTab = "posts" | "videos" | "saved" | "tagged";
 
 function formatCount(value: number) {
   return new Intl.NumberFormat("ja-JP").format(value);
@@ -218,6 +218,36 @@ function SavedTabIcon({ active }: { active: boolean }) {
         stroke={color}
         strokeWidth="1.5"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function TaggedTabIcon({ active }: { active: boolean }) {
+  const color = active ? "#000000" : "#8e8e8e";
+
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <rect
+        x="4.75"
+        y="3.75"
+        width="14.5"
+        height="16.5"
+        rx="2.25"
+        stroke={color}
+        strokeWidth="2"
+      />
+      <circle cx="12" cy="10" r="2.5" stroke={color} strokeWidth="2" />
+      <path
+        d="M7.7 18.2c.8-2.2 2.3-3.3 4.3-3.3s3.5 1.1 4.3 3.3"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -462,6 +492,8 @@ export default function ProfilePage() {
       ? videoPosts
       : activeTab === "saved"
         ? savedImagePosts
+        : activeTab === "tagged"
+          ? []
         : imagePosts;
   const isTabLoading = loading || (activeTab === "saved" && savedLoading);
   const isCurrentTabEmpty = activePosts.length === 0;
@@ -480,6 +512,14 @@ export default function ProfilePage() {
         icon: <SavedTabIcon active />,
         title: "保存済み",
         description: "まだ保存済みの投稿がありません",
+      };
+    }
+
+    if (activeTab === "tagged") {
+      return {
+        icon: <TaggedTabIcon active />,
+        title: "タグ付けされた投稿",
+        description: "まだタグ付けされた投稿がありません",
       };
     }
 
@@ -800,6 +840,22 @@ export default function ProfilePage() {
                 <SavedTabIcon active={activeTab === "saved"} />
               </button>
             )}
+            <button
+              type="button"
+              aria-label="タグ付けされた投稿"
+              aria-pressed={activeTab === "tagged"}
+              role="tab"
+              aria-selected={activeTab === "tagged"}
+              onClick={() => setActiveTab("tagged")}
+              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+                activeTab === "tagged" ? "text-black" : "text-[#8e8e8e]"
+              }`}
+            >
+              {activeTab === "tagged" && (
+                <span className="absolute top-0 left-1/2 h-[2px] w-[64px] -translate-x-1/2 bg-black md:w-[72px]" />
+              )}
+              <TaggedTabIcon active={activeTab === "tagged"} />
+            </button>
           </div>
 
           {isTabLoading ? (
