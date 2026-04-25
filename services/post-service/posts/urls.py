@@ -11,6 +11,7 @@ urlpatterns = [
     # 投稿詳細・操作
     path("<uuid:post_id>/", views.PostDetailView.as_view(), name="post-detail"),
     path("<uuid:post_id>/like/", views.like_post, name="post-like"),
+    path("<uuid:post_id>/view/", views.view_post, name="post-view"),
     path("<uuid:post_id>/likes/", views.post_likes_users, name="post-likes-users"),
     path("<uuid:post_id>/save/", views.save_post, name="post-save"),
     path("<uuid:post_id>/comments/", views.CommentListCreateView.as_view(), name="post-comments"),

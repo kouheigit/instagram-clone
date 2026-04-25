@@ -7,6 +7,7 @@ import logging
 import urllib.request
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -195,6 +196,26 @@ def save_post(request, post_id):
     else:
         SavedPost.objects.filter(user_id=user_id, post=post).delete()
         return Response({"saved": False})
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+def view_post(request, post_id):
+    """動画投稿の再生回数を記録する。ユーザー単位で短時間の重複加算を避ける。"""
+    post = get_object_or_404(Post, post_id=post_id, is_deleted=False)
+    user_id = get_user_id_from_request(request)
+
+    if post.media_type not in (Post.MEDIA_VIDEO, Post.MEDIA_REEL):
+        return Response({"view_count": post.view_count})
+
+    cache_key = f"post_view:{post_id}:{user_id}"
+    if cache.get(cache_key):
+        return Response({"view_count": post.view_count})
+
+    cache.set(cache_key, True, timeout=60 * 60)
+    Post.objects.filter(pk=post_id).update(view_count=F("view_count") + 1)
+    post.refresh_from_db(fields=["view_count"])
+    return Response({"view_count": post.view_count})
 
 
 @api_view(["GET"])

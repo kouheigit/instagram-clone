@@ -18,10 +18,10 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = [
             "post_id", "user_id", "caption", "media_type", "location",
-            "like_count", "comment_count", "media_files",
+            "like_count", "comment_count", "view_count", "media_files",
             "is_liked", "is_saved", "created_at",
         ]
-        read_only_fields = ["post_id", "user_id", "like_count", "comment_count", "created_at"]
+        read_only_fields = ["post_id", "user_id", "like_count", "comment_count", "view_count", "created_at"]
 
     def get_is_liked(self, obj):
         request = self.context.get("request")

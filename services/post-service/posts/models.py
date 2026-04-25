@@ -23,6 +23,7 @@ class Post(models.Model):
     location      = models.CharField(max_length=255, blank=True)   # POST-07
     like_count    = models.PositiveIntegerField(default=0)
     comment_count = models.PositiveIntegerField(default=0)
+    view_count    = models.PositiveIntegerField(default=0)          # 動画再生回数
     is_deleted    = models.BooleanField(default=False)
     created_at    = models.DateTimeField(auto_now_add=True)
     updated_at    = models.DateTimeField(auto_now=True)
