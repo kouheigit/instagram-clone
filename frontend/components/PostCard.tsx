@@ -232,6 +232,7 @@ export function PostCard({ post, author, onDelete }: Props) {
               src={media.media_url}
               poster={media.thumbnail_url ?? undefined}
               className="w-full h-full"
+              autoPlayWhenVisible
             />
           ) : media && !imgError ? (
             // eslint-disable-next-line @next/next/no-img-element
