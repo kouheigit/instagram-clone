@@ -8,6 +8,7 @@ interface Props {
   poster?: string;
   className?: string;
   loop?: boolean;
+  autoPlayWhenVisible?: boolean;
 }
 
 function formatTime(value: number): string {
@@ -17,7 +18,7 @@ function formatTime(value: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function VideoPlayer({ src, poster, className = "", loop = true }: Props) {
+export function VideoPlayer({ src, poster, className = "", loop = true, autoPlayWhenVisible = false }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,12 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (entry.isIntersecting && autoPlayWhenVisible && video.paused) {
+          video.play().catch(() => {});
+          setPlaying(true);
+          return;
+        }
+
         if (!entry.isIntersecting && !video.paused) {
           video.pause();
           setPlaying(false);
@@ -48,7 +55,7 @@ export function VideoPlayer({ src, poster, className = "", loop = true }: Props)
     );
     observer.observe(container);
     return () => observer.disconnect();
-  }, []);
+  }, [autoPlayWhenVisible]);
 
   const revealControls = useCallback(() => {
     setShowControls(true);
