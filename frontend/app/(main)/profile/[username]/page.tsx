@@ -745,6 +745,63 @@ export default function ProfilePage() {
         </section>
 
         <section className="posts-section box-border w-full max-w-[935px] min-w-0">
+          <div
+            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb] bg-white px-4 md:px-0"
+            role="tablist"
+            aria-label="プロフィールメディア"
+          >
+            <button
+              type="button"
+              aria-label="画像一覧"
+              aria-pressed={activeTab === "posts"}
+              role="tab"
+              aria-selected={activeTab === "posts"}
+              onClick={() => setActiveTab("posts")}
+              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+                activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
+              }`}
+            >
+              {activeTab === "posts" && (
+                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
+              )}
+              <GridTabIcon active={activeTab === "posts"} />
+            </button>
+            <button
+              type="button"
+              aria-label="投稿動画一覧"
+              aria-pressed={activeTab === "videos"}
+              role="tab"
+              aria-selected={activeTab === "videos"}
+              onClick={() => setActiveTab("videos")}
+              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+                activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
+              }`}
+            >
+              {activeTab === "videos" && (
+                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
+              )}
+              <ReelsTabIcon active={activeTab === "videos"} />
+            </button>
+            {showSavedTab && (
+              <button
+                type="button"
+                aria-label="お気に入り画像一覧"
+                aria-pressed={activeTab === "saved"}
+                role="tab"
+                aria-selected={activeTab === "saved"}
+                onClick={() => setActiveTab("saved")}
+                className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
+                  activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
+                }`}
+              >
+                {activeTab === "saved" && (
+                  <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
+                )}
+                <SavedTabIcon active={activeTab === "saved"} />
+              </button>
+            )}
+          </div>
+
           {isTabLoading ? (
             <div className="flex min-h-[280px] items-center justify-center pb-3 md:min-h-[320px] md:pb-4">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#dbdbdb] border-t-[#0095f6]" />
@@ -822,63 +879,6 @@ export default function ProfilePage() {
               })}
             </div>
           )}
-
-          <div
-            className="mx-auto box-border flex w-full max-w-[935px] min-w-0 border-t border-[#dbdbdb] bg-white px-4 md:px-0"
-            role="tablist"
-            aria-label="プロフィールメディア"
-          >
-            <button
-              type="button"
-              aria-label="画像一覧"
-              aria-pressed={activeTab === "posts"}
-              role="tab"
-              aria-selected={activeTab === "posts"}
-              onClick={() => setActiveTab("posts")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
-                activeTab === "posts" ? "text-black" : "text-[#8e8e8e]"
-              }`}
-            >
-              {activeTab === "posts" && (
-                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
-              )}
-              <GridTabIcon active={activeTab === "posts"} />
-            </button>
-            <button
-              type="button"
-              aria-label="投稿動画一覧"
-              aria-pressed={activeTab === "videos"}
-              role="tab"
-              aria-selected={activeTab === "videos"}
-              onClick={() => setActiveTab("videos")}
-              className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
-                activeTab === "videos" ? "text-black" : "text-[#8e8e8e]"
-              }`}
-            >
-              {activeTab === "videos" && (
-                <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
-              )}
-              <ReelsTabIcon active={activeTab === "videos"} />
-            </button>
-            {showSavedTab && (
-              <button
-                type="button"
-                aria-label="お気に入り画像一覧"
-                aria-pressed={activeTab === "saved"}
-                role="tab"
-                aria-selected={activeTab === "saved"}
-                onClick={() => setActiveTab("saved")}
-                className={`relative flex h-[56px] flex-1 items-center justify-center transition-colors md:h-[72px] ${
-                  activeTab === "saved" ? "text-black" : "text-[#8e8e8e]"
-                }`}
-              >
-                {activeTab === "saved" && (
-                  <span className="absolute bottom-0 left-1/2 h-[3px] w-[64px] -translate-x-1/2 rounded-full bg-black md:w-[72px]" />
-                )}
-                <SavedTabIcon active={activeTab === "saved"} />
-              </button>
-            )}
-          </div>
         </section>
 
         {listModal && (
