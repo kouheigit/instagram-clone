@@ -12,11 +12,11 @@ class MediaFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaFile
         fields = [
-            "media_id", "user_id", "media_type", "url", "thumbnail_url",
+            "media_id", "user_id", "media_type", "url", "thumbnail_url", "hls_url",
             "width", "height", "duration", "file_size",
             "status", "created_at",
         ]
-        read_only_fields = ["media_id", "user_id", "url", "thumbnail_url", "file_size", "status", "created_at"]
+        read_only_fields = ["media_id", "user_id", "url", "thumbnail_url", "hls_url", "file_size", "status", "created_at"]
 
 
 class MediaUploadSerializer(serializers.Serializer):

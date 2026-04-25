@@ -11,20 +11,23 @@
 | `services/media-service/Dockerfile` | ffmpeg インストール追加 |
 | `services/media-service/media_app/models.py` | `thumbnail_url` フィールド追加 |
 | `services/media-service/media_app/migrations/0002_mediafile_thumbnail_url.py` | マイグレーション |
-| `services/media-service/media_app/serializers.py` | 動画サイズ制限 200MB→100MB、`thumbnail_url` をシリアライザーに追加 |
-| `services/media-service/media_app/views.py` | ffprobe で duration 取得・60秒超えバリデーション、ffmpeg でサムネイル生成 |
+| `services/media-service/media_app/migrations/0003_mediafile_hls_url.py` | `hls_url` マイグレーション |
+| `services/media-service/media_app/serializers.py` | 動画サイズ制限 200MB→100MB、AVI 対応、`thumbnail_url` / `hls_url` をシリアライザーに追加 |
+| `services/media-service/media_app/views.py` | ffprobe で duration 取得・60秒超えバリデーション、ffmpeg でサムネイル生成、H.264/AAC 圧縮、HLS 生成 |
 | `services/media-service/config/settings/base.py` | `DATA_UPLOAD_MAX_MEMORY_SIZE` 210MB→110MB |
 | `services/post-service/posts/models.py` | `PostMedia` に `thumbnail_url` 追加 |
 | `services/post-service/posts/migrations/0002_postmedia_thumbnail_url.py` | マイグレーション |
-| `services/post-service/posts/serializers.py` | `thumbnail_url` をフィールドに追加、`media_type` 正規化 |
-| `infra/docker/nginx/conf.d/api.conf` | `/media/` に Range Request・mp4 モジュール追加、`/api/v1/media/` タイムアウト 300s |
-| `frontend/lib/types.ts` | `PostMedia.thumbnail_url` 追加 |
+| `services/post-service/posts/migrations/0003_postmedia_hls_url.py` | `hls_url` マイグレーション |
+| `services/post-service/posts/serializers.py` | `thumbnail_url` / `hls_url` をフィールドに追加、`media_type` 正規化 |
+| `infra/docker/nginx/conf.d/api.conf` | `/media/` に Range Request・mp4 モジュール・HLS MIME type 追加、`/api/v1/media/` タイムアウト 300s |
+| `frontend/lib/types.ts` | `PostMedia.thumbnail_url` / `hls_url` 追加 |
 | `frontend/lib/api.ts` | `mediaApi.upload` に progress コールバック追加、timeout 3分 |
-| `frontend/components/VideoPlayer.tsx` | **新規** HTML5 動画プレーヤー |
-| `frontend/components/PostCard.tsx` | 動画投稿で `VideoPlayer` を表示 |
-| `frontend/components/PostDetailModal.tsx` | 詳細モーダルでも `VideoPlayer` を表示 |
+| `frontend/components/VideoPlayer.tsx` | **新規** HTML5 動画プレーヤー、音量調整、再生時間表示、画面内自動再生、ネイティブ HLS 対応 |
+| `frontend/components/PostCard.tsx` | 動画投稿・カルーセル内動画で `VideoPlayer` を表示 |
+| `frontend/components/PostDetailModal.tsx` | 詳細モーダルでも `VideoPlayer` を表示、カルーセル内動画対応 |
 | `frontend/components/CreatePostModal.tsx` | 動画プレビュー・バリデーション・進捗バー |
 | `frontend/app/(main)/profile/[username]/page.tsx` | `getPostThumbnail()` が動画サムネイルを優先 |
+| `frontend/app/(main)/reels/page.tsx` | 縦スクロール動画フィード、HLS 再生対応 |
 
 ---
 
@@ -37,14 +40,16 @@
   ↓
 [media-service :8004]  ← ffmpeg/ffprobe でサムネイル生成・duration 検証
   → /var/media/{user_id}/{media_id}.mp4   (動画)
+  → /var/media/{user_id}/video_{media_id}.mp4   (H.264/AAC 圧縮済み動画)
   → /var/media/{user_id}/thumb_{media_id}.jpg  (サムネイル)
-  ← { url, thumbnail_url, duration, ... }
+  → /var/media/{user_id}/hls_{media_id}/index.m3u8  (HLS)
+  ← { url, thumbnail_url, hls_url, duration, ... }
 
 [Frontend]
   ↓ POST /api/v1/posts/
 [post-service :8002]
   → posts テーブル (media_type='video')
-  → post_media テーブル (media_url, thumbnail_url, duration)
+  → post_media テーブル (media_url, thumbnail_url, hls_url, duration)
 ```
 
 ---
@@ -52,25 +57,25 @@
 ## 残タスク（未実装）
 
 ### 必須
-- [ ] `docker-compose up --build` で動作確認（ffmpeg が Dockerfile に追加済み、ビルドが必要）
-- [ ] `docker exec instagram_media_service python manage.py migrate` でマイグレーション実行
-- [ ] `docker exec instagram_post_service python manage.py migrate` でマイグレーション実行
+- [x] `docker-compose up --build` で動作確認（ffmpeg が Dockerfile に追加済み、ビルドが必要）
+- [x] `docker exec instagram_media_service python manage.py migrate` でマイグレーション実行
+- [x] `docker exec instagram_post_service python manage.py migrate` でマイグレーション実行
 
 ### 推奨改善
-- [ ] **動画圧縮**: ffmpeg で H.264 + AAC に再エンコードしてファイルサイズを削減
+- [x] **動画圧縮**: ffmpeg で H.264 + AAC に再エンコードしてファイルサイズを削減
   - `ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac output.mp4`
-- [ ] **HLS ストリーミング**: ffmpeg で `.m3u8` に変換して低速回線対応
+- [x] **HLS ストリーミング**: ffmpeg で `.m3u8` に変換して低速回線対応
 - [ ] **非同期処理**: Celery タスクでサムネイル生成・圧縮を非同期化（現在は同期処理）
-- [ ] **AVI 対応**: media-service serializer の `ALLOWED_VIDEO_TYPES` に `video/avi` を追加
-- [ ] **動画音量調整**: VideoPlayer に音量スライダーを追加
-- [ ] **動画再生時間表示**: コントロールバーに `00:30 / 01:00` 形式で時間表示
-- [ ] **自動再生**: フィードスクロール時に画面内の動画を自動再生（Intersection Observer 拡張）
-- [ ] **Reels ページ**: 縦スクロール TikTok 風動画フィード（`/reels` ページ）
+- [x] **AVI 対応**: media-service serializer の `ALLOWED_VIDEO_TYPES` に `video/avi` を追加
+- [x] **動画音量調整**: VideoPlayer に音量スライダーを追加
+- [x] **動画再生時間表示**: コントロールバーに `00:30 / 01:00` 形式で時間表示
+- [x] **自動再生**: フィードスクロール時に画面内の動画を自動再生（Intersection Observer 拡張）
+- [x] **Reels ページ**: 縦スクロール TikTok 風動画フィード（`/reels` ページ）
 - [ ] **E2E テスト**: Playwright で動画アップロード → フィード表示のテスト追加
 
 ### フロントエンド改善
 - [ ] `PostCard.tsx`: 動画の再生回数（view_count）表示
-- [ ] カルーセル投稿での動画混在（現状は1枚目が動画の場合のみ対応）
+- [x] カルーセル投稿での動画混在（現状は1枚目が動画の場合のみ対応）
 - [ ] モバイル: 動画のタップで音量オン/オフ切り替え
 
 ---

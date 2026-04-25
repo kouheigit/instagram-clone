@@ -60,7 +60,7 @@ export const postsApi = {
   list: (cursor?: string) =>
     api.get("/posts/", { params: cursor ? { cursor } : {} }),
   get: (postId: string) => api.get(`/posts/${postId}/`),
-  create: (data: { caption: string; media_files: { media_url: string; media_order: number; thumbnail_url?: string; duration?: number }[]; media_type: string; location?: string }) =>
+  create: (data: { caption: string; media_files: { media_url: string; media_order: number; thumbnail_url?: string; hls_url?: string; duration?: number }[]; media_type: string; location?: string }) =>
     api.post("/posts/", data),
   delete: (postId: string) => api.delete(`/posts/${postId}/`),
   like: (postId: string) => api.post(`/posts/${postId}/like/`),

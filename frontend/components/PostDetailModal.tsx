@@ -293,6 +293,7 @@ export function PostDetailModal({ postId, onClose }: Props) {
               {media && mediaIsVideo ? (
                 <VideoPlayer
                   src={media.media_url}
+                  hlsSrc={media.hls_url ?? undefined}
                   poster={media.thumbnail_url ?? undefined}
                   className="w-full h-full"
                 />

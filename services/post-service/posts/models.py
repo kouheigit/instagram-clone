@@ -44,6 +44,7 @@ class PostMedia(models.Model):
     post          = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="media_files")
     media_url     = models.CharField(max_length=512)
     thumbnail_url = models.CharField(max_length=512, blank=True)  # 動画サムネイル
+    hls_url       = models.CharField(max_length=512, blank=True)  # HLS playlist URL
     media_order   = models.PositiveSmallIntegerField()             # 1〜10
     width         = models.IntegerField(null=True, blank=True)
     height        = models.IntegerField(null=True, blank=True)

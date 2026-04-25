@@ -241,6 +241,7 @@ export function PostCard({ post, author, onDelete }: Props) {
           {mediaIsVideo && media ? (
             <VideoPlayer
               src={media.media_url}
+              hlsSrc={media.hls_url ?? undefined}
               poster={media.thumbnail_url ?? undefined}
               className="w-full h-full"
               autoPlayWhenVisible

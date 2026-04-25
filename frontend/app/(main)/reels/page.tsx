@@ -53,13 +53,17 @@ function ReelCard({ post, author, active }: ReelCardProps) {
 
   useEffect(() => {
     if (!videoRef.current) return;
-    if (active) {
-      videoRef.current.play().catch(() => {});
-    } else {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
+    const video = videoRef.current;
+    if (isVideo && media?.hls_url && video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = media.hls_url;
     }
-  }, [active]);
+    if (active) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [active, isVideo, media?.hls_url]);
 
   const toggleLike = async () => {
     try {

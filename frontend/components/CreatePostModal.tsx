@@ -136,6 +136,7 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
     try {
       let mediaUrl = "";
       let thumbnailUrl = "";
+      let hlsUrl = "";
       let duration: number | undefined;
 
       if (file) {
@@ -152,7 +153,9 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
 
         if (isVideo) {
           const thumbRaw: string = res.data.thumbnail_url ?? "";
+          const hlsRaw: string = res.data.hls_url ?? "";
           thumbnailUrl = thumbRaw.startsWith("/") ? `http://localhost:8888${thumbRaw}` : thumbRaw;
+          hlsUrl = hlsRaw.startsWith("/") ? `http://localhost:8888${hlsRaw}` : hlsRaw;
           duration = res.data.duration ?? undefined;
         }
       }
@@ -172,6 +175,7 @@ export function CreatePostModal({ onClose, onCreated }: Props) {
             media_url: mediaUrl,
             media_order: 1,
             ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
+            ...(hlsUrl ? { hls_url: hlsUrl } : {}),
             ...(duration !== undefined ? { duration } : {}),
           },
         ],

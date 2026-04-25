@@ -1,6 +1,7 @@
 export interface User {
   user_id: string;
   username: string;
+  display_name?: string;
   bio: string;
   profile_img: string;
   is_private: boolean;
@@ -14,6 +15,7 @@ export interface PostMedia {
   media_id: string;
   media_url: string;
   thumbnail_url: string | null;
+  hls_url: string | null;
   media_order: number;
   width: number | null;
   height: number | null;

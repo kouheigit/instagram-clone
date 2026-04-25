@@ -6,7 +6,7 @@ from .models import Post, PostMedia, Like, Comment, SavedPost, Hashtag
 class PostMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostMedia
-        fields = ["media_id", "media_url", "thumbnail_url", "media_order", "width", "height", "duration"]
+        fields = ["media_id", "media_url", "thumbnail_url", "hls_url", "media_order", "width", "height", "duration"]
 
 
 class PostSerializer(serializers.ModelSerializer):

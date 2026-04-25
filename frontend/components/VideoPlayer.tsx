@@ -5,6 +5,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react";
 
 interface Props {
   src: string;
+  hlsSrc?: string;
   poster?: string;
   className?: string;
   loop?: boolean;
@@ -18,7 +19,7 @@ function formatTime(value: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function VideoPlayer({ src, poster, className = "", loop = true, autoPlayWhenVisible = false }: Props) {
+export function VideoPlayer({ src, hlsSrc, poster, className = "", loop = true, autoPlayWhenVisible = false }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,16 @@ export function VideoPlayer({ src, poster, className = "", loop = true, autoPlay
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showControls, setShowControls] = useState(true);
+  const [playbackSrc, setPlaybackSrc] = useState(src);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (hlsSrc && video?.canPlayType("application/vnd.apple.mpegurl")) {
+      setPlaybackSrc(hlsSrc);
+      return;
+    }
+    setPlaybackSrc(src);
+  }, [src, hlsSrc]);
 
   // スクロールで画面外に出たら自動停止
   useEffect(() => {
@@ -134,7 +145,7 @@ export function VideoPlayer({ src, poster, className = "", loop = true, autoPlay
     >
       <video
         ref={videoRef}
-        src={src}
+        src={playbackSrc}
         poster={poster}
         className="w-full h-full object-cover"
         loop={loop}

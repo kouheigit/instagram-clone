@@ -39,6 +39,7 @@ class MediaFile(models.Model):
     file          = models.FileField(upload_to=media_upload_path)
     url           = models.CharField(max_length=512, blank=True)            # 公開URL (Nginx経由)
     thumbnail_url = models.CharField(max_length=512, blank=True)            # 動画サムネイル
+    hls_url       = models.CharField(max_length=512, blank=True)            # HLS playlist URL
     width         = models.IntegerField(null=True, blank=True)
     height        = models.IntegerField(null=True, blank=True)
     duration      = models.IntegerField(null=True, blank=True)              # 動画: 秒数

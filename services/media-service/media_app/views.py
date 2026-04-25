@@ -5,6 +5,7 @@
 import json
 import logging
 import os
+import shutil
 import subprocess
 from django.conf import settings
 from django.shortcuts import get_object_or_404
@@ -19,6 +20,8 @@ from .serializers import MediaFileSerializer, MediaUploadSerializer
 logger = logging.getLogger(__name__)
 
 MAX_VIDEO_DURATION = 60  # seconds
+VIDEO_TRANSCODE_TIMEOUT = 180
+HLS_TRANSCODE_TIMEOUT = 180
 
 
 def get_user_id(request):
@@ -67,6 +70,67 @@ def _generate_thumbnail(file_path: str, user_id: str, media_id: str) -> str:
         logger.warning(f"ffmpeg thumbnail failed: {result.stderr[:200]}")
     except (FileNotFoundError, subprocess.TimeoutExpired) as e:
         logger.warning(f"ffmpeg unavailable or failed: {e}")
+    return ""
+
+
+def _transcode_video(file_path: str, user_id: str, media_id: str) -> tuple[str, str]:
+    """動画を H.264/AAC MP4 に圧縮し、成功時は (path, public_url) を返す。失敗時は元ファイルを返す。"""
+    output_dir = os.path.dirname(file_path)
+    output_filename = f"video_{media_id}.mp4"
+    output_path = os.path.join(output_dir, output_filename)
+    if os.path.abspath(output_path) == os.path.abspath(file_path):
+        return file_path, f"/media/{user_id}/{output_filename}"
+
+    try:
+        result = subprocess.run(
+            [
+                "ffmpeg", "-y", "-i", file_path,
+                "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+                "-c:a", "aac", "-b:a", "128k",
+                "-movflags", "+faststart",
+                output_path,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=VIDEO_TRANSCODE_TIMEOUT,
+        )
+        if result.returncode == 0 and os.path.exists(output_path):
+            return output_path, f"/media/{user_id}/{output_filename}"
+        logger.warning(f"ffmpeg transcode failed: {result.stderr[:200]}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        logger.warning(f"ffmpeg transcode unavailable or failed: {e}")
+
+    return file_path, f"/media/{os.path.relpath(file_path, settings.MEDIA_ROOT)}"
+
+
+def _generate_hls(file_path: str, user_id: str, media_id: str) -> str:
+    """HLS playlist と segment を生成し、playlist の公開URLを返す。失敗時は空文字。"""
+    hls_dirname = f"hls_{media_id}"
+    hls_dir = os.path.join(settings.MEDIA_ROOT, str(user_id), hls_dirname)
+    playlist_path = os.path.join(hls_dir, "index.m3u8")
+    segment_pattern = os.path.join(hls_dir, "segment_%03d.ts")
+    os.makedirs(hls_dir, exist_ok=True)
+
+    try:
+        result = subprocess.run(
+            [
+                "ffmpeg", "-y", "-i", file_path,
+                "-codec", "copy",
+                "-start_number", "0",
+                "-hls_time", "6",
+                "-hls_playlist_type", "vod",
+                "-hls_segment_filename", segment_pattern,
+                playlist_path,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=HLS_TRANSCODE_TIMEOUT,
+        )
+        if result.returncode == 0 and os.path.exists(playlist_path):
+            return f"/media/{user_id}/{hls_dirname}/index.m3u8"
+        logger.warning(f"ffmpeg hls failed: {result.stderr[:200]}")
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        logger.warning(f"ffmpeg hls unavailable or failed: {e}")
     return ""
 
 
@@ -123,6 +187,15 @@ def upload_media(request):
         if thumb_url:
             media.thumbnail_url = thumb_url
 
+        playback_path, playback_url = _transcode_video(file_path, user_id, media_id_str)
+        media.url = playback_url
+        if os.path.exists(playback_path):
+            media.file_size = os.path.getsize(playback_path)
+
+        hls_url = _generate_hls(playback_path, user_id, media_id_str)
+        if hls_url:
+            media.hls_url = hls_url
+
         media.status = MediaFile.STATUS_READY
 
     media.save()
@@ -155,6 +228,14 @@ def delete_media(request, media_id):
         except OSError as e:
             logger.warning(f"File delete failed: {e}")
 
+    if media.url:
+        media_path = os.path.join(settings.MEDIA_ROOT, media.url.lstrip("/media/"))
+        if os.path.exists(media_path) and media.file and os.path.abspath(media_path) != os.path.abspath(media.file.path):
+            try:
+                os.remove(media_path)
+            except OSError as e:
+                logger.warning(f"Transcoded file delete failed: {e}")
+
     # サムネイルファイルも削除
     if media.thumbnail_url:
         thumb_path = os.path.join(settings.MEDIA_ROOT, media.thumbnail_url.lstrip("/media/"))
@@ -163,6 +244,12 @@ def delete_media(request, media_id):
                 os.remove(thumb_path)
             except OSError:
                 pass
+
+    if media.hls_url:
+        hls_path = os.path.join(settings.MEDIA_ROOT, media.hls_url.lstrip("/media/"))
+        hls_dir = os.path.dirname(hls_path)
+        if os.path.isdir(hls_dir):
+            shutil.rmtree(hls_dir, ignore_errors=True)
 
     media.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
