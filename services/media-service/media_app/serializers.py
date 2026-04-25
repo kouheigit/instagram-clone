@@ -5,7 +5,7 @@ from .models import MediaFile
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
 MAX_VIDEO_SIZE = 100 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/x-m4v"}
+ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/x-m4v", "video/avi", "video/x-msvideo"}
 
 
 class MediaFileSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class MediaUploadSerializer(serializers.Serializer):
         else:
             if content_type not in ALLOWED_VIDEO_TYPES:
                 raise serializers.ValidationError(
-                    f"動画は MP4/MOV のみ対応しています (受信: {content_type})"
+                    f"動画は MP4/MOV/AVI のみ対応しています (受信: {content_type})"
                 )
             if file.size > MAX_VIDEO_SIZE:
                 raise serializers.ValidationError("動画は100MB以下にしてください")
