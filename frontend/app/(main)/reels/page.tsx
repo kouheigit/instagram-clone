@@ -208,9 +208,10 @@ export default function ReelsPage() {
       try {
         const res = await postsApi.list();
         const all: Post[] = res.data.results ?? [];
-        setPosts(all);
+        const videos = all.filter(isVideoPost);
+        setPosts(videos);
 
-        const ids = [...new Set(all.map((p) => p.user_id))];
+        const ids = [...new Set(videos.map((p) => p.user_id))];
         if (ids.length > 0) {
           const uRes = await usersApi.byIds(ids);
           const map: Record<string, User> = {};
