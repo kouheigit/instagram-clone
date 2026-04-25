@@ -87,7 +87,7 @@ function GridTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
+      className="h-[24px] w-[24px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -173,7 +173,7 @@ function ReelsTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
+      className="h-[24px] w-[24px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -209,7 +209,7 @@ function SavedTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
+      className="h-[24px] w-[24px]"
       viewBox="0 0 12 12"
       fill="none"
     >
@@ -229,7 +229,7 @@ function TaggedTabIcon({ active }: { active: boolean }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-[24px] w-[24px] md:h-[26px] md:w-[26px]"
+      className="h-[24px] w-[24px]"
       viewBox="0 0 24 24"
       fill="none"
     >
