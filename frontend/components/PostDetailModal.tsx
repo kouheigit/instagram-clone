@@ -36,6 +36,16 @@ interface Props {
   onClose: () => void;
 }
 
+function isVideoMedia(media: Post["media_files"][number] | undefined, postType: Post["media_type"]): boolean {
+  if (!media) return false;
+  return (
+    postType === "video" ||
+    Boolean(media.thumbnail_url) ||
+    media.duration !== null ||
+    /\.(mp4|mov|m4v|webm|avi)$/i.test(media.media_url)
+  );
+}
+
 export function PostDetailModal({ postId, onClose }: Props) {
   const router = useRouter();
   const { user: me } = useAuth();
@@ -235,6 +245,7 @@ export function PostDetailModal({ postId, onClose }: Props) {
   };
 
   const media = post?.media_files[imgIdx];
+  const mediaIsVideo = isVideoMedia(media, post?.media_type ?? "photo");
 
   return (
     <>
@@ -279,7 +290,7 @@ export function PostDetailModal({ postId, onClose }: Props) {
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              {media && post.media_type === "video" ? (
+              {media && mediaIsVideo ? (
                 <VideoPlayer
                   src={media.media_url}
                   poster={media.thumbnail_url ?? undefined}
