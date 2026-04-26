@@ -362,14 +362,26 @@ export function StoryBar() {
             </button>
           </div>
 
-          {/* ストーリー画像 */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={viewer.group.stories[viewer.idx]?.media_url}
-            alt="story"
-            className="max-h-screen max-w-[500px] w-full object-contain"
-            loading="eager"
-          />
+          {/* ストーリーメディア */}
+          {viewer.group.stories[viewer.idx]?.media_type === "video" ? (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video
+              key={viewer.group.stories[viewer.idx]?.media_url}
+              src={viewer.group.stories[viewer.idx]?.media_url}
+              className="max-h-screen max-w-[500px] w-full object-contain"
+              autoPlay
+              muted
+              playsInline
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={viewer.group.stories[viewer.idx]?.media_url}
+              alt="story"
+              className="max-h-screen max-w-[500px] w-full object-contain"
+              loading="eager"
+            />
+          )}
         </div>
       )}
     </>
