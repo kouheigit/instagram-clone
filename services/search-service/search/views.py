@@ -191,6 +191,7 @@ def upsert_user_index(request):
         "name":          request.data.get("name", "") or request.data.get("username", ""),
         "email":         request.data.get("email", ""),
         "bio":           request.data.get("bio", ""),
+        "website":       request.data.get("website", ""),
         "profile_img":   request.data.get("profile_img", ""),
         "is_private":    request.data.get("is_private", False),
         "is_verified":   request.data.get("is_verified", False),
