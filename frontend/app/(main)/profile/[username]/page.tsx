@@ -691,7 +691,7 @@ export default function ProfilePage() {
           </div>
 
           {/* デスクトップ: アバター下まで伸びる全幅ボタン行 */}
-          <div className="hidden md:flex items-center gap-2 mt-4 px-6">
+          <div className="hidden md:flex items-center gap-2 mt-4 px-10">
             {isMe ? (
               <>
                 <Link
