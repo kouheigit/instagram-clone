@@ -528,7 +528,7 @@ export default function ProfilePage() {
       <div className="mx-auto box-border w-full max-w-[935px] min-w-0">
         <section className="border-b border-[#dbdbdb] px-2 pb-5 md:px-0 md:pb-[44px]">
           <div className="grid grid-cols-1 gap-y-6 md:grid-cols-[291px_minmax(0,613px)] md:items-start md:gap-x-[18px]">
-            <div className="flex justify-center md:justify-center md:pt-[8px] md:translate-x-[48px]">
+            <div className="flex justify-center md:justify-center md:pt-[8px] md:translate-x-[48px] relative z-10">
               <ProfileAvatar user={user} />
             </div>
 
@@ -615,7 +615,7 @@ export default function ProfilePage() {
                   ) : null}
                 </div>
 
-                <div className="mt-[16px] flex max-w-[613px] items-center gap-2 md:-ml-[252px] md:w-[800px] md:max-w-none">
+                <div className="mt-[16px] flex max-w-[613px] items-center gap-2">
                   {isMe ? (
                     <>
                       <Link

@@ -211,10 +211,10 @@ export function StoryBar() {
               key={group.user.user_id}
               className="flex flex-col items-center gap-1 flex-shrink-0"
             >
-              <button
-                onClick={() => openStory(group)}
-                className="relative"
-                aria-label={`${group.user.username}のストーリーを見る`}
+              <Link
+                href={`/profile/${group.user.username}`}
+                className="relative block"
+                aria-label={`${group.user.username}のプロフィールを見る`}
               >
                 <div
                   className={`p-[2px] rounded-full ${
@@ -229,7 +229,7 @@ export function StoryBar() {
                     <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
                   </div>
                 </div>
-              </button>
+              </Link>
               <Link href={`/profile/${group.user.username}`} className="w-20 truncate text-center text-xs text-[#262626] hover:underline">
                 {group.user.username}
               </Link>
