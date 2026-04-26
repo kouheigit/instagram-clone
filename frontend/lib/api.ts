@@ -98,7 +98,7 @@ export const usersApi = {
   following: (username: string) => api.get(`/users/${username}/following/`),
   followingIds: () => api.get(`/users/me/following-ids/`),
   suggestions: () => api.get(`/users/suggestions/`),
-  updateMe: (data: { bio?: string; profile_img?: string; is_private?: boolean }) =>
+  updateMe: (data: { bio?: string; website?: string; gender?: string; show_account_suggestions?: boolean; profile_img?: string; is_private?: boolean }) =>
     api.patch(`/users/me/`, data),
   changePassword: (oldPassword: string, newPassword: string) =>
     api.post(`/auth/password/change/`, { old_password: oldPassword, new_password: newPassword }),
