@@ -615,51 +615,6 @@ export default function ProfilePage() {
                   ) : null}
                 </div>
 
-                <div className="mt-[16px] flex max-w-[613px] items-center gap-2">
-                  {isMe ? (
-                    <>
-                      <Link
-                        href="/profile/edit"
-                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                      >
-                        プロフィールを編集
-                      </Link>
-                      <button
-                        type="button"
-                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                      >
-                        アーカイブを表示
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handleFollow}
-                        className={`flex h-10 flex-1 items-center justify-center rounded-lg px-5 text-[14px] font-semibold transition-colors ${
-                          following
-                            ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
-                            : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
-                        }`}
-                      >
-                        {following ? "フォロー中" : "フォローする"}
-                      </button>
-                      <button
-                        type="button"
-                        className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                      >
-                        メッセージ
-                      </button>
-                      <button
-                        type="button"
-                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
-                        aria-label="その他"
-                      >
-                        <MoreHorizontal size={18} strokeWidth={2.2} />
-                      </button>
-                    </>
-                  )}
-                </div>
               </div>
 
               <div className="mt-2 md:hidden">
@@ -733,6 +688,53 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* デスクトップ: アバター下まで伸びる全幅ボタン行 */}
+          <div className="hidden md:flex items-center gap-2 mt-5">
+            {isMe ? (
+              <>
+                <Link
+                  href="/profile/edit"
+                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  プロフィールを編集
+                </Link>
+                <button
+                  type="button"
+                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  アーカイブを表示
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={handleFollow}
+                  className={`flex h-10 flex-1 items-center justify-center rounded-lg px-5 text-[14px] font-semibold transition-colors ${
+                    following
+                      ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
+                      : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
+                  }`}
+                >
+                  {following ? "フォロー中" : "フォローする"}
+                </button>
+                <button
+                  type="button"
+                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                >
+                  メッセージ
+                </button>
+                <button
+                  type="button"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  aria-label="その他"
+                >
+                  <MoreHorizontal size={18} strokeWidth={2.2} />
+                </button>
+              </>
+            )}
           </div>
 
           {isMe && (
