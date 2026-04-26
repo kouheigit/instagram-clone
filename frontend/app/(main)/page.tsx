@@ -48,8 +48,8 @@ export default function FeedPage() {
 
       const userMap = await fetchAuthors(feedPosts, {});
       setAuthors(userMap);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // ignore
     } finally {
       setLoading(false);
     }
