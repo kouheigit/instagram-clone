@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { usersApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { Avatar } from "@/components/Avatar";
 
 export default function ProfileEditPage() {
   const { user: me, refresh } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
 
   const [bio, setBio] = useState("");
   const [website, setWebsite] = useState("");
@@ -72,8 +74,11 @@ export default function ProfileEditPage() {
       });
       await refresh();
       setSaved(true);
+      showToast("プロフィールを更新しました", "success");
       setTimeout(() => setSaved(false), 2000);
-    } catch { /* ignore */ } finally {
+    } catch {
+      showToast("プロフィールの更新に失敗しました", "error");
+    } finally {
       setLoading(false);
     }
   };
