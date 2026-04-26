@@ -64,7 +64,20 @@ export function RightSidebar() {
             {me.username}
           </Link>
           {me.bio && <p className="text-[#8e8e8e] text-sm truncate">{me.bio}</p>}
+          {me.website && (
+            <a
+              href={me.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#0095f6] text-xs truncate block hover:underline"
+            >
+              {me.website.replace(/^https?:\/\//, "")}
+            </a>
+          )}
         </div>
+        <Link href="/profile/edit" className="text-xs font-semibold text-[#0095f6] hover:text-[#1877f2] flex-shrink-0">
+          編集
+        </Link>
       </div>
 
       {/* フォロー提案 */}
