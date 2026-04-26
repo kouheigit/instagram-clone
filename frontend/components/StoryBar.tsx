@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import Link from "next/link";
 import { X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { usersApi, storiesApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -206,12 +207,14 @@ export function StoryBar() {
         {/* プロフィール一覧 */}
         <div className="flex gap-3 pl-2 pr-9">
           {visibleGroups.map((group) => (
-            <button
+            <div
               key={group.user.user_id}
-              onClick={() => openStory(group)}
               className="flex flex-col items-center gap-1 flex-shrink-0"
             >
-              <div className="relative">
+              <button
+                onClick={() => openStory(group)}
+                className="relative"
+              >
                 <div
                   className={`p-[2px] rounded-full ${
                     group.stories.length > 0 && group.hasUnviewed
@@ -225,11 +228,11 @@ export function StoryBar() {
                     <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
                   </div>
                 </div>
-              </div>
-              <span className="w-20 truncate text-center text-xs text-[#262626]">
+              </button>
+              <Link href={`/profile/${group.user.username}`} className="w-20 truncate text-center text-xs text-[#262626] hover:underline">
                 {group.user.username}
-              </span>
-            </button>
+              </Link>
+            </div>
           ))}
         </div>
 
