@@ -738,8 +738,8 @@ export default function ProfilePage() {
           </div>
 
           {isMe && (
-            <div className="mt-[24px] hidden md:flex md:translate-x-[24px]">
-              <div className="flex flex-col items-center">
+            <div className="mt-[24px] hidden md:flex md:w-[291px] md:justify-center md:translate-x-[48px]">
+              <div className="-translate-x-[24px] flex flex-col items-center">
                 <div className="relative flex h-[96px] w-[96px] items-center justify-center rounded-full border-[5px] border-[#d9dee2] bg-white">
                   <div className="absolute inset-[6px] rounded-full bg-[#fafafa]" />
                   <div className="absolute h-[38px] w-[38px]">
