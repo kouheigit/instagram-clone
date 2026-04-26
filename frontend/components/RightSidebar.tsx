@@ -85,7 +85,7 @@ export function RightSidebar() {
             {suggestions.map((user) => (
               <div key={user.user_id} className="flex items-center gap-3">
                 <Link href={`/profile/${user.username}`}>
-                  <Avatar src={user.profile_img} username={user.username} size={32} />
+                  <Avatar src={user.profile_img} username={user.username} size={44} />
                 </Link>
                 <div className="flex-1 min-w-0">
                   <Link href={`/profile/${user.username}`} className="font-semibold text-xs block truncate">
