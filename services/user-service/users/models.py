@@ -34,9 +34,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     username    = models.CharField(max_length=30, unique=True, db_index=True)
     email       = models.EmailField(unique=True, db_index=True)
     phone       = models.CharField(max_length=20, null=True, blank=True)
+    GENDER_CHOICES = [
+        ("male", "男性"),
+        ("female", "女性"),
+        ("custom", "カスタム"),
+        ("prefer_not", "回答しない"),
+    ]
+
     bio         = models.TextField(max_length=150, blank=True)
+    website     = models.CharField(max_length=200, blank=True)
+    gender      = models.CharField(max_length=20, choices=GENDER_CHOICES, default="male", blank=True)
     profile_img = models.CharField(max_length=512, blank=True)  # S3 URL
     is_private  = models.BooleanField(default=False)
+    show_account_suggestions = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     is_staff    = models.BooleanField(default=False)
     created_at  = models.DateTimeField(auto_now_add=True)
