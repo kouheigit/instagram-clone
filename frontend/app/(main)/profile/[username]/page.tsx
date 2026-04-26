@@ -696,13 +696,13 @@ export default function ProfilePage() {
               <>
                 <Link
                   href="/profile/edit"
-                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  className="flex h-11 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   プロフィールを編集
                 </Link>
                 <button
                   type="button"
-                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  className="flex h-11 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   アーカイブを表示
                 </button>
@@ -712,7 +712,7 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={handleFollow}
-                  className={`flex h-10 flex-1 items-center justify-center rounded-lg px-5 text-[14px] font-semibold transition-colors ${
+                  className={`flex h-11 flex-1 items-center justify-center rounded-lg px-5 text-[14px] font-semibold transition-colors ${
                     following
                       ? "bg-[#efefef] text-[#262626] hover:bg-[#dbdbdb]"
                       : "bg-[#0095f6] text-white hover:bg-[#1877f2]"
@@ -722,13 +722,13 @@ export default function ProfilePage() {
                 </button>
                 <button
                   type="button"
-                  className="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  className="flex h-11 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   メッセージ
                 </button>
                 <button
                   type="button"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#efefef] text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                   aria-label="その他"
                 >
                   <MoreHorizontal size={18} strokeWidth={2.2} />
