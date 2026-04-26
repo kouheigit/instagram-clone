@@ -106,17 +106,16 @@ services:
         condition: service_healthy
     networks:
       - instagram_net
+    restart: "no"
     entrypoint: ["/bin/sh", "-c"]
     command: |
-      "
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.created --partitions 3 --replication-factor 1
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.liked --partitions 3 --replication-factor 1
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.commented --partitions 3 --replication-factor 1
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic story.created --partitions 3 --replication-factor 1
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.followed --partitions 3 --replication-factor 1
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.activity --partitions 3 --replication-factor 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.created --partitions 3 --replication-factor 1 &&
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.liked --partitions 3 --replication-factor 1 &&
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic post.commented --partitions 3 --replication-factor 1 &&
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic story.created --partitions 3 --replication-factor 1 &&
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.followed --partitions 3 --replication-factor 1 &&
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic user.activity --partitions 3 --replication-factor 1 &&
       echo 'Kafka topics created.'
-      "
 
   # ===========================
   # API Gateway (Nginx)
@@ -463,7 +462,7 @@ services:
     volumes:
       - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning
     ports:
-      - "3000:3000"
+      - "3002:3000"
     depends_on:
       - prometheus
     networks:
