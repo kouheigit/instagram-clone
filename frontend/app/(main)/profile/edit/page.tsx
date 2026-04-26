@@ -80,6 +80,7 @@ export default function ProfileEditPage() {
         is_private: isPrivate,
       });
       await refresh();
+      if (normalizedWebsite !== website) setWebsite(normalizedWebsite);
       setSaved(true);
       showToast("プロフィールを更新しました", "success");
       setTimeout(() => setSaved(false), 2000);

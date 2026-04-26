@@ -114,6 +114,7 @@ export interface UserIndex {
   username: string;
   name: string;
   bio: string;
+  website?: string;
   profile_img: string;
   is_verified: boolean;
   follower_count: number;
