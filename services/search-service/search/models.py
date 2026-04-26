@@ -19,6 +19,7 @@ class UserIndex(models.Model):
     name        = models.CharField(max_length=150, blank=True, default="")
     email       = models.EmailField(blank=True, default="")
     bio         = models.TextField(max_length=150, blank=True)
+    website     = models.CharField(max_length=200, blank=True, default="")
     profile_img = models.CharField(max_length=512, blank=True)
     is_private  = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
