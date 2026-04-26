@@ -766,7 +766,7 @@ export default function ProfilePage() {
                 </Link>
                 <button
                   type="button"
-                  className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
+                  className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   アーカイブを表示
                 </button>
