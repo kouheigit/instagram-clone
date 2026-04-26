@@ -89,7 +89,14 @@ export default function ExplorePage() {
                   {u.username}
                   {u.is_verified && <span className="text-[#0095f6] text-xs">✓</span>}
                 </p>
-                <p className="text-[#8e8e8e] text-xs">{u.bio || `フォロワー ${u.follower_count}`}</p>
+                <p className="text-[#8e8e8e] text-xs">
+                  {u.bio || `フォロワー ${u.follower_count}`}
+                </p>
+                {u.website && (
+                  <p className="text-[#0095f6] text-xs truncate max-w-[200px]">
+                    {u.website.replace(/^https?:\/\//, "")}
+                  </p>
+                )}
               </div>
             </Link>
           ))}
