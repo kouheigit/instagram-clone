@@ -47,6 +47,7 @@ def _sync_to_search(user):
             "name": user.username,
             "email": user.email,
             "bio": user.bio or "",
+            "website": getattr(user, "website", "") or "",
             "profile_img": user.profile_img or "",
             "is_private": user.is_private,
             "is_verified": getattr(user, "is_verified", False),
