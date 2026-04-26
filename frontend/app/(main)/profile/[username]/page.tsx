@@ -40,13 +40,15 @@ function ThreadsBadgeIcon({ size = 20 }: { size?: number }) {
   );
 }
 
-function ProfileAvatar({ user }: { user: User }) {
+function ProfileAvatar({ user, isMe }: { user: User; isMe: boolean }) {
   return (
     <div className="relative flex-shrink-0 md:-translate-x-[24px]">
-      <div className="absolute left-[18px] top-[-16px] hidden rounded-[18px] bg-white px-[16px] py-[10px] text-[14px] font-normal leading-none text-[#737373] shadow-[0_6px_18px_rgba(0,0,0,0.14)] md:block">
-        ノート...
-        <div className="absolute bottom-[-5px] left-[26px] h-[10px] w-[10px] rotate-45 rounded-[2px] bg-white" />
-      </div>
+      {isMe && (
+        <div className="absolute left-[18px] top-[-16px] hidden rounded-[18px] bg-white px-[16px] py-[10px] text-[14px] font-normal leading-none text-[#737373] shadow-[0_6px_18px_rgba(0,0,0,0.14)] md:block">
+          ノート...
+          <div className="absolute bottom-[-5px] left-[26px] h-[10px] w-[10px] rotate-45 rounded-[2px] bg-white" />
+        </div>
+      )}
       <div className="h-[77px] w-[77px] rounded-full border border-[#dbdbdb] p-[2px] md:h-[160px] md:w-[160px]">
         {user.profile_img ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -529,7 +531,7 @@ export default function ProfilePage() {
         <section className="border-b border-[#dbdbdb] px-2 pb-5 md:px-0 md:pb-[44px]">
           <div className="grid grid-cols-1 gap-y-6 md:grid-cols-[291px_minmax(0,613px)] md:items-start md:gap-x-[18px]">
             <div className="flex justify-center md:justify-center md:pt-[8px] md:translate-x-[48px] relative z-10">
-              <ProfileAvatar user={user} />
+              <ProfileAvatar user={user} isMe={isMe} />
             </div>
 
             <div className="min-w-0 md:max-w-[613px] md:pt-0">
