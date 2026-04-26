@@ -313,19 +313,12 @@ function getPostThumbnail(post: Post) {
 }
 
 function getBioLines(user: User) {
-  if (user.bio?.trim()) {
-    return user.bio
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .slice(0, 3);
-  }
-
-  return [
-    "Born and raised in Tokyo 🗼",
-    "Exploring history and culture is my lifelong passion ✨",
-    "From famous landmarks to hidden... 続きを読む",
-  ];
+  if (!user.bio?.trim()) return [];
+  return user.bio
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, 3);
 }
 
 export default function ProfilePage() {
@@ -604,6 +597,16 @@ export default function ProfilePage() {
                   {bioLines.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
+                  {user.website && (
+                    <a
+                      href={user.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#0095f6] font-semibold hover:underline block"
+                    >
+                      {user.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  )}
                 </div>
 
                 <div className="mt-[16px] flex max-w-[613px] items-center gap-2 md:-ml-[252px] md:w-[800px] md:max-w-none">
@@ -709,6 +712,16 @@ export default function ProfilePage() {
                   {bioLines.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
+                  {user.website && (
+                    <a
+                      href={user.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#0095f6] font-semibold hover:underline"
+                    >
+                      {user.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
