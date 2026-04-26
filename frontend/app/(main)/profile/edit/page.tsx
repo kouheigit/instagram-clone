@@ -53,11 +53,18 @@ export default function ProfileEditPage() {
     }
   };
 
+  const normalizeUrl = (url: string): string => {
+    if (!url) return url;
+    if (!/^https?:\/\//i.test(url)) return `https://${url}`;
+    return url;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setWebsiteError("");
 
-    if (website && !validateWebsite(website)) {
+    const normalizedWebsite = normalizeUrl(website);
+    if (normalizedWebsite && !validateWebsite(normalizedWebsite)) {
       setWebsiteError("有効なURLを入力してください（例: https://example.com）");
       return;
     }
@@ -66,7 +73,7 @@ export default function ProfileEditPage() {
     try {
       await usersApi.updateMe({
         bio,
-        website,
+        website: normalizedWebsite,
         gender,
         show_account_suggestions: showSuggestions,
         profile_img: profileImg,
