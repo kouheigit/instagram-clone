@@ -353,6 +353,15 @@ export function Sidebar({ onCreatePost }: Props) {
             </Link>
           </NavFlyout>
 
+          {/* メッセージ（飛行機アイコン：非アクティブ=SVGアウトライン、アクティブ=plane_icon.png） */}
+          <NavFlyout label="メッセージ">
+            <Link href="/dm">
+              <NavIcon label="メッセージ" active={isDm}>
+                <PaperPlaneIcon active={isDm} />
+              </NavIcon>
+            </Link>
+          </NavFlyout>
+
           {/* 検索 */}
           <NavFlyout label="検索">
             <NavBtn onClick={handleSearchToggle} label="検索">
@@ -365,15 +374,6 @@ export function Sidebar({ onCreatePost }: Props) {
             <Link href="/explore">
               <NavIcon label="発見" active={pathname === "/explore" && !searchOpen}>
                 <Compass size={24} strokeWidth={pathname === "/explore" && !searchOpen ? 2.5 : 1.75} />
-              </NavIcon>
-            </Link>
-          </NavFlyout>
-
-          {/* メッセージ（飛行機アイコン：非アクティブ=SVGアウトライン、アクティブ=plane_icon.png） */}
-          <NavFlyout label="メッセージ">
-            <Link href="/dm">
-              <NavIcon label="メッセージ" active={isDm}>
-                <PaperPlaneIcon active={isDm} />
               </NavIcon>
             </Link>
           </NavFlyout>
