@@ -594,9 +594,11 @@ export default function ProfilePage() {
 
                 <div className="mt-[16px] max-w-[613px] space-y-[2px] text-[14px] leading-[18px] text-[#262626]">
                   <p className="font-semibold">{user.username}</p>
-                  {bioLines.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
+                  {user.bio?.trim() ? (
+                    <p className="whitespace-pre-line">{user.bio}</p>
+                  ) : (
+                    bioLines.map((line) => <p key={line}>{line}</p>)
+                  )}
                   {user.website && (
                     <a
                       href={user.website}
@@ -708,10 +710,12 @@ export default function ProfilePage() {
                     </div>
                   </button>
                 </div>
-                <div className="mt-[10px] max-w-[360px] whitespace-pre-wrap text-[14px] leading-[18px] text-[#262626]">
-                  {bioLines.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
+                <div className="mt-[10px] max-w-[360px] text-[14px] leading-[18px] text-[#262626]">
+                  {user.bio?.trim() ? (
+                    <p className="whitespace-pre-line">{user.bio}</p>
+                  ) : bioLines.length > 0 ? (
+                    bioLines.map((line) => <p key={line}>{line}</p>)
+                  ) : null}
                   {user.website && (
                     <a
                       href={user.website}
