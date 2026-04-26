@@ -738,7 +738,7 @@ export default function ProfilePage() {
           </div>
 
           {isMe && (
-            <div className="mt-[24px] hidden md:grid md:grid-cols-[291px_minmax(0,613px)] md:gap-x-[18px]">
+            <div className="mt-[24px] hidden md:flex md:translate-x-[24px]">
               <div className="flex flex-col items-center">
                 <div className="relative flex h-[96px] w-[96px] items-center justify-center rounded-full border-[5px] border-[#d9dee2] bg-white">
                   <div className="absolute inset-[6px] rounded-full bg-[#fafafa]" />
@@ -751,7 +751,6 @@ export default function ProfilePage() {
                   新規
                 </span>
               </div>
-              <div />
             </div>
           )}
 
