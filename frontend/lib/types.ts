@@ -3,6 +3,9 @@ export interface User {
   username: string;
   display_name?: string;
   bio: string;
+  website?: string;
+  gender?: string;
+  show_account_suggestions?: boolean;
   profile_img: string;
   is_private: boolean;
   is_verified: boolean;
