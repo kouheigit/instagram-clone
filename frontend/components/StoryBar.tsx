@@ -214,6 +214,7 @@ export function StoryBar() {
               <button
                 onClick={() => openStory(group)}
                 className="relative"
+                aria-label={`${group.user.username}のストーリーを見る`}
               >
                 <div
                   className={`p-[2px] rounded-full ${

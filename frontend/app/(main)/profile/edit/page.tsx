@@ -211,16 +211,18 @@ export default function ProfileEditPage() {
           <label className="block text-sm font-bold text-[#262626] mb-2">自己紹介</label>
           <div className="relative border border-[#dbdbdb] rounded-md focus-within:border-[#a8a8a8] transition-colors">
             <textarea
+              id="bio-textarea"
               value={bio}
               onChange={(e) => {
                 if (e.target.value.length <= 150) setBio(e.target.value);
               }}
               rows={4}
               placeholder="自己紹介を入力..."
+              aria-describedby="bio-counter"
               className="w-full px-3 py-2 text-sm text-[#262626] outline-none resize-none rounded-md"
             />
             <div className="flex justify-end px-3 pb-2">
-              <span className={`text-xs ${bio.length >= 145 ? "text-[#ed4956]" : "text-[#737373]"}`}>
+              <span id="bio-counter" className={`text-xs ${bio.length >= 145 ? "text-[#ed4956]" : "text-[#737373]"}`}>
                 {bio.length} / 150
               </span>
             </div>
