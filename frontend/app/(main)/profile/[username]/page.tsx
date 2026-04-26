@@ -599,7 +599,7 @@ export default function ProfilePage() {
                   ) : (
                     bioLines.map((line) => <p key={line}>{line}</p>)
                   )}
-                  {user.website && (
+                  {user.website ? (
                     <a
                       href={user.website}
                       target="_blank"
@@ -608,7 +608,11 @@ export default function ProfilePage() {
                     >
                       {user.website.replace(/^https?:\/\//, "")}
                     </a>
-                  )}
+                  ) : isMe ? (
+                    <Link href="/profile/edit" className="text-[#0095f6] text-[14px] hover:underline">
+                      ウェブサイトを追加
+                    </Link>
+                  ) : null}
                 </div>
 
                 <div className="mt-[16px] flex max-w-[613px] items-center gap-2 md:-ml-[252px] md:w-[800px] md:max-w-none">
