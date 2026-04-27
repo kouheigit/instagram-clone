@@ -97,13 +97,13 @@ export default function LoginPage() {
                 <label className="ig-login-field" data-filled={password ? "true" : "false"}>
                   <span className="ig-login-label">パスワード</span>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
                     required
                     aria-label="パスワード"
-                    className="ig-login-input"
+                    className="ig-login-input pr-14"
                   />
                 </label>
                 {error && <p className="text-center text-xs text-[#ed4956]">{error}</p>}
