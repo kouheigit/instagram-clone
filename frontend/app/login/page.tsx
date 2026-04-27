@@ -105,6 +105,15 @@ export default function LoginPage() {
                     aria-label="パスワード"
                     className="ig-login-input pr-14"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8e8e8e] hover:text-[#262626] transition-colors cursor-pointer"
+                    aria-label={showPassword ? "パスワードを隠す" : "パスワードを表示"}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={20} strokeWidth={1.75} /> : <Eye size={20} strokeWidth={1.75} />}
+                  </button>
                 </label>
                 {error && <p className="text-center text-xs text-[#ed4956]">{error}</p>}
                 <button
