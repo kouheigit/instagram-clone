@@ -31,8 +31,8 @@ function PaperPlaneIcon({ active = false }: { active?: boolean }) {
     <img
       src={active ? "/plane_icon_active.png" : "/plane_icon.png"}
       alt=""
-      width={24}
-      height={24}
+      width={21}
+      height={21}
       style={{ objectFit: "contain", display: "block" }}
     />
   );
@@ -44,8 +44,8 @@ function ReelsIcon({ active = false }: { active?: boolean }) {
     <img
       src={active ? "/reels_icon_filled.png" : "/reels_icon_outline.png"}
       alt=""
-      width={28}
-      height={28}
+      width={24}
+      height={24}
       style={{ objectFit: "contain", display: "block" }}
     />
   );
@@ -58,13 +58,13 @@ function HomeIcon({ active = false }: { active?: boolean }) {
       <img
         src="/home_icon_active.png"
         alt=""
-        width={28}
-        height={28}
+        width={24}
+        height={24}
         style={{ objectFit: "contain", display: "block" }}
       />
     );
   }
-  return <Home size={26} strokeWidth={1.75} />;
+  return <Home size={23} strokeWidth={1.75} />;
 }
 
 const RECENT_KEY = "ig_recent_searches";
