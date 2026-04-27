@@ -49,7 +49,7 @@ export function RightSidebar() {
   if (!me) return null;
 
   return (
-    <div className="w-[320px] flex-shrink-0 pt-8 pl-8 hidden xl:block">
+    <div className="w-[320px] flex-shrink-0 pt-20 pl-8 hidden xl:block">
       {/* 現在のユーザー */}
       <div className="flex items-center gap-3 mb-6">
         <Link href={`/profile/${me.username}`}>
