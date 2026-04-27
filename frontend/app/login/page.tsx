@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const canSubmit = username.length > 0 && password.length > 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
