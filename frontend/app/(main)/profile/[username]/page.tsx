@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   BadgeCheck,
   Lock,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { PostDetailModal } from "@/components/PostDetailModal";
-import { postsApi, usersApi } from "@/lib/api";
+import { postsApi, usersApi, dmApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { Post, User } from "@/lib/types";
 
@@ -326,6 +326,7 @@ function getBioLines(user: User) {
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const { user: me } = useAuth();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [savedPosts, setSavedPosts] = useState<Post[]>([]);
@@ -440,6 +441,14 @@ export default function ProfilePage() {
     } catch {
       // ignore
     }
+  };
+
+  const handleMessage = async () => {
+    if (!user) return;
+    try {
+      await dmApi.start(user.user_id);
+    } catch { /* ignore: conversation may already exist */ }
+    router.push("/dm");
   };
 
   const openListModal = async (type: ListModal) => {
@@ -724,6 +733,7 @@ export default function ProfilePage() {
                 </button>
                 <button
                   type="button"
+                  onClick={handleMessage}
                   className="flex h-11 flex-1 items-center justify-center rounded-lg bg-[#efefef] px-5 text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   メッセージ
@@ -793,6 +803,7 @@ export default function ProfilePage() {
                 </button>
                 <button
                   type="button"
+                  onClick={handleMessage}
                   className="flex-1 rounded-lg bg-[#efefef] py-[7px] text-center text-[14px] font-semibold text-[#262626] transition-colors hover:bg-[#dbdbdb]"
                 >
                   メッセージ
