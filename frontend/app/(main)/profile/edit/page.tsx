@@ -34,6 +34,7 @@ export default function ProfileEditPage() {
   const [showOldPw, setShowOldPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
   const [showConfirmPw, setShowConfirmPw] = useState(false);
+  const canChangePw = oldPassword.length > 0 && newPassword.length > 0 && confirmPassword.length > 0;
 
   useEffect(() => {
     if (me) {
@@ -371,8 +372,12 @@ export default function ProfileEditPage() {
           {pwSaved && <p className="text-green-600 text-xs">パスワードを変更しました</p>}
           <button
             type="submit"
-            disabled={pwLoading || !oldPassword || !newPassword || !confirmPassword}
-            className="w-full py-2.5 bg-[#0095f6] text-white font-semibold text-sm rounded-lg hover:bg-[#1877f2] transition-colors disabled:opacity-40"
+            disabled={pwLoading || !canChangePw}
+            className={`w-full py-2.5 text-white font-semibold text-sm rounded-lg transition-colors ${
+              canChangePw
+                ? "bg-[#0095f6] hover:bg-[#1877f2] disabled:opacity-70 disabled:cursor-not-allowed"
+                : "bg-[#9bc4ee] cursor-not-allowed opacity-60"
+            }`}
           >
             {pwLoading ? "変更中..." : "パスワードを変更する"}
           </button>
