@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { usersApi, storiesApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -20,6 +21,7 @@ const PAGE_SIZE = 6;
 export function StoryBar() {
   const { user: me } = useAuth();
   const { showToast } = useToast();
+  const router = useRouter();
   const [groups, setGroups] = useState<StoryGroup[]>([]);
   const [page, setPage] = useState(0);
   const [viewer, setViewer] = useState<{ group: StoryGroup; idx: number } | null>(null);
@@ -132,9 +134,10 @@ export function StoryBar() {
 
   const openStory = async (group: StoryGroup) => {
     if (group.stories.length === 0) {
-      // 自分のストーリーがない場合は作成
       if (group.user.user_id === me?.user_id) {
         setShowCreate(true);
+      } else {
+        router.push(`/profile/${group.user.username}`);
       }
       return;
     }
@@ -211,10 +214,10 @@ export function StoryBar() {
               key={group.user.user_id}
               className="flex flex-col items-center gap-1 flex-shrink-0"
             >
-              <Link
-                href={`/profile/${group.user.username}`}
-                className="relative block"
-                aria-label={`${group.user.username}のプロフィールを見る`}
+              <button
+                onClick={() => openStory(group)}
+                className="relative block focus:outline-none"
+                aria-label={group.stories.length > 0 ? `${group.user.username}のストーリーを見る` : `${group.user.username}のプロフィールを見る`}
               >
                 <div
                   className={`p-[2px] rounded-full ${
@@ -229,7 +232,7 @@ export function StoryBar() {
                     <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
                   </div>
                 </div>
-              </Link>
+              </button>
               <Link href={`/profile/${group.user.username}`} className="w-20 truncate text-center text-xs text-[#262626] hover:underline">
                 {group.user.username}
               </Link>
