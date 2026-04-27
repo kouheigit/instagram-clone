@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { usersApi, mediaApi } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
@@ -31,6 +31,9 @@ export default function ProfileEditPage() {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSaved, setPwSaved] = useState(false);
+  const [showOldPw, setShowOldPw] = useState(false);
+  const [showNewPw, setShowNewPw] = useState(false);
+  const [showConfirmPw, setShowConfirmPw] = useState(false);
 
   useEffect(() => {
     if (me) {
@@ -315,33 +318,54 @@ export default function ProfileEditPage() {
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
             <label className="block text-sm font-bold text-[#262626] mb-1">現在のパスワード</label>
-            <input
-              type="password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              placeholder="現在のパスワード"
-              className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
-            />
+            <div className="relative">
+              <input
+                type={showOldPw ? "text" : "password"}
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                placeholder="現在のパスワード"
+                className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 pr-10 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
+              />
+              <button type="button" tabIndex={-1} onClick={() => setShowOldPw((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8e8e8e] hover:text-[#262626] transition-colors"
+                aria-label={showOldPw ? "パスワードを隠す" : "パスワードを表示"}>
+                {showOldPw ? <EyeOff size={16} strokeWidth={1.75} /> : <Eye size={16} strokeWidth={1.75} />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-bold text-[#262626] mb-1">新しいパスワード</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="8文字以上"
-              className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
-            />
+            <div className="relative">
+              <input
+                type={showNewPw ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="8文字以上"
+                className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 pr-10 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
+              />
+              <button type="button" tabIndex={-1} onClick={() => setShowNewPw((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8e8e8e] hover:text-[#262626] transition-colors"
+                aria-label={showNewPw ? "パスワードを隠す" : "パスワードを表示"}>
+                {showNewPw ? <EyeOff size={16} strokeWidth={1.75} /> : <Eye size={16} strokeWidth={1.75} />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-bold text-[#262626] mb-1">新しいパスワード（確認）</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="パスワードを再入力"
-              className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPw ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="パスワードを再入力"
+                className="w-full border border-[#dbdbdb] rounded-md px-3 py-2 pr-10 text-sm outline-none focus:border-[#a8a8a8] transition-colors"
+              />
+              <button type="button" tabIndex={-1} onClick={() => setShowConfirmPw((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8e8e8e] hover:text-[#262626] transition-colors"
+                aria-label={showConfirmPw ? "パスワードを隠す" : "パスワードを表示"}>
+                {showConfirmPw ? <EyeOff size={16} strokeWidth={1.75} /> : <Eye size={16} strokeWidth={1.75} />}
+              </button>
+            </div>
           </div>
           {pwError && <p className="text-[#ed4956] text-xs">{pwError}</p>}
           {pwSaved && <p className="text-green-600 text-xs">パスワードを変更しました</p>}
