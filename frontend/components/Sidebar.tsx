@@ -64,7 +64,7 @@ function HomeIcon({ active = false }: { active?: boolean }) {
       />
     );
   }
-  return <Home size={20} strokeWidth={1.75} />;
+  return <Home size={20} strokeWidth={2} />;
 }
 
 const RECENT_KEY = "ig_recent_searches";
