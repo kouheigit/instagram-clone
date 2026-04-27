@@ -37,9 +37,9 @@ export function StoryBar() {
       // フォロー中ユーザー全員を取得
       const followingRes = await usersApi.following(me.username);
       const followingUsers: User[] = followingRes.data ?? [];
-      if (followingUsers.length === 0) return;
 
-      const ids = followingUsers.map((u) => u.user_id);
+      // 自分 + フォロー中のIDリスト（ストーリー取得用）
+      const ids = [me.user_id, ...followingUsers.map((u) => u.user_id)];
 
       // ストーリーも取得（ある場合はリング表示）
       let storiesData: Story[] = [];
@@ -54,15 +54,22 @@ export function StoryBar() {
         groupMap[s.user_id].push(s);
       }
 
+      // 自分を先頭に追加
+      const selfGroup: StoryGroup = {
+        user: me as User,
+        stories: groupMap[me.user_id] ?? [],
+        hasUnviewed: false,
+      };
+
       // フォロー中の全ユーザーをリスト化（ストーリーなしでも表示）
-      const ordered: StoryGroup[] = followingUsers.map((u) => ({
+      const followingGroups: StoryGroup[] = followingUsers.map((u) => ({
         user: u,
         stories: groupMap[u.user_id] ?? [],
         hasUnviewed: (groupMap[u.user_id] ?? []).some((s) => !s.is_viewed),
       }));
 
       // ストーリーあり（未視聴）→ストーリーあり（視聴済）→ストーリーなし の順にソート
-      ordered.sort((a, b) => {
+      followingGroups.sort((a, b) => {
         if (a.hasUnviewed && !b.hasUnviewed) return -1;
         if (!a.hasUnviewed && b.hasUnviewed) return 1;
         if (a.stories.length > 0 && b.stories.length === 0) return -1;
@@ -70,7 +77,7 @@ export function StoryBar() {
         return 0;
       });
 
-      setGroups(ordered);
+      setGroups([selfGroup, ...followingGroups]);
     } catch { /* ignore */ }
   }, [me]);
 
@@ -209,35 +216,45 @@ export function StoryBar() {
 
         {/* プロフィール一覧 */}
         <div className="flex gap-3 pl-2 pr-9">
-          {visibleGroups.map((group) => (
-            <div
-              key={group.user.user_id}
-              className="flex flex-col items-center gap-1 flex-shrink-0"
-            >
-              <button
-                onClick={() => openStory(group)}
-                className="relative block focus:outline-none"
-                aria-label={group.stories.length > 0 ? `${group.user.username}のストーリーを見る` : `${group.user.username}のプロフィールを見る`}
+          {visibleGroups.map((group) => {
+            const isSelf = group.user.user_id === me?.user_id;
+            const hasStories = group.stories.length > 0;
+            return (
+              <div
+                key={group.user.user_id}
+                className="flex flex-col items-center gap-1 flex-shrink-0"
               >
-                <div
-                  className={`p-[2px] rounded-full ${
-                    group.stories.length > 0 && group.hasUnviewed
-                      ? "bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]"
-                      : group.stories.length > 0
-                      ? "bg-[#dbdbdb]"
-                      : "bg-transparent"
-                  }`}
+                <button
+                  onClick={() => openStory(group)}
+                  className="relative block focus:outline-none"
+                  aria-label={hasStories ? `${group.user.username}のストーリーを見る` : isSelf ? "ストーリーを追加" : `${group.user.username}のプロフィールを見る`}
                 >
-                  <div className={`rounded-full ${group.stories.length > 0 ? "p-[2px] bg-white" : ""}`}>
-                    <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
+                  <div
+                    className={`p-[2px] rounded-full ${
+                      hasStories && group.hasUnviewed
+                        ? "bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]"
+                        : hasStories
+                        ? "bg-[#dbdbdb]"
+                        : "bg-transparent"
+                    }`}
+                  >
+                    <div className={`rounded-full ${hasStories ? "p-[2px] bg-white" : ""}`}>
+                      <Avatar src={group.user.profile_img} username={group.user.username} size={77} />
+                    </div>
                   </div>
-                </div>
-              </button>
-              <Link href={`/profile/${group.user.username}`} className="w-20 truncate text-center text-xs text-[#262626] hover:underline">
-                {group.user.username}
-              </Link>
-            </div>
-          ))}
+                  {/* 自分のアバターにストーリーなしの場合は+バッジを表示 */}
+                  {isSelf && !hasStories && (
+                    <div className="absolute bottom-0 right-0 w-[22px] h-[22px] bg-[#0095f6] rounded-full border-2 border-white flex items-center justify-center">
+                      <Plus size={12} strokeWidth={3} className="text-white" />
+                    </div>
+                  )}
+                </button>
+                <span className="w-20 truncate text-center text-xs text-[#262626]">
+                  {isSelf ? "あなた" : group.user.username}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* 次へ矢印 */}
