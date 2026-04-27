@@ -44,8 +44,8 @@ function ReelsIcon({ active = false }: { active?: boolean }) {
     <img
       src={active ? "/reels_icon_filled.png" : "/reels_icon_outline.png"}
       alt=""
-      width={26}
-      height={26}
+      width={28}
+      height={28}
       style={{ objectFit: "contain", display: "block" }}
     />
   );
