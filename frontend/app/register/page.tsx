@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const canSubmit = form.email.length > 0 && form.username.length > 0 && form.password.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,8 +86,12 @@ export default function RegisterPage() {
             {error && <p className="text-[#ed4956] text-xs text-center">{error}</p>}
             <button
               type="submit"
-              disabled={loading || !form.username || !form.email || !form.password}
-              className="w-full bg-[#0095f6] text-white font-semibold text-sm rounded py-1.5 mt-2 disabled:opacity-50 hover:bg-[#1877f2] transition-colors"
+              disabled={loading || !canSubmit}
+              className={`w-full text-white font-semibold text-sm rounded py-1.5 mt-2 transition-colors ${
+                canSubmit
+                  ? "bg-[#0095f6] hover:bg-[#1877f2] disabled:opacity-70 disabled:cursor-not-allowed"
+                  : "bg-[#9bc4ee] cursor-not-allowed opacity-60"
+              }`}
             >
               {loading ? "登録中..." : "登録する"}
             </button>
