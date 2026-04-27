@@ -120,8 +120,12 @@ export default function LoginPage() {
                 {error && <p className="text-center text-xs text-[#ed4956]">{error}</p>}
                 <button
                   type="submit"
-                  disabled={loading || !username || !password}
-                  className="mt-2 min-h-[50px] w-full rounded-full bg-[#9bc4ee] px-4 text-[0.95rem] font-semibold text-white transition hover:bg-[#86b4e4] disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={loading || !canSubmit}
+                  className={`mt-2 min-h-[50px] w-full rounded-full px-4 text-[0.95rem] font-semibold text-white transition-colors duration-150 ${
+                    canSubmit
+                      ? "bg-[#0095f6] hover:bg-[#1877f2] disabled:opacity-70 disabled:cursor-not-allowed"
+                      : "bg-[#9bc4ee] cursor-not-allowed opacity-60"
+                  }`}
                 >
                   {loading ? "ログイン中..." : "ログイン"}
                 </button>
