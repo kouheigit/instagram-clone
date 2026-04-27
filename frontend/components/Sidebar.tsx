@@ -39,12 +39,32 @@ function PaperPlaneIcon({ active = false }: { active?: boolean }) {
 }
 
 function ReelsIcon({ active = false }: { active?: boolean }) {
+  // eslint-disable-next-line @next/next/no-img-element
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.75} strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="4" ry="4" />
-      <polygon points="10,8 16,12 10,16" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? 2 : 1.75} strokeLinejoin="round" />
-    </svg>
+    <img
+      src={active ? "/reels_icon_filled.png" : "/reels_icon_outline.png"}
+      alt=""
+      width={24}
+      height={24}
+      style={{ objectFit: "contain", display: "block" }}
+    />
   );
+}
+
+function HomeIcon({ active = false }: { active?: boolean }) {
+  if (active) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img
+        src="/home_icon_active.png"
+        alt=""
+        width={24}
+        height={24}
+        style={{ objectFit: "contain", display: "block" }}
+      />
+    );
+  }
+  return <Home size={24} strokeWidth={1.75} />;
 }
 
 const RECENT_KEY = "ig_recent_searches";
@@ -339,7 +359,7 @@ export function Sidebar({ onCreatePost }: Props) {
           <NavFlyout label="ホーム">
             <Link href="/">
               <NavIcon label="ホーム" active={pathname === "/" && !searchOpen}>
-                <Home size={24} strokeWidth={pathname === "/" && !searchOpen ? 2.5 : 1.75} />
+                <HomeIcon active={pathname === "/" && !searchOpen} />
               </NavIcon>
             </Link>
           </NavFlyout>
