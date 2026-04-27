@@ -46,7 +46,7 @@ function ReelsIcon({ active = false }: { active?: boolean }) {
       alt=""
       width={20}
       height={20}
-      style={{ objectFit: "contain", display: "block" }}
+      style={{ objectFit: "contain", display: "block", flexShrink: 0 }}
     />
   );
 }
