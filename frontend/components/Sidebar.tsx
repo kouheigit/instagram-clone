@@ -58,13 +58,13 @@ function HomeIcon({ active = false }: { active?: boolean }) {
       <img
         src="/home_icon_active.png"
         alt=""
-        width={24}
-        height={24}
+        width={26}
+        height={26}
         style={{ objectFit: "contain", display: "block" }}
       />
     );
   }
-  return <Home size={24} strokeWidth={1.75} />;
+  return <Home size={26} strokeWidth={1.75} />;
 }
 
 const RECENT_KEY = "ig_recent_searches";
