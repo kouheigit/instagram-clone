@@ -58,8 +58,8 @@ function HomeIcon({ active = false }: { active?: boolean }) {
       <img
         src="/home_icon_active.png"
         alt=""
-        width={26}
-        height={26}
+        width={28}
+        height={28}
         style={{ objectFit: "contain", display: "block" }}
       />
     );
